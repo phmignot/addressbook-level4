@@ -872,33 +872,56 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 [appendix]
 == Use Cases
 
-(For all use cases below, the *System* is the `AddressBook` and the *Actor* is the `user`, unless specified otherwise)
+(For all use cases below, the *System* is `SmartSplit` and the *Actor* is the `user`, unless specified otherwise)
 
 [discrete]
-=== Use case: Delete person
+=== Use case: Create group
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1.  User requests to create group
+2.  SmartSplit prompts user for the name of the new group
+3.  User enters the desired name
+4.  SmartSplit creates the new group with the name and designates the user as the admin user for that group
++
+Use case ends.
+
+[discrete]
+=== Use case: Add members to group
+
+*Preconditions*
+
+1.  User is an admin user for the group
+
+*MSS*
+
+1.  Admin user requests to add members to group
+2.  SmartSplit prompts adminuser for the names of the members to be added
+3.  User enters the names of the members to be added
+4.  SmartSplit adds the new members to the group
++
+Use case ends.
+
+[discrete]
+=== Use case: Add transaction
+
+*MSS*
+
+1.  User requests to add transaction
+2.  SmartSplit requests transaction details from the user
+3.  User enters the transaction details
+4.  SmartSplit records the transaction
 +
 Use case ends.
 
 *Extensions*
 
-[none]
-* 2a. The list is empty.
-+
-Use case ends.
-
-* 3a. The given index is invalid.
+* 3a. User enters details in an incorrect format.
 +
 [none]
-** 3a1. AddressBook shows an error message.
+** 3a1. SmartSplit shows an error message and prompts the user to try again.
 +
-Use case resumes at step 2.
+Use case resumes at step 3.
 
 _{More to be added}_
 
@@ -906,8 +929,14 @@ _{More to be added}_
 == Non Functional Requirements
 
 .  Should work on any <<mainstream-os,mainstream OS>> as long as it has Java `1.8.0_60` or higher installed.
-.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
+.  Should be able to hold up to 100 users without a noticeable sluggishness in performance for typical usage.
+.  Should be able to hold up to 1000 transactions per group without a noticeable sluggishness in performance for typical usage.
 .  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+.  The size of group cannot be smaller than 2.
+.  Should respond to user input within 3 seconds.
+.  Should work in both 32-bit and 64-bit environments.
+.  Should be usable by a novice who has never used this system before.
+.  The project is expected to adhere to a schedule that delivers a feature/bug-fix update every week.
 
 _{More to be added}_
 
@@ -919,6 +948,18 @@ Windows, Linux, Unix, OS-X
 
 [[private-contact-detail]] Private contact detail::
 A contact detail that is not meant to be shared with others
+
+[[split-evenly]] Split evenly::
+A method of dividing the total cost of an expense by splitting it in even parts over the total number of users involved with that expense
+
+[[split-by-units]] Split by units::
+A method of dividing the total cost of an expense by units and then assigning the specific amount of units (which can vary among users) owed by a user to that user
+
+[[settle-balance]] Settle balance::
+A feature that allows a user to record a payment that was made to another user to settle the debt owed
+
+[[recurring-expense]] Recurring expense::
+An expense that does not change in amount over a repeated time period (e.g. every month) and is always incurred by a user
 
 [appendix]
 == Product Survey
