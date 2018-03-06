@@ -782,13 +782,12 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Target user profile*:
 
-* has a need to manage a significant number of contacts
+* traveller who share many expenses with friends
 * prefer desktop apps over other types
-* can type fast
 * prefers typing over mouse input
 * is reasonably comfortable using CLI apps
 
-*Value proposition*: manage contacts faster than a typical mouse/GUI driven app
+*Value proposition*: simplify the shared expense budgeting process and reduce the number of "pay-back" transactions between individuals to only 1
 
 [appendix]
 == User Stories
@@ -798,20 +797,77 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 [width="59%",cols="22%,<23%,<25%,<30%",options="header",]
 |=======================================================================
 |Priority |As a ... |I want to ... |So that I can...
-|`* * *` |new user |see usage instructions |refer to instructions when I forget how to use the App
-
-|`* * *` |user |add a new person |
-
-|`* * *` |user |delete a person |remove entries that I no longer need
-
 |`* * *` |user |find a person by name |locate details of persons without having to go through the entire list
 
-|`* *` |user |hide <<private-contact-detail,private contact details>> by default |minimize chance of someone else seeing them by accident
+|`* * *` |admin user |create a new group |separate different trips by the people who were involved
 
-|`*` |user with many persons in the address book |sort persons by name |locate a person easily
+|`* * *` |admin user |add people to a group |
+
+|`* * *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
+
+|`* * *` |admin user |add an expense |make a record of it
+
+|`* * *` |user |sort my expense into different categories |keep better track of my expenses
+
+|`* * *` |user |edit an expense |correct any mistakes I may have made
+
+|`* * *` |user |delete an expense |remove a mistakenly entered or unwanted expense
+
+|`* * *` |user |specify which group members were involved with an expense |
+
+|`* * *` |user |split an expense evenly over the group members who were involved by default |
+
+|`* * *` |user |split an expense by units |properly attribute unevenly shared expenses to the individuals that were involved
+
+|`* * *` |user |see all transactions recorded by group members in a table |see a complete history of what was paid
+
+|`* * *` |user |see a summary of the expenses paid per person |figure out how much each person owes or is owed
+
+|`* * *` |user |see my total balance |know how much I owe or can expect to be paid back
+
+|`* * *` |user |record payment to another group member |settle my balance with that individual
+
+|`* * *` |user |search for a specific expense |quickly find the transaction that I am interested in
+
+|`* * *` |user |filter transactions by various criteria |see similar transactions grouped together
+
+|`* * *` |user |comment on an expense |clarify an expense or ask questions about it
+
+|`* *` |admin user |set whether other group members can add new people to the group |control who is added
+
+|`* *` |user with permission to add new people |add new people to the group |
+
+|`* *` |user |request payment from others who owe me money via social media or a chat messenger |
+
+|`* *` |user |transfer money directly to a friend to pay a debt |
+
+|`* *` |user |change the currency of the expense I am adding |have it match the currency in which I paid
+
+|`* *` |user |see all listed expenses converted to the currency of my choice |better gauge how much was spent
+
+|`* *` |user |see the transactions in graphical form |better visualize the balances of each group member
+
+|`* *` |user in a group for which the trip has ended |archive the group |no expenses can be added anymore
+
+|`* *` |user |log in to see my account |access my secured information
+
+|`* *` |user |log out of my account |ensure that my information is inaccessible to others
+
+|`* *` |user |set a deadline for when payments need to made |members of the group know when they can expect to be paid
+
+|`* *` |user |record the location where I spent my money |keep track where I spent the most/least money during the trip
+
+|`* *` |user |set a default currency for the group |
+
+|`* *` |user |add a recurring expense |avoid having to add it more than once
+
+|`* *` |user in a group with recurring expenses |remove a recurring expense |
+
+|`* *` |user in an archived group |reopen the group |add any forgotten expenses
+
+|`*` |user |instantly message other members |communicate with them directly in the application
+
 |=======================================================================
-
-_{More to be added}_
 
 [appendix]
 == Use Cases
