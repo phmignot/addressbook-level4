@@ -797,49 +797,47 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 [width="59%",cols="22%,<23%,<25%,<30%",options="header",]
 |=======================================================================
 |Priority |As a ... |I want to ... |So that I can...
-|`* * *` |user |find a person by name |locate details of persons without having to go through the entire list
+|`* * *` |user |add an expense (split evenly to those who are involved)  to the application | make a record of it
 
-|`* * *` |admin user |create a new group |separate different trips by the people who were involved
+|`* * *` | user |specify which users were involved with an expense|
 
-|`* * *` |admin user |add people to a group |
+|`* * *` | user |see all transactions recorded by users in a table |see a complete history of what was paid
 
-|`* * *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
+|`* * *` |user |see how much I owe to or am owed by each individual
 
-|`* * *` |admin user |add an expense |make a record of it
+|`* * *` |user |see how much I owe or am owed in total
 
-|`* * *` |user |sort my expense into different categories |keep better track of my expenses
+|`* * *` |user |record an offline payment to or from another user |update the balance between the 2 users
 
-|`* * *` |user |edit an expense |correct any mistakes I may have made
+|`* * *` |user |specify the type/category of my expense (food, accommodation, transport etc) when adding it |keep better track of my expenses
+
+|`* * *` |user | search for a specific expense |quickly find the transaction that I am interested in
+
+|`* * *` |user |filter transactions by various criteria |see similar transactions grouped together
+
+|`* * *` |user |split an expense by percentage so that unevenly shared expenses can be properly attributed to any individual that was involved
+
+|`* * *` |user |split an expense by units |properly attribute unevenly shared expenses to any individual that was involved
 
 |`* * *` |user |delete an expense |remove a mistakenly entered or unwanted expense
 
-|`* * *` |user |specify which group members were involved with an expense |
+|`* * *` |user |edit an expense on the application |correct any mistakes I may have made
 
-|`* * *` |user |split an expense evenly over the group members who were involved by default |
+|`* * *` |admin user |create a new group |separate different trips by the people who were involved
 
-|`* * *` |user |split an expense by units |properly attribute unevenly shared expenses to the individuals that were involved
+|`* * *` |admin user |add people to a group |know who was involved with the expenses that were shared
 
-|`* * *` |user |see all transactions recorded by group members in a table |see a complete history of what was paid
+|`* * *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
 
-|`* * *` |user |see a summary of the expenses paid per person |figure out how much each person owes or is owed
+|`* * *` |user |sort my expense into different categories |keep better track of my expenses
 
-|`* * *` |user |see my total balance |know how much I owe or can expect to be paid back
-
-|`* * *` |user |record payment to another group member |settle my balance with that individual
-
-|`* * *` |user |search for a specific expense |quickly find the transaction that I am interested in
-
-|`* * *` |user |filter transactions by various criteria |see similar transactions grouped together
+|`* * *` |user |use a user-friendly interactive interface |enter input
 
 |`* * *` |user |comment on an expense |clarify an expense or ask questions about it
 
 |`* *` |admin user |set whether other group members can add new people to the group |control who is added
 
-|`* *` |user with permission to add new people |add new people to the group |
-
 |`* *` |user |request payment from others who owe me money via social media or a chat messenger |
-
-|`* *` |user |transfer money directly to a friend to pay a debt |
 
 |`* *` |user |change the currency of the expense I am adding |have it match the currency in which I paid
 
@@ -864,6 +862,10 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 |`* *` |user in a group with recurring expenses |remove a recurring expense |
 
 |`* *` |user in an archived group |reopen the group |add any forgotten expenses
+
+|`* *` |user with permission to add new people |add new people to the group |
+
+|`* *` |user |transfer money directly to a friend to pay a debt |
 
 |`*` |user |instantly message other members |communicate with them directly in the application
 
