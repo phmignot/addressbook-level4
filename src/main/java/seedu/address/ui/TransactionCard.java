@@ -14,7 +14,7 @@ public class TransactionCard extends UiPart<Region> {
 
   private static final String FXML = "TransactionListCard.fxml";
   
- // public final Transaction transaction;
+  public final Transaction transaction;
 
   @FXML
   private HBox cardPane;
@@ -27,16 +27,14 @@ public class TransactionCard extends UiPart<Region> {
   @FXML
   private FlowPane payees;
 
-  public TransactionCard(Person person, int displayedIndex) {
+  public TransactionCard(Transaction transaction, int displayedIndex) {
     super(FXML);
-    /*this.person = person;
-    id.setText(displayedIndex + ". ");
-    name.setText(person.getName().fullName);
-    phone.setText(person.getPhone().value);
-    address.setText(person.getAddress().value);
-    email.setText(person.getEmail().value);
-    person.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
-  */
+    this.transaction = transaction;
+    //id.setText(displayedIndex + ". ");
+    payerName.setText(transaction.getPayer().getName().fullName);
+    amount.setText(String.valueOf(transaction.getAmount()));
+    description.setText(transaction.getDescription());
+    transaction.getPayees().forEach(payee -> payees.getChildren().add(new Label(payee.getName().fullName)));
   }
 
   @Override
@@ -55,7 +53,7 @@ public class TransactionCard extends UiPart<Region> {
     TransactionCard card = (TransactionCard) other;
     //return id.getText().equals(card.id.getText())
     //    && person.equals(card.person);
+    return transaction.equals(card.transaction);
   
-    return false;
   }
 }

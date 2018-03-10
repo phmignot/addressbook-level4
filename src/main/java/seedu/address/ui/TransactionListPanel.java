@@ -13,8 +13,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.commons.events.ui.JumpToListRequestEvent;
-import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.Person;
 
 
@@ -27,25 +25,30 @@ public class TransactionListPanel extends UiPart<Region> {
     private final Logger logger = LogsCenter.getLogger(seedu.address.ui.PersonListPanel.class);
 
     @javafx.fxml.FXML
-    private ListView<PersonCard> personListView;
+    private ListView<TransactionCard> transactionListView;
 
     public TransactionListPanel(ObservableList<Person> personList) {
       super(FXML);
       //setConnections(personList);
       //registerAsAnEventHandler(this);
     }
+    
+    /* TO DO: Replace Person by Transaction
+    * 
+    */ 
 
-    private void setConnections(ObservableList<Person> personList) {
-      ObservableList<PersonCard> mappedList = EasyBind.map(
-          personList, (person) -> new PersonCard(person, personList.indexOf(person) + 1));
-      personListView.setItems(mappedList);
-      personListView.setCellFactory(listView -> new PersonListViewCell());
+    private void setConnections(ObservableList<Person> transactionList) {
+      ObservableList<TransactionCard> mappedList = EasyBind.map(
+          transactionList, (transaction) -> new TransactionCard(transaction,
+              transactionList.indexOf(transaction) + 1));
+      transactionListView.setItems(mappedList);
+      transactionListView.setCellFactory(listView -> new TransactionListViewCell());
     }
     
     /**
      * Custom {@code ListCell} that displays the graphics of a {@code PersonCard}.
      */
-    class PersonListViewCell extends ListCell<TransactionCard> {
+    class TransactionListViewCell extends ListCell<TransactionCard> {
 
       @Override
       protected void updateItem(TransactionCard transaction, boolean empty) {
