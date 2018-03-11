@@ -13,7 +13,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.model.person.Person;
+import seedu.address.model.Transaction.Transaction;
+import seedu.address.model.transaction.Transaction;
 
 
 /**
@@ -22,22 +23,22 @@ import seedu.address.model.person.Person;
 public class TransactionListPanel extends UiPart<Region> {
   
     private static final String FXML = "TransactionListPanel.fxml";
-    private final Logger logger = LogsCenter.getLogger(seedu.address.ui.PersonListPanel.class);
+    private final Logger logger = LogsCenter.getLogger(seedu.address.ui.TransactionListPanel.class);
 
     @javafx.fxml.FXML
     private ListView<TransactionCard> transactionListView;
 
-    public TransactionListPanel(ObservableList<Person> personList) {
+    public TransactionListPanel(ObservableList<Transaction> transactionList) {
       super(FXML);
-      //setConnections(personList);
+      setConnections(transactionList);
       //registerAsAnEventHandler(this);
     }
     
-    /* TO DO: Replace Person by Transaction
+    /* TO DO: Replace Transaction by Transaction
     * 
     */ 
 
-    private void setConnections(ObservableList<Person> transactionList) {
+    private void setConnections(ObservableList<Transaction> transactionList) {
       ObservableList<TransactionCard> mappedList = EasyBind.map(
           transactionList, (transaction) -> new TransactionCard(transaction,
               transactionList.indexOf(transaction) + 1));
@@ -46,7 +47,7 @@ public class TransactionListPanel extends UiPart<Region> {
     }
     
     /**
-     * Custom {@code ListCell} that displays the graphics of a {@code PersonCard}.
+     * Custom {@code ListCell} that displays the graphics of a {@code TransactionCard}.
      */
     class TransactionListViewCell extends ListCell<TransactionCard> {
 
