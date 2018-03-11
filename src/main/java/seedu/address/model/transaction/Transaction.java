@@ -1,5 +1,7 @@
 package seedu.address.model.transaction;
 
+import seedu.address.model.person.Amount;
+import seedu.address.model.person.Description;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -9,19 +11,19 @@ import java.util.Set;
 
 public class Transaction {
 
-    private final Person payer;
-    private final Double amount;
-    private final String description;
+    private final UniquePersonList payer;
+    private final Amount amount;
+    private final Description description;
     private final UniquePersonList payees;
 
-    public Transaction(Person payer, Double amount, String description, UniquePersonList payees) {
+    public Transaction(UniquePersonList payer, Amount amount, Description description, UniquePersonList payees) {
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
     }
 
-    public Transaction(Person payer, Double amount, String description, Set<Person> payeesToAdd) {
+    public Transaction(UniquePersonList payer, Amount amount, Description description, Set<Person> payeesToAdd) {
         UniquePersonList payees = new UniquePersonList();
         for(Person p: payeesToAdd) {
             try {
@@ -37,15 +39,15 @@ public class Transaction {
         this.payees = payees;
     }
 
-    public Person getPayer() {
+    public UniquePersonList getPayer() {
         return payer;
     }
 
-    public Double getAmount() {
+    public Amount getAmount() {
         return amount;
     }
 
-    public String getDescription() {
+    public Description getDescription() {
         return description;
     }
 
