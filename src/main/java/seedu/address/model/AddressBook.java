@@ -171,14 +171,21 @@ public class AddressBook implements ReadOnlyAddressBook {
     public ObservableList<Transaction> getTransactionList() {
         //TO DO: match our work from here
         //return persons.asObservableList();
+        
+        //For Testing the display.
         ObservableList<Transaction> transactions = FXCollections.observableArrayList();
         Amount amount = new Amount("55");
         Name namePayer = new Name("John Doe");
         Description description = new Description("First transaction");
         Name namePayee = new Name("Alice Doe");
-        Transaction transaction = new Transaction(namePayer, amount, description, namePayee);
-        transactions.add(transaction);
-        System.out.println(" 00000000000000 " + transaction.toString());
+        Transaction transaction1 = new Transaction(namePayer, amount, description, namePayee);
+        transactions.add(transaction1);
+        Amount amount2 = new Amount("1055.65");
+        Name namePayer2 = new Name("Alice Doe");
+        Description description2 = new Description("Second transaction");
+        Name namePayee2 = new Name("John Doe");
+        Transaction transaction2 = new Transaction(namePayer2, amount2, description2, namePayee2);
+        transactions.add(transaction2);
         return FXCollections.unmodifiableObservableList(transactions);
     }
 
