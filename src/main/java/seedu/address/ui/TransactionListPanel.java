@@ -28,8 +28,7 @@ public class TransactionListPanel extends UiPart<Region> {
         setConnections(transactionList);
         registerAsAnEventHandler(this);
     }
-    
-    private void setConnections(ObservableList<Transaction> transactionList) { 
+    private void setConnections(ObservableList<Transaction> transactionList) {
         ObservableList<TransactionCard> mappedList = EasyBind.map(transactionList, (transaction) -> new TransactionCard(transaction, 
                         transactionList.indexOf(transaction) + 1));
         transactionListView.setItems(mappedList);
