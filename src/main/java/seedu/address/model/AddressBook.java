@@ -2,21 +2,23 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
-import seedu.address.model.transaction.Amount;
-import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionList;
 
 /**
  * Wraps all data at the address-book level
@@ -26,6 +28,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
     private final UniqueTagList tags;
+    private final TransactionList transactions;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -37,6 +40,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     {
         persons = new UniquePersonList();
         tags = new UniqueTagList();
+        transactions = new TransactionList();
     }
 
     public AddressBook() {}
@@ -166,32 +170,14 @@ public class AddressBook implements ReadOnlyAddressBook {
         return persons.asObservableList();
     }
 
-
-    @Override
-    public ObservableList<Transaction> getTransactionList() {
-        //TO DO: match our work from here
-        //return persons.asObservableList();
-        
-        //For Testing the display.
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-        Amount amount = new Amount("55");
-        Name namePayer = new Name("John Doe");
-        Description description = new Description("First transaction");
-        Name namePayee = new Name("Alice Doe");
-        Transaction transaction1 = new Transaction(namePayer, amount, description, namePayee);
-        transactions.add(transaction1);
-        Amount amount2 = new Amount("1055.65");
-        Name namePayer2 = new Name("Alice Doe");
-        Description description2 = new Description("Second transaction");
-        Name namePayee2 = new Name("John Doe");
-        Transaction transaction2 = new Transaction(namePayer2, amount2, description2, namePayee2);
-        transactions.add(transaction2);
-        return FXCollections.unmodifiableObservableList(transactions);
-    }
-
     @Override
     public ObservableList<Tag> getTagList() {
         return tags.asObservableList();
+    }
+
+    @Override
+    public ObservableList<Transaction> getTransactionList() {
+        return transactions.asObservableList();
     }
 
     @Override
@@ -206,5 +192,9 @@ public class AddressBook implements ReadOnlyAddressBook {
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
     }
 }

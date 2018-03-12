@@ -110,6 +110,13 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
+    public void addTransaction(Transaction transaction) {
+        addressBook.addTransaction(transaction);
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        indicateAddressBookChanged();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         // short circuit if same object
         if (obj == this) {

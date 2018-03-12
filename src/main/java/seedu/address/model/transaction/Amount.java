@@ -10,16 +10,13 @@ import seedu.address.model.person.Address;
  */
 public class Amount {
 
-    public static final String MESSAGE_ADDRESS_CONSTRAINTS =
+    public static final String MESSAGE_AMOUNT_CONSTRAINTS =
             "Payer amount can only take in numerical number with 2 decimals, and it should not be blank";
-
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String MESSAGE_AMOUNT_CONSTRAINTS =
-            "Amount value can only contain numbers and comma when value is below 1";
-    public static final String AMOUNT_VALIDATION_REGEX = "^-?\\d*\\.\\d{2}$\n";
+    public static final String AMOUNT_VALIDATION_REGEX = "^\\d+\\.\\d{0,2}$";
 
     public final String value;
 
@@ -30,7 +27,7 @@ public class Amount {
      */
     public Amount(String amount) {
         requireNonNull(amount);
-        //checkArgument(isValidAmount(amount), MESSAGE_ADDRESS_CONSTRAINTS);
+        checkArgument(isValidAmount(amount), MESSAGE_AMOUNT_CONSTRAINTS);
         this.value = amount;
     }
 
