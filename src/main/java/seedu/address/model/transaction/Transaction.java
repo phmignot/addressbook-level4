@@ -1,12 +1,8 @@
 package seedu.address.model.transaction;
 
 import java.util.Objects;
-import java.util.Set;
 
 import seedu.address.model.person.Name;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.UniquePersonList;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
  * Represent a transaction
