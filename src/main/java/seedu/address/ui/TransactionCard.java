@@ -31,7 +31,6 @@ public class TransactionCard extends UiPart<Region> {
     public TransactionCard(Transaction transaction, int displayedIndex) {
         super(FXML);
         this.transaction = transaction;
-        System.out.println(" Creating a new TCard from " + transaction.toString());
         idDisplay.setText(displayedIndex + ". ");
         //payerName.setText(transaction.getPayer().getName().fullName);
         payerName.setText(transaction.getPayer().fullName);
