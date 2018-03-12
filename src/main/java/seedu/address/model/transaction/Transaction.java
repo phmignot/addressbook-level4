@@ -2,10 +2,10 @@ package seedu.address.model.transaction;
 
 import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Set;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -17,6 +17,8 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  */
 public class Transaction {
 
+    private static Integer lastTransactionId = 0;
+
     private final Integer id;
     private final Date dateTime;
     private final Person payer;
@@ -25,7 +27,7 @@ public class Transaction {
     private final UniquePersonList payees;
 
     public Transaction(Person payer, Double amount, String description, UniquePersonList payees) {
-        this.id = 0; // TODO: Ensure that this increments by 1 for each new transaction
+        this.id = lastTransactionId++;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         this.payer = payer;
         this.amount = amount;
@@ -43,7 +45,7 @@ public class Transaction {
             }
         }
 
-        this.id = 0; // TODO: Ensure that this increments by 1 for each new transaction
+        this.id = lastTransactionId++;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         this.payer = payer;
         this.amount = amount;
@@ -86,12 +88,7 @@ public class Transaction {
         }
 
         Transaction otherTransaction = (Transaction) other;
-        return otherTransaction.getId().equals(this.getId())
-                && otherTransaction.getDateTime().equals(this.getDateTime())
-                && otherTransaction.getPayer().equals(this.getPayer())
-                && otherTransaction.getAmount().equals(this.getAmount())
-                && otherTransaction.getDescription().equals(this.getDescription())
-                && otherTransaction.getPayees().equals(this.getPayees());
+        return otherTransaction.getId().equals(this.getId());
     }
 
     @Override
