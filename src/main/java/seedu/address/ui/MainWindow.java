@@ -34,13 +34,18 @@ public class MainWindow extends UiPart<Stage> {
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
-    private BrowserPanel browserPanel;
+    private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
+    private BrowserPanel browserPanel;
     private Config config;
     private UserPrefs prefs;
 
+
+    //@FXML
+    //private StackPane browserPanelPlaceholder;
+
     @FXML
-    private StackPane browserPlaceholder;
+    private StackPane transactionListPanelPlaceholder;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -116,11 +121,15 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        browserPanel = new BrowserPanel();
-        browserPlaceholder.getChildren().add(browserPanel.getRoot());
 
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+
+        transactionListPanel = new TransactionListPanel(logic.getTransactionList());
+        transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
+
+        //browserPanel = new BrowserPanel(logic.getFilteredPersonList());
+        //browserPanelPlaceholder.getChildren().add(browserPanel.getRoot());
 
         ResultDisplay resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -185,10 +194,12 @@ public class MainWindow extends UiPart<Stage> {
         return this.personListPanel;
     }
 
+    /*
+    Used by fomer BrowserPanel
     void releaseResources() {
         browserPanel.freeResources();
     }
-
+*/
     @Subscribe
     private void handleShowHelpEvent(ShowHelpRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));

@@ -82,6 +82,16 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
     }
 
+
+    /**
+     * Returns an unmodifiable view of the list of {@code Transaction}
+     */
+    @Override
+    public ObservableList<Transaction> getTransactionList() {
+        //TO DO: properly match the work from here
+        return addressBook.getTransactionList();
+    }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
