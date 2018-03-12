@@ -14,7 +14,7 @@ public class TransactionCard extends UiPart<Region> {
 
     private static final String FXML = "TransactionListCard.fxml";
     public final Transaction transaction;
-    
+
     @FXML
     private HBox cardPane;
     @FXML
@@ -27,7 +27,7 @@ public class TransactionCard extends UiPart<Region> {
     private Label description;
     @FXML
     private FlowPane payees;
-    
+
     public TransactionCard(Transaction transaction, int displayedIndex) {
         super(FXML);
         this.transaction = transaction;

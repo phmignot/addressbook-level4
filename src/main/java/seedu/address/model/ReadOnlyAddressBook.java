@@ -20,7 +20,7 @@ public interface ReadOnlyAddressBook {
      * Returns an unmodifiable view of the transaction list.
      */
     ObservableList<Transaction> getTransactionList();
-    
+
     /**
      * Returns an unmodifiable view of the tags list.
      * This list will not contain any duplicate tags.
