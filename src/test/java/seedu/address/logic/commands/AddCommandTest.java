@@ -136,9 +136,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) {
-            
-        }
+        public void addTransaction(Transaction transaction) {}
     }
 
     /**
