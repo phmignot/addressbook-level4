@@ -11,11 +11,11 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.model.person.Address;
-import seedu.address.model.person.Amount;
-import seedu.address.model.person.Description;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.transaction.Amount;
+import seedu.address.model.transaction.Description;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -168,7 +168,12 @@ public class ParserUtil {
         return tagSet;
     }
 
-
+    /**
+     * Parses a {@code String amount} into a {@code Amount}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
     public static Amount parseAmount(String amount) throws IllegalValueException {
         requireNonNull(amount);
         String trimmedAmount = amount.trim();
@@ -178,12 +183,21 @@ public class ParserUtil {
         return new Amount(trimmedAmount);
     }
 
+    /**
+     * Parses {@code Collection<String> Amount} into a {@code Set<Amount>}.
+     */
     public static Optional<Amount> parseAmount(Optional<String> amount) throws IllegalValueException {
         requireNonNull(amount);
         return amount.isPresent() ? Optional.of(parseAmount(amount.get())) : Optional.empty();
 
     }
 
+    /**
+     * Parses a {@code String description} into a {@code Description}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
     public static Description parseDescription(String description) throws IllegalValueException {
         requireNonNull(description);
         String trimmedDescription = description.trim();
@@ -193,6 +207,9 @@ public class ParserUtil {
         return new Description(trimmedDescription);
     }
 
+    /**
+     * Parses {@code Collection<String> Description} into a {@code Set<Description>}.
+     */
     public static Optional<Description> parseDescription(Optional<String> description) throws IllegalValueException {
         requireNonNull(description);
         return description.isPresent() ? Optional.of(parseDescription(description.get())) : Optional.empty();

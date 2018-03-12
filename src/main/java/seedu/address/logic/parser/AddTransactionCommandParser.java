@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Amount;
-import seedu.address.model.person.Description;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.transaction.Amount;
+import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
 
 /**
@@ -31,16 +31,18 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddTransactionCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    AddTransactionCommand.MESSAGE_USAGE));
         }
 
         try {
             Name payerName = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME)).get();
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
-            Name payeeName= ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME)).get();
+            Name payeeName = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME)).get();
 
             UniquePersonList payers = new UniquePersonList();
+
             UniquePersonList payees = new UniquePersonList();
 
             Transaction transaction = new Transaction(payers, amount, description, payees);

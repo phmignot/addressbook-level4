@@ -1,14 +1,15 @@
 package seedu.address.model.transaction;
 
-import seedu.address.model.person.Amount;
-import seedu.address.model.person.Description;
+import java.util.Objects;
+import java.util.Set;
+
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
-import java.util.Objects;
-import java.util.Set;
-
+/**
+ * Represent a transaction
+ */
 public class Transaction {
 
     private final UniquePersonList payer;
@@ -25,7 +26,7 @@ public class Transaction {
 
     public Transaction(UniquePersonList payer, Amount amount, Description description, Set<Person> payeesToAdd) {
         UniquePersonList payees = new UniquePersonList();
-        for(Person p: payeesToAdd) {
+        for (Person p: payeesToAdd) {
             try {
                 payees.add(p);
             } catch (DuplicatePersonException e) {

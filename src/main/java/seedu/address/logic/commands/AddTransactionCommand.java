@@ -23,9 +23,9 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_DESCRIPTION + "DESCRIPTION "
             + PREFIX_NAME + "NAME "
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME+ "John Doe "
+            + PREFIX_NAME + "John Doe "
             + PREFIX_AMOUNT + "3456.78 "
-            + PREFIX_DESCRIPTION + "for dinner meal"
+            + PREFIX_DESCRIPTION + "for Ndinner meal"
             + PREFIX_NAME + "Tom Riddle"
             + PREFIX_NAME + "Harry Potter";
 
