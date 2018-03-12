@@ -3,7 +3,8 @@ package seedu.address.logic.parser;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
 import java.util.stream.Stream;
 
@@ -26,19 +27,19 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      */
     public AddTransactionCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_NAME);
+                ArgumentTokenizer.tokenize(args, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_NAME)
+        if (!arePrefixesPresent(argMultimap, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     AddTransactionCommand.MESSAGE_USAGE));
         }
 
         try {
-            Name payerName = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME)).get();
+            Name payerName = ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get();
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
-            Name payeeName = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME)).get();
+            Name payeeName = ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYEE)).get();
 
 
             Transaction transaction = new Transaction(payerName, amount, description, payeeName);

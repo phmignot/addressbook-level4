@@ -9,13 +9,13 @@ import seedu.address.model.person.Address;
  * Represents a Transaction's description in the address book.
  */
 public class Description {
-    public static final String MESSAGE_ADDRESS_CONSTRAINTS =
+    public static final String MESSAGE_DESCRIPTION_CONSTRAINTS =
             "Transaction description can take any values, and it should not be blank";
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String ADDRESS_VALIDATION_REGEX = "[^\\s].*";
+    public static final String DESCRIPTION_VALIDATION_REGEX = "^.+";
 
     public final String value;
 
@@ -26,7 +26,7 @@ public class Description {
      */
     public Description(String description) {
         requireNonNull(description);
-        checkArgument(isValidDescription(description), MESSAGE_ADDRESS_CONSTRAINTS);
+        checkArgument(isValidDescription(description), MESSAGE_DESCRIPTION_CONSTRAINTS);
         this.value = description;
     }
 
@@ -34,7 +34,7 @@ public class Description {
      * Returns true if a given string is a valid person email.
      */
     public static boolean isValidDescription(String test) {
-        return test.matches(ADDRESS_VALIDATION_REGEX);
+        return test.matches(DESCRIPTION_VALIDATION_REGEX);
     }
 
     @Override
