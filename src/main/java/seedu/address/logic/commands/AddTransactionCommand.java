@@ -4,9 +4,9 @@ import static java.util.Objects.requireNonNull;
 
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
-import seedu.address.model.AddressBook;
 import seedu.address.model.transaction.Transaction;
 
 /**
@@ -18,16 +18,15 @@ public class AddTransactionCommand extends UndoableCommand {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a new transaction to the address book. "
             + "Parameters: "
-            + PREFIX_NAME + "NAME "
+            + PREFIX_PAYER + "PAYER NAME "
             + PREFIX_AMOUNT + "AMOUNT "
             + PREFIX_DESCRIPTION + "DESCRIPTION "
-            + PREFIX_NAME + "NAME "
+            + PREFIX_PAYEE + "PAYEE NAME \n"
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME + "John Doe "
+            + PREFIX_PAYER + "John Doe "
             + PREFIX_AMOUNT + "3456.78 "
-            + PREFIX_DESCRIPTION + "for Ndinner meal"
-            + PREFIX_NAME + "Tom Riddle"
-            + PREFIX_NAME + "Harry Potter";
+            + PREFIX_DESCRIPTION + "for dinner meal "
+            + PREFIX_PAYEE + "Tom Riddle ";
 
     public static final String MESSAGE_SUCCESS = "New transaction added";
 
@@ -44,8 +43,8 @@ public class AddTransactionCommand extends UndoableCommand {
     @Override
     public CommandResult executeUndoableCommand() {
         requireNonNull(model);
-        model.resetData(new AddressBook());
-        return new CommandResult(MESSAGE_SUCCESS);
+        model.addTransaction(toAdd);
+        return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
 
     }
 

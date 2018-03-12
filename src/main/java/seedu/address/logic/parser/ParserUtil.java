@@ -202,8 +202,8 @@ public class ParserUtil {
     public static Description parseDescription(String description) throws IllegalValueException {
         requireNonNull(description);
         String trimmedDescription = description.trim();
-        if (!Amount.isValidAmount(trimmedDescription)) {
-            throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
+        if (!Description.isValidDescription(trimmedDescription)) {
+            throw new IllegalValueException(Description.MESSAGE_DESCRIPTION_CONSTRAINTS);
         }
         return new Description(trimmedDescription);
     }
