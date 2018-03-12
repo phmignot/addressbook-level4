@@ -13,7 +13,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.model.Transaction.Transaction;
 import seedu.address.model.transaction.Transaction;
 
 
@@ -31,12 +30,8 @@ public class TransactionListPanel extends UiPart<Region> {
     public TransactionListPanel(ObservableList<Transaction> transactionList) {
       super(FXML);
       setConnections(transactionList);
-      //registerAsAnEventHandler(this);
+      registerAsAnEventHandler(this);
     }
-    
-    /* TO DO: Replace Transaction by Transaction
-    * 
-    */ 
 
     private void setConnections(ObservableList<Transaction> transactionList) {
       ObservableList<TransactionCard> mappedList = EasyBind.map(
