@@ -11,7 +11,6 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Name;
-import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
@@ -41,11 +40,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             Name payeeName = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME)).get();
 
-            UniquePersonList payers = new UniquePersonList();
 
-            UniquePersonList payees = new UniquePersonList();
-
-            Transaction transaction = new Transaction(payers, amount, description, payees);
+            Transaction transaction = new Transaction(payerName, amount, description, payeeName);
 
             return new AddTransactionCommand(transaction);
         } catch (IllegalValueException ive) {
