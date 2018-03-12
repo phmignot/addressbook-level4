@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
+import seedu.address.model.transaction.Transaction;
 
 /**
  * The API of the Model component.
@@ -38,6 +39,9 @@ public interface Model {
 
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
+
+    /** Returns an unmodifiable view of the transaction list */
+    ObservableList<Transaction> getTransactionList();
 
     /**
      * Updates the filter of the filtered person list to filter by the given {@code predicate}.

@@ -36,11 +36,16 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
+    private BrowserPanel browserPanel;
     private Config config;
     private UserPrefs prefs;
 
+
+    //@FXML
+    //private StackPane browserPanelPlaceholder;
+
     @FXML
-    private StackPane transactionListPlaceholder;
+    private StackPane transactionListPanelPlaceholder;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -116,11 +121,15 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        transactionListPanel = new BrowserPanel(logic.getFilteredPersonList());
-        transactionListPlaceholder.getChildren().add(transactionListPanel.getRoot());
 
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        
+        transactionListPanel = new TransactionListPanel(logic.getTransactionList());
+        transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
+
+        //browserPanel = new BrowserPanel(logic.getFilteredPersonList());
+        //browserPanelPlaceholder.getChildren().add(browserPanel.getRoot());
 
         ResultDisplay resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());

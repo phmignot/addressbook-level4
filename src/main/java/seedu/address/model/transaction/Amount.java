@@ -30,7 +30,7 @@ public class Amount {
      */
     public Amount(String amount) {
         requireNonNull(amount);
-        checkArgument(isValidAmount(amount), MESSAGE_ADDRESS_CONSTRAINTS);
+        //checkArgument(isValidAmount(amount), MESSAGE_ADDRESS_CONSTRAINTS);
         this.value = amount;
     }
 

@@ -28,7 +28,7 @@ public class BrowserPanel extends UiPart<Region> {
     private static final String FXML = "BrowserPanel.fxml";
 
     private final Logger logger = LogsCenter.getLogger(PersonListPanel.class);
-//private final Logger logger = LogsCenter.getLogger(this.getClass());
+    //private final Logger logger = LogsCenter.getLogger(this.getClass());
 
 
     @FXML
