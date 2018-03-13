@@ -1,6 +1,8 @@
 package guitests.guihandles;
 
 import javafx.stage.Stage;
+import seedu.address.model.transaction.Transaction;
+import seedu.address.ui.TransactionListPanel;
 
 /**
  * Provides a handle for {@code MainWindow}.
@@ -8,6 +10,7 @@ import javafx.stage.Stage;
 public class MainWindowHandle extends StageHandle {
 
     private final PersonListPanelHandle personListPanel;
+    private final TransactionListPanelHandle transactionListPanel;
     private final ResultDisplayHandle resultDisplay;
     private final CommandBoxHandle commandBox;
     private final StatusBarFooterHandle statusBarFooter;
@@ -18,6 +21,7 @@ public class MainWindowHandle extends StageHandle {
         super(stage);
 
         personListPanel = new PersonListPanelHandle(getChildNode(PersonListPanelHandle.PERSON_LIST_VIEW_ID));
+        transactionListPanel = new TransactionListPanelHandle(getChildNode(TransactionListPanelHandle.TRANSACTION_LIST_VIEW_ID));
         resultDisplay = new ResultDisplayHandle(getChildNode(ResultDisplayHandle.RESULT_DISPLAY_ID));
         commandBox = new CommandBoxHandle(getChildNode(CommandBoxHandle.COMMAND_INPUT_FIELD_ID));
         statusBarFooter = new StatusBarFooterHandle(getChildNode(StatusBarFooterHandle.STATUS_BAR_PLACEHOLDER));
@@ -27,6 +31,10 @@ public class MainWindowHandle extends StageHandle {
 
     public PersonListPanelHandle getPersonListPanel() {
         return personListPanel;
+    }
+    
+    public TransactionListPanelHandle getTransactionListPanel() {
+        return transactionListPanel;
     }
 
     public ResultDisplayHandle getResultDisplay() {

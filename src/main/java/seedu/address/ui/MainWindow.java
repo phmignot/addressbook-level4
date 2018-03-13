@@ -41,8 +41,8 @@ public class MainWindow extends UiPart<Stage> {
     private UserPrefs prefs;
 
 
-    //@FXML
-    //private StackPane browserPanelPlaceholder;
+    @FXML
+    private StackPane browserPanelPlaceholder;
 
     @FXML
     private StackPane transactionListPanelPlaceholder;
@@ -128,8 +128,8 @@ public class MainWindow extends UiPart<Stage> {
         transactionListPanel = new TransactionListPanel(logic.getTransactionList());
         transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
 
-        //browserPanel = new BrowserPanel(logic.getFilteredPersonList());
-        //browserPanelPlaceholder.getChildren().add(browserPanel.getRoot());
+        browserPanel = new BrowserPanel();
+        browserPanelPlaceholder.getChildren().add(browserPanel.getRoot());
 
         ResultDisplay resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -194,12 +194,10 @@ public class MainWindow extends UiPart<Stage> {
         return this.personListPanel;
     }
 
-    /*
-    Used by fomer BrowserPanel
     void releaseResources() {
         browserPanel.freeResources();
     }
-*/
+
     @Subscribe
     private void handleShowHelpEvent(ShowHelpRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
