@@ -20,19 +20,19 @@ Responsibilities: Logic + Storage
 '''
 
 === Steven Jia
-image::steven-jia.jpg[width="150", align="left"]
+image::steven-jia.png[width="150", align="left"]
 {empty}[https://github.com/Steven-Jia[github]]
 
-Role: Project Manager, Developer
+Role: Scheduling and Tracking, Documentation
 Responsibilities: Model + Logic
 
 '''
 
 === Paul-Henri MIGNOT
-image::phmignot.jpg[width="150", align="left"]
+image::phmignot.png[width="150", align="left"]
 {empty}[http://github.com/phmignot[github]]
 
-Role: Documentation
+Role: Integration, Code quality
 Responsibilities: UI
 
 '''
