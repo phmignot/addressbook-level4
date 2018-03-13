@@ -13,7 +13,7 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/CS2103JAN2018-W10-B1/main
 
-By: `Kok Cong, Steven, Paul Henri`      Since: `Jun 2016`      Licence: `MIT`
+By: `Kok Cong, Steven, Paul Henri`      Since: `March 2018`      Licence: `MIT`
 
 == Introduction
 
