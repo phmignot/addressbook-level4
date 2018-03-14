@@ -61,8 +61,8 @@ public class TransactionListPanelHandle extends NodeHandle<ListView<TransactionC
      */
     public void navigateToCard(Transaction transaction) {
         List<TransactionCard> cards = getRootNode().getItems();
-        Optional<TransactionCard> matchingCard = cards.stream().filter(
-                card -> card.transaction.equals(transaction)).findFirst();
+        Optional<TransactionCard> matchingCard
+                = cards.stream().filter(card -> card.transaction.equals(transaction)).findFirst();
 
         if (!matchingCard.isPresent()) {
             throw new IllegalArgumentException("Transaction does not exist.");
