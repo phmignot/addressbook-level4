@@ -1,8 +1,6 @@
 package guitests.guihandles;
 
 import javafx.stage.Stage;
-import seedu.address.model.transaction.Transaction;
-import seedu.address.ui.TransactionListPanel;
 
 /**
  * Provides a handle for {@code MainWindow}.
@@ -32,7 +30,6 @@ public class MainWindowHandle extends StageHandle {
     public PersonListPanelHandle getPersonListPanel() {
         return personListPanel;
     }
-    
     public TransactionListPanelHandle getTransactionListPanel() {
         return transactionListPanel;
     }
