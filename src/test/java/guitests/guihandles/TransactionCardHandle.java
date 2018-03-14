@@ -64,7 +64,6 @@ public class TransactionCardHandle extends NodeHandle<Node> {
     public String getPayee() {
         return payeeLabel.getText();
     }
-    
     /*
     public List<String> getTags() {
         return tagLabels
