@@ -1,4 +1,3 @@
-//@phmignot
 package seedu.address.testutil;
 
 import seedu.address.model.person.Name;
@@ -6,6 +5,7 @@ import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
 
+//@phmignot
 /**
  * A utility class to help with building Transaction objects.
  */

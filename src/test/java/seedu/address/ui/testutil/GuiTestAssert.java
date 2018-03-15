@@ -40,6 +40,7 @@ public class GuiTestAssert {
         assertEquals(expectedCard.getPayee(), actualCard.getPayee());
     }
 
+    //@phmignot
     /**
      * Asserts that {@code actualCard} displays the details of {@code expectedPerson}.
      */
@@ -85,6 +86,7 @@ public class GuiTestAssert {
         assertEquals(expected, resultDisplayHandle.getText());
     }
 
+    //@phmignot
     /**
      * Asserts that {@code actualCard} displays the details of {@code expectedTransaction}.
      */
