@@ -24,7 +24,7 @@ public class TransactionCardHandle extends NodeHandle<Node> {
     private final Label amountLabel;
     private final Label descriptionLabel;
     private final Label payeeLabel;
-    //private final List<Label> tagLabels;
+    //private final List<Label> payeeLabels;
 
     public TransactionCardHandle(Node cardNode) {
         super(cardNode);
