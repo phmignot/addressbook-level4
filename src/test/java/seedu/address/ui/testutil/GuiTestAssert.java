@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import guitests.guihandles.PersonCardHandle;
 import guitests.guihandles.PersonListPanelHandle;
 import guitests.guihandles.ResultDisplayHandle;
+import guitests.guihandles.TransactionCardHandle;
 import seedu.address.model.person.Person;
+import seedu.address.model.transaction.Transaction;
 
 /**
  * A set of assertion methods useful for writing GUI tests.
@@ -24,6 +26,18 @@ public class GuiTestAssert {
         assertEquals(expectedCard.getName(), actualCard.getName());
         assertEquals(expectedCard.getPhone(), actualCard.getPhone());
         assertEquals(expectedCard.getTags(), actualCard.getTags());
+    }
+
+    //@phmignot
+    /**
+     * Asserts that {@code actualTransactionCard} displays the same values as {@code expectedTransactionCard}.
+     */
+    public static void assertCardEquals(TransactionCardHandle expectedCard, TransactionCardHandle actualCard) {
+        assertEquals(expectedCard.getId(), actualCard.getId());
+        assertEquals(expectedCard.getPayer(), actualCard.getPayer());
+        assertEquals(expectedCard.getAmount(), actualCard.getAmount());
+        assertEquals(expectedCard.getDescription(), actualCard.getDescription());
+        assertEquals(expectedCard.getPayee(), actualCard.getPayee());
     }
 
     /**
@@ -69,5 +83,16 @@ public class GuiTestAssert {
      */
     public static void assertResultMessage(ResultDisplayHandle resultDisplayHandle, String expected) {
         assertEquals(expected, resultDisplayHandle.getText());
+    }
+
+    /**
+     * Asserts that {@code actualCard} displays the details of {@code expectedTransaction}.
+     */
+    public static void assertCardDisplaysTransaction(Transaction expectedTransaction,
+                                                     TransactionCardHandle actualCard) {
+        assertEquals(expectedTransaction.getPayer().fullName, actualCard.getPayer());
+        assertEquals(expectedTransaction.getAmount().value, actualCard.getAmount());
+        assertEquals(expectedTransaction.getDescription().value, actualCard.getDescription());
+        assertEquals(expectedTransaction.getPayee().fullName, actualCard.getPayee());
     }
 }
