@@ -42,9 +42,6 @@ public class TransactionCardTest extends GuiUnitTest {
         // different transaction, same index -> returns false
         Transaction differentTransaction = new TransactionBuilder().withPayerName("differentPayer").build();
         assertFalse(transactionCard.equals(new TransactionCard(differentTransaction, 0)));
-
-        // same transaction, different index -> returns false
-        assertFalse(transactionCard.equals(new TransactionCard(transaction, 1)));
     }
 
     /**
