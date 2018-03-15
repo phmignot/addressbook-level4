@@ -13,7 +13,7 @@ public class TransactionBuilder {
 
     public static final String DEFAULT_PAYER_NAME = "Alice Pauline";
     public static final String DEFAULT_AMOUNT = "123.45";
-    public static final String DEFAULT_DESCRIPTION = "";
+    public static final String DEFAULT_DESCRIPTION = "paying for Cookies";
     public static final String DEFAULT_PAYEE_NAME = "Bob Jacques";
 
     private Name payerName;
