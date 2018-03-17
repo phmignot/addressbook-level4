@@ -50,7 +50,7 @@ public class TransactionList implements Iterable<Transaction> {
     public int hashCode() {
         return internalList.hashCode();
     }
-    
+
     //phmignot
     /**
      * Removes the equivalent transaction from the list of transactions.
