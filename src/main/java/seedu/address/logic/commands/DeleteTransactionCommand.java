@@ -1,13 +1,17 @@
 package seedu.address.logic.commands;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.List;
+import java.util.Objects;
+
+import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
-import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
-
+//@phmignot
 /**
  * Deletes a transaction identified using its displayed index from the list of transactions.
  */
@@ -42,18 +46,18 @@ public class DeleteTransactionCommand extends UndoableCommand {
 
             return new CommandResult(String.format(MESSAGE_DELETE_TRANSACTION_SUCCESS, transactionToDelete));
         }
-        /*
+        
         @Override
         protected void preprocessUndoableCommand() throws CommandException {
-            List<Transaction> lastShownList = model.getFilteredTransactionList();
+            List<Transaction> lastShownList = model.getTransactionList();
 
             if (targetIndex.getZeroBased() >= lastShownList.size()) {
-                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                throw new CommandException(Messages.MESSAGE_INVALID_TRANSACTION_DISPLAYED_INDEX);
             }
 
             transactionToDelete = lastShownList.get(targetIndex.getZeroBased());
         }
-        */
+        
         @Override
         public boolean equals(Object other) {
             return other == this // short circuit if same object
