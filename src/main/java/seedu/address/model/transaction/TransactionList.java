@@ -7,6 +7,7 @@ import java.util.Iterator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 /**
  * Recard all transactions to the list.
@@ -48,5 +49,20 @@ public class TransactionList implements Iterable<Transaction> {
     @Override
     public int hashCode() {
         return internalList.hashCode();
+    }
+
+    //phmignot
+    /**
+     * Removes the equivalent transaction from the list of transactions.
+     *
+     * @throws TransactionNotFoundException if no such transaction could be found in the list.
+     */
+    public boolean remove(Transaction toRemove) throws TransactionNotFoundException {
+        requireNonNull(toRemove);
+        final boolean transactionFoundAndDeleted = internalList.remove(toRemove);
+        if (!transactionFoundAndDeleted) {
+            throw new TransactionNotFoundException();
+        }
+        return transactionFoundAndDeleted;
     }
 }
