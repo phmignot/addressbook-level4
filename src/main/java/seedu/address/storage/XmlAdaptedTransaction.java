@@ -11,7 +11,9 @@ import seedu.address.model.person.Name;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
-
+/**
+ * JAXB-friendly adapted version of the Transaction.
+ */
 public class XmlAdaptedTransaction {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
@@ -81,7 +83,8 @@ public class XmlAdaptedTransaction {
         final Amount amount = new Amount(this.amount);
 
         if (this.description == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Description.class.getSimpleName()));
+            throw new IllegalValueException(String.format
+                    (MISSING_FIELD_MESSAGE_FORMAT, Description.class.getSimpleName()));
         }
         if (!Description.isValidDescription(this.description)) {
             throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
@@ -96,7 +99,7 @@ public class XmlAdaptedTransaction {
         }
         final Name payee = new Name(this.payee);
 
-        return new Transaction( payer, amount, description, payee);
+        return new Transaction(payer, amount, description, payee);
     }
 
     @Override
