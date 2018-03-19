@@ -794,8 +794,8 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Kok Cong Ong*
 
-* Major feature:
-* Minor feature:
+* Major feature: Allow user to categorise their spending into different categories, so as to allow the ease of tracking what they spent most on
+* Minor feature: Allow user to edit their added transaction 
 
 *Paul Mignot*
 
