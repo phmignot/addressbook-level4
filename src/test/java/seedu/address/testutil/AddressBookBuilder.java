@@ -1,13 +1,15 @@
 package seedu.address.testutil;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.address.testutil.TypicalPersons.getTypicalPersons;
+import static seedu.address.testutil.TypicalTransactions.getTypicalTransactions;
+
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Transaction;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A utility class to help with building Addressbook objects.
@@ -61,5 +63,23 @@ public class AddressBookBuilder {
     }
     public AddressBook build() {
         return addressBook;
+    }
+
+    /**
+     * Returns an {@code AddressBook} with all the typical persons.
+     */
+    public static AddressBook getTypicalAddressBook() {
+        AddressBook ab = new AddressBook();
+        for (Person person : getTypicalPersons()) {
+            try {
+                ab.addPerson(person);
+            } catch (DuplicatePersonException e) {
+                throw new AssertionError("not possible");
+            }
+        }
+        for (Transaction transaction : getTypicalTransactions()) {
+            ab.addTransaction(transaction);
+        }
+        return ab;
     }
 }
