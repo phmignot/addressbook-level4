@@ -499,14 +499,14 @@ b. Require developers to download those libraries manually (this creates extra w
 
 [[GetStartedProgramming]]
 [appendix]
-== Suggested Programming Tasks to Get Started
+== Developing New Features
 
-Suggested path for new programmers:
+1. Ong Kok Cong:
 
-1. First, add small local-impact (i.e. the impact of the change does not go beyond the component) enhancements to one component at a time. Some suggestions are given in <<GetStartedProgramming-EachComponent>>.
-
-2. Next, add a feature that touches multiple components to learn how to implement an end-to-end feature across all components. <<GetStartedProgramming-RemarkCommand>> explains how to go about adding such a feature.
-
+Major Feature: Allow User to specify the type of expense spent on
+               - allow the user to keep track of his/her spending for better planning in the trip
+Minor Feature: Allow User to edit the an added transaction
+               - so the user can amend the transaction in the even any error such as the wrong amount was added
 [[GetStartedProgramming-EachComponent]]
 === Improving each component
 
