@@ -5,6 +5,9 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.transaction.Transaction;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A utility class to help with building Addressbook objects.
@@ -47,6 +50,15 @@ public class AddressBookBuilder {
         return this;
     }
 
+    //@phmignot
+    /**
+     * Adds a new {@code transaction} to the {@code AddressBook} that we are building.
+     */
+    public AddressBookBuilder withTransaction(Transaction transaction) {
+        requireNonNull(transaction);
+        addressBook.addTransaction(transaction);
+        return this;
+    }
     public AddressBook build() {
         return addressBook;
     }
