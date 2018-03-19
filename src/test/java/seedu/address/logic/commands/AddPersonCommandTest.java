@@ -132,7 +132,7 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public ObservableList<Transaction> getTransactionList() {
+        public ObservableList<Transaction> getFilteredTransactionList() {
             return null;
         }
 
@@ -147,6 +147,8 @@ public class AddPersonCommandTest {
         @Override
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
     }
+
+    public class ModelStubImpl extends ModelStub { }
 
     /**
      * A Model stub that always throw a DuplicatePersonException when trying to add a person.

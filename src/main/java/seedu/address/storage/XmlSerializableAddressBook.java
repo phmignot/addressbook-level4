@@ -3,6 +3,7 @@ package seedu.address.storage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,6 +21,10 @@ public class XmlSerializableAddressBook {
     private List<XmlAdaptedPerson> persons;
     @XmlElement
     private List<XmlAdaptedTag> tags;
+    @XmlElement
+    private List<XmlAdaptedTransaction> transactions;
+
+
 
     /**
      * Creates an empty XmlSerializableAddressBook.
@@ -28,6 +33,7 @@ public class XmlSerializableAddressBook {
     public XmlSerializableAddressBook() {
         persons = new ArrayList<>();
         tags = new ArrayList<>();
+        transactions = new ArrayList<>();
     }
 
     /**
@@ -37,6 +43,9 @@ public class XmlSerializableAddressBook {
         this();
         persons.addAll(src.getPersonList().stream().map(XmlAdaptedPerson::new).collect(Collectors.toList()));
         tags.addAll(src.getTagList().stream().map(XmlAdaptedTag::new).collect(Collectors.toList()));
+        transactions.addAll(src.getTransactionList().stream().map(XmlAdaptedTransaction::new).collect(Collectors.toList()));
+
+
     }
 
     /**
@@ -53,6 +62,10 @@ public class XmlSerializableAddressBook {
         for (XmlAdaptedPerson p : persons) {
             addressBook.addPerson(p.toModelType());
         }
+        for (XmlAdaptedTransaction tr : transactions) {
+            addressBook.addTransaction(tr.toModelType());
+        }
+
         return addressBook;
     }
 
