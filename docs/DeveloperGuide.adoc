@@ -789,6 +789,24 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Value proposition*: simplify the shared expense budgeting process and reduce the number of "pay-back" transactions between individuals to only 1
 
+[[GetStartedProgramming-FeatureContribution]]
+=== Feature Contribution
+
+*Kok Cong Ong*
+
+* Major feature:
+* Minor feature:
+
+*Paul Mignot*
+
+* Major feature:
+* Minor feature:
+
+*Wen Qin Jia*
+
+* Major feature:
+* Minor feature: 
+
 [appendix]
 == User Stories
 
