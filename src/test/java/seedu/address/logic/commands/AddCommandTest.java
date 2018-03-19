@@ -25,6 +25,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
@@ -142,6 +143,9 @@ public class AddCommandTest {
 
         @Override
         public void addTransaction(Transaction transaction) {}
+
+        @Override
+        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
     }
 
     /**

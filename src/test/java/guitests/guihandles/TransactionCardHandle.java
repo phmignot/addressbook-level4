@@ -1,30 +1,28 @@
 package guitests.guihandles;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-//import javafx.scene.layout.Region;
+import javafx.scene.layout.Region;
 
-//import java.util.List;
-//import java.util.stream.Collectors;
-
-
+//@phmignot
 /**
  * Provides a handle to a transaction card in the transaction list panel.
  */
 public class TransactionCardHandle extends NodeHandle<Node> {
-    private static final String ID_FIELD_ID = "#id";
-    private static final String PAYER_FIELD_ID = "#payer";
+    private static final String ID_FIELD_ID = "#idDisplay";
+    private static final String PAYER_FIELD_ID = "#payerName";
     private static final String AMOUNT_FIELD_ID = "#amount";
     private static final String DESCRIPTION_FIELD_ID = "#description";
-    private static final String PAYEE_FIELD_ID = "#payee";
-    //private static final String TAGS_FIELD_ID = "#tags";
+    private static final String PAYEES_FIELD_ID = "#payees";
 
     private final Label idLabel;
     private final Label payerLabel;
     private final Label amountLabel;
     private final Label descriptionLabel;
-    private final Label payeeLabel;
-    //private final List<Label> tagLabels;
+    private final List<Label> payeesLabel;
 
     public TransactionCardHandle(Node cardNode) {
         super(cardNode);
@@ -33,16 +31,13 @@ public class TransactionCardHandle extends NodeHandle<Node> {
         this.payerLabel = getChildNode(PAYER_FIELD_ID);
         this.amountLabel = getChildNode(AMOUNT_FIELD_ID);
         this.descriptionLabel = getChildNode(DESCRIPTION_FIELD_ID);
-        this.payeeLabel = getChildNode(PAYEE_FIELD_ID);
-
-        /*
-        Region tagsContainer = getChildNode(TAGS_FIELD_ID);
-        this.tagLabels = tagsContainer
+        Region payeesContainer = getChildNode(PAYEES_FIELD_ID);
+        this.payeesLabel = payeesContainer
                 .getChildrenUnmodifiable()
                 .stream()
                 .map(Label.class::cast)
                 .collect(Collectors.toList());
-        */
+
     }
 
     public String getId() {
@@ -62,15 +57,7 @@ public class TransactionCardHandle extends NodeHandle<Node> {
     }
 
     public String getPayee() {
-        return payeeLabel.getText();
+        return payeesLabel.get(0).getText();
     }
-    /*
-    public List<String> getTags() {
-        return tagLabels
-                .stream()
-                .map(Label::getText)
-                .collect(Collectors.toList());
-    }
-    */
 }
 

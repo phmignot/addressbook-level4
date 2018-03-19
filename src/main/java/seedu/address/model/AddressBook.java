@@ -19,6 +19,8 @@ import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
+
 
 /**
  * Wraps all data at the address-book level
@@ -197,4 +199,17 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
+
+    /**
+     * Removes {@code target} from the list of transactions.
+     * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
+     */
+    public boolean removeTransaction(Transaction target) throws TransactionNotFoundException {
+        if (transactions.remove(target)) {
+            return true;
+        } else {
+            throw new TransactionNotFoundException();
+        }
+    }
+
 }

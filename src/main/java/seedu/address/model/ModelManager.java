@@ -16,6 +16,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -113,6 +114,13 @@ public class ModelManager extends ComponentManager implements Model {
     public void addTransaction(Transaction transaction) {
         addressBook.addTransaction(transaction);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        indicateAddressBookChanged();
+    }
+
+    //@phmignot
+    @Override
+    public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
+        addressBook.removeTransaction(target);
         indicateAddressBookChanged();
     }
 
