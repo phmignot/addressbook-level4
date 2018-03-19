@@ -65,6 +65,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.tags.setTags(tags);
     }
 
+    //@phmignot
+    public void setTransactions(ObservableList<Transaction> transactions) {
+        this.transactions.setTransactions(transactions);
+    }
+
     /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
      */
@@ -74,6 +79,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         List<Person> syncedPersonList = newData.getPersonList().stream()
                 .map(this::syncWithMasterTagList)
                 .collect(Collectors.toList());
+        setTransactions(newData.getTransactionList());
 
         try {
             setPersons(syncedPersonList);

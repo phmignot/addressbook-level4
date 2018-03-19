@@ -65,4 +65,14 @@ public class TransactionList implements Iterable<Transaction> {
         }
         return transactionFoundAndDeleted;
     }
+
+    //@phmignot
+
+    /**
+     * Replaces the list of transactions by a input list of transaction.
+     * @param transactions that will be the new transactions' list.
+     */
+    public void setTransactions(ObservableList<Transaction> transactions) {
+        this.internalList.setAll(transactions);
+    }
 }
