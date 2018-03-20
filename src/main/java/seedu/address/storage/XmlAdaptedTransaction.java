@@ -5,8 +5,6 @@ import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
@@ -60,7 +58,7 @@ public class XmlAdaptedTransaction {
     }
 
     /**
-     * Converts this jaxb-friendly adapted person object into the model's Transaction object.
+     * Converts this jaxb-friendly adapted transaction's object into the model's Transaction object.
      *
      * @throws IllegalValueException if there were any data constraints violated in the adapted Transaction
      */
@@ -88,7 +86,7 @@ public class XmlAdaptedTransaction {
                     (MISSING_FIELD_MESSAGE_FORMAT, Description.class.getSimpleName()));
         }
         if (!Description.isValidDescription(this.description)) {
-            throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
+            throw new IllegalValueException(Description.MESSAGE_DESCRIPTION_CONSTRAINTS);
         }
         final Description description = new Description(this.description);
 
@@ -96,7 +94,7 @@ public class XmlAdaptedTransaction {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
         }
         if (!Name.isValidName(this.payee)) {
-            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
+            throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
         }
         final Name payee = new Name(this.payee);
 

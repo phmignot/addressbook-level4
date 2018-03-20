@@ -64,11 +64,11 @@ public class Transaction {
         final StringBuilder builder = new StringBuilder();
         builder.append(" Transaction paid by: ")
                 .append(getPayer().toString())
-                .append("\n Amount: ")
+                .append("\r\n Amount: ")
                 .append(getAmount().toString())
-                .append("\n Description: ")
+                .append("\r\n Description: ")
                 .append(getDescription().toString())
-                .append("\n Payees: ")
+                .append("\r\n Payees: ")
                 .append(getPayee().toString());
         return builder.toString();
     }

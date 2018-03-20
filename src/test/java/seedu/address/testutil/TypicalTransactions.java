@@ -19,6 +19,14 @@ public class TypicalTransactions {
             .withAmount("123").withDescription("for dinner")
             .withPayeeName("Brandon Ingram").build();
 
+    // Manually added
+    public static final Transaction FOUR = new TransactionBuilder().withPayeeName("Alice Pauline")
+            .withAmount("9999").withDescription("for transport")
+            .withPayeeName("Brandon Ingram").build();
+    public static final Transaction FIVE = new TransactionBuilder().withPayeeName("Alice Pauline")
+            .withAmount("9999").withDescription("for dinner")
+            .withPayeeName("Brandon Ingram").build();
+
     private TypicalTransactions() {} // prevents instantiation
 
     /**

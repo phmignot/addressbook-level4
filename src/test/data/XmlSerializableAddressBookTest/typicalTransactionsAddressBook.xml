@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- AddressBook save file which contains the same Person values as in
+{@code TypicalPersons#getTypicalAddressBook()}-->
+<addressbook>
+    <transactions>
+        <payer>Alice Pauline</payer>
+        <amount>85355255</amount>
+        <description>for lunch meal</description>
+        <payee>Brandon Ingram</payee>
+    </transactions>
+</addressbook>

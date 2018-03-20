@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addressbook>
+    <!-- Transaction with invalid payer field -->
+    <persons>
+        <payer>Ha!ns Mu@ster</payer>
+        <amount isPrivate="false">9482424.3</amount>
+        <description isPrivate="false">for lunch and dinner</description>
+        <payee isPrivate="false">Kobe Bryant</payee>
+    </persons>
+</addressbook>

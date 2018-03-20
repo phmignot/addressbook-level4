@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Person with invalid amount field -->
+<addressbook>
+    <transactions>
+        <payer>Alice Pauline</payer>
+        <amount>8.5.5</amount>
+        <description>for lunch meal</description>
+        <payee>Brandon Ingram</payee>
+    </transactions>
+</addressbook>
