@@ -1,4 +1,4 @@
-= AddressBook Level 4 - Developer Guide
+= SmartSplit - Developer Guide
 :toc:
 :toc-title:
 :toc-placement: preamble
@@ -789,6 +789,24 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Value proposition*: simplify the shared expense budgeting process and reduce the number of "pay-back" transactions between individuals to only 1
 
+[[GetStartedProgramming-FeatureContribution]]
+=== Feature Contribution
+
+*Kok Cong Ong*
+
+* Major feature:
+* Minor feature:
+
+*Paul Mignot*
+
+* Major feature:
+* Minor feature:
+
+*Wen Qin Jia*
+
+* Major feature:
+* Minor feature: 
+
 [appendix]
 == User Stories
 
@@ -811,7 +829,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |specify the type/category of my expense (food, accommodation, transport etc) when adding it |keep better track of my expenses
 
-|`* * *` |user | search for a specific expense |quickly find the transaction that I am interested in
+|`* * *` |user |search for a specific expense |quickly find the transaction that I am interested in
 
 |`* * *` |user |filter transactions by various criteria |see similar transactions grouped together
 
@@ -931,10 +949,9 @@ _{More to be added}_
 == Non Functional Requirements
 
 .  Should work on any <<mainstream-os,mainstream OS>> as long as it has Java `1.8.0_60` or higher installed.
-.  Should be able to hold up to 100 users without a noticeable sluggishness in performance for typical usage.
+.  Should be able to hold up to 100 users without a noticeable sluggishness (i.e. delay of more than 3 seconds) in performance for typical usage.
 .  Should be able to hold up to 1000 transactions per group without a noticeable sluggishness in performance for typical usage.
 .  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-.  The size of group cannot be smaller than 2.
 .  Should respond to user input within 3 seconds.
 .  Should work in both 32-bit and 64-bit environments.
 .  Should be usable by a novice who has never used this system before.

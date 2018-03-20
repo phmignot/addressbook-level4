@@ -15,6 +15,8 @@ import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
+import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -81,6 +83,16 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
     }
 
+
+    /**
+     * Returns an unmodifiable view of the list of {@code Transaction}
+     */
+    @Override
+    public ObservableList<Transaction> getTransactionList() {
+        //TO DO: properly match the work from here
+        return addressBook.getTransactionList();
+    }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
@@ -96,6 +108,20 @@ public class ModelManager extends ComponentManager implements Model {
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+
+    @Override
+    public void addTransaction(Transaction transaction) {
+        addressBook.addTransaction(transaction);
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        indicateAddressBookChanged();
+    }
+
+    //@phmignot
+    @Override
+    public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
+        addressBook.removeTransaction(target);
+        indicateAddressBookChanged();
     }
 
     @Override

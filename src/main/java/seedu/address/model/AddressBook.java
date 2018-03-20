@@ -17,6 +17,10 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionList;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
+
 
 /**
  * Wraps all data at the address-book level
@@ -26,6 +30,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
     private final UniqueTagList tags;
+    private final TransactionList transactions;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -37,6 +42,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     {
         persons = new UniquePersonList();
         tags = new UniqueTagList();
+        transactions = new TransactionList();
     }
 
     public AddressBook() {}
@@ -172,6 +178,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public ObservableList<Transaction> getTransactionList() {
+        return transactions.asObservableList();
+    }
+
+    @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof AddressBook // instanceof handles nulls
@@ -184,4 +195,21 @@ public class AddressBook implements ReadOnlyAddressBook {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
     }
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
+
+    /**
+     * Removes {@code target} from the list of transactions.
+     * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
+     */
+    public boolean removeTransaction(Transaction target) throws TransactionNotFoundException {
+        if (transactions.remove(target)) {
+            return true;
+        } else {
+            throw new TransactionNotFoundException();
+        }
+    }
+
 }
