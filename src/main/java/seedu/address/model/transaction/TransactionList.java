@@ -1,6 +1,7 @@
 package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Iterator;
 
@@ -64,5 +65,15 @@ public class TransactionList implements Iterable<Transaction> {
             throw new TransactionNotFoundException();
         }
         return transactionFoundAndDeleted;
+    }
+
+    //@phmignot
+    /**
+     * Replaces the list of transactions by a input list of transaction.
+     * @param transactions that will be the new transactions' list.
+     */
+    public void setTransactions(ObservableList<Transaction> transactions) {
+        requireAllNonNull(transactions);
+        this.internalList.setAll(transactions);
     }
 }
