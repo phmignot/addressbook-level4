@@ -12,16 +12,12 @@ import seedu.address.model.transaction.Transaction;
  */
 public class TypicalTransactions {
 
-    public static final Transaction T1 = new TransactionBuilder().withPayeeName("Alice Pauline")
-            .withAmount("123.45").withDescription("for lunch meal")
-            .withPayeeName("Brandon Ingram").build();
-    public static final Transaction T2 = new TransactionBuilder().withPayeeName("Alice Pauline")
-            .withAmount("123.00").withDescription("for transport")
-            .withPayeeName("Brandon Ingram").build();
-    public static final Transaction T3 = new TransactionBuilder().withPayeeName("Alice Pauline")
-            .withAmount("123").withDescription("for dinner")
-            .withPayeeName("Brandon Ingram").build();
-
+    public static final Transaction T1 = new TransactionBuilder().withPayerName("Alice Dupree").withAmount("5.62")
+            .withDescription("Boat trip").withPayeeName("John Remi").build();
+    public static final Transaction T2 = new TransactionBuilder().withPayerName("Joseph Marie").withAmount("123.45")
+            .withDescription("Food for barbecue").withPayerName("Marie Joe").build();
+    public static final Transaction T3 = new TransactionBuilder().withPayerName("Damien Francois").withAmount("10.00")
+            .withDescription("Open air concert").withPayeeName("Patrick Bruel").build();
     // Manually added
     public static final Transaction T4 = new TransactionBuilder().withPayeeName("Alice Pauline")
             .withAmount("9999").withDescription("for transport")
@@ -42,6 +38,7 @@ public class TypicalTransactions {
         }
         return ab;
     }
+
 
     public static List<Transaction> getTypicalTransactions() {
         return new ArrayList<>(Arrays.asList(T1, T2, T3));

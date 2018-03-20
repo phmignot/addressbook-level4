@@ -10,7 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
-//@authoer ongkc
+//@author ongkc
 /**
  * Recard all transactions to the list.
  *
@@ -67,7 +67,11 @@ public class TransactionList implements Iterable<Transaction> {
         }
         return transactionFoundAndDeleted;
     }
-
+    //@phmignot
+    /**
+     * Replaces the list of transactions by a input list of transaction.
+     * @param transactions that will be the new transactions' list.
+     */
     public void setTransactions(List<Transaction> transactions) {
         requireAllNonNull(transactions);
         internalList.setAll(transactions);
