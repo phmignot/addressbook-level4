@@ -3,8 +3,10 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +14,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -84,6 +87,22 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
 
+    //@@author steven-jia
+    @Override
+    public Person findPerson(Name name) throws PersonNotFoundException {
+        Set<Person> matchingPersons = addressBook.getPersonList()
+                .stream()
+                .filter(person -> person.getName().equals(name))
+                .collect(Collectors.toSet());
+
+        if (!matchingPersons.isEmpty()) {
+            return matchingPersons.iterator().next();
+        } else {
+            throw new PersonNotFoundException();
+        }
+    }
+
+    //@@author
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */

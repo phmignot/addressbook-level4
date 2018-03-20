@@ -5,6 +5,9 @@ import static org.junit.Assert.fail;
 
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
+import seedu.address.model.ModelManagerTest;
 
 /**
  * Contains helper methods for testing command parsers.
@@ -17,7 +20,7 @@ public class CommandParserTestUtil {
      */
     public static void assertParseSuccess(Parser parser, String userInput, Command expectedCommand) {
         try {
-            Command command = parser.parse(userInput);
+            Command command = parser.parse(userInput, new ModelManager());
             assertEquals(expectedCommand, command);
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Invalid userInput.", pe);
@@ -30,7 +33,7 @@ public class CommandParserTestUtil {
      */
     public static void assertParseFailure(Parser parser, String userInput, String expectedMessage) {
         try {
-            parser.parse(userInput);
+            parser.parse(userInput, new ModelManager());
             fail("The expected ParseException was not thrown.");
         } catch (ParseException pe) {
             assertEquals(expectedMessage, pe.getMessage());

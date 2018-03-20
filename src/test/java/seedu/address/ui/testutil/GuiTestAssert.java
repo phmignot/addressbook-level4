@@ -28,7 +28,7 @@ public class GuiTestAssert {
         assertEquals(expectedCard.getTags(), actualCard.getTags());
     }
 
-    //@phmignot
+    //@@author phmignot
     /**
      * Asserts that {@code actualTransactionCard} displays the same values as {@code expectedTransactionCard}.
      */
@@ -37,10 +37,10 @@ public class GuiTestAssert {
         assertEquals(expectedCard.getPayer(), actualCard.getPayer());
         assertEquals(expectedCard.getAmount(), actualCard.getAmount());
         assertEquals(expectedCard.getDescription(), actualCard.getDescription());
-        assertEquals(expectedCard.getPayee(), actualCard.getPayee());
+        assertEquals(expectedCard.getPayees(), actualCard.getPayees());
     }
 
-    //@phmignot
+    //@@author phmignot
     /**
      * Asserts that {@code actualCard} displays the details of {@code expectedPerson}.
      */
@@ -86,15 +86,21 @@ public class GuiTestAssert {
         assertEquals(expected, resultDisplayHandle.getText());
     }
 
-    //@phmignot
+    //@@author phmignot
     /**
      * Asserts that {@code actualCard} displays the details of {@code expectedTransaction}.
      */
     public static void assertCardDisplaysTransaction(Transaction expectedTransaction,
                                                      TransactionCardHandle actualCard) {
-        assertEquals(expectedTransaction.getPayer().fullName, actualCard.getPayer());
+        assertEquals(expectedTransaction.getPayer().getName().fullName, actualCard.getPayer());
         assertEquals(expectedTransaction.getAmount().value, actualCard.getAmount());
         assertEquals(expectedTransaction.getDescription().value, actualCard.getDescription());
-        assertEquals(expectedTransaction.getPayee().fullName, actualCard.getPayee());
+
+        String expectedPayeesString = "";
+        for (Person expectedPayee: expectedTransaction.getPayees().asObservableList()) {
+            expectedPayeesString = expectedPayeesString + expectedPayee.getName().fullName + ", ";
+        }
+
+        assertEquals(expectedPayeesString, actualCard.getPayees());
     }
 }

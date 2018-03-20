@@ -5,9 +5,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 
-//@phmignot
+import java.util.Iterator;
+
+//@@author phmignot
 /**
  * An UI component that displays information of a {@code Transaction}.
  */
@@ -33,12 +36,13 @@ public class TransactionCard extends UiPart<Region> {
         super(FXML);
         this.transaction = transaction;
         idDisplay.setText(displayedIndex + ". ");
-        //payerName.setText(transaction.getPayer().getName().fullName);
-        payerName.setText(transaction.getPayer().fullName);
+        payerName.setText(transaction.getPayer().getName().fullName);
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
-        //transaction.getPayees().forEach(payee -> payees.getChildren().add(new Label(payee.getName().fullName)));
-        payees.getChildren().add(new Label(transaction.getPayee().fullName));
+        for (Person payee : transaction.getPayees()) {
+            payees.getChildren().add(new Label(payee.getName().fullName));
+            payees.getChildren().add(new Label(", "));
+        }
     }
 
     @Override

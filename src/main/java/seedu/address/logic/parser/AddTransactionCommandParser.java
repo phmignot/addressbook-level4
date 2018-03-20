@@ -6,12 +6,16 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Name;
+import seedu.address.model.Model;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
@@ -25,7 +29,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      * and returns an AddTransactionCommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
-    public AddTransactionCommand parse(String args) throws ParseException {
+    public AddTransactionCommand parse(String args, Model model) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE);
 
@@ -36,22 +40,37 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         }
 
         try {
-            Name payerName = ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get();
+            Person payer = model.findPerson(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
-            Name payeeName = ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYEE)).get();
+            UniquePersonList payees = getPayeesList(argMultimap, model);
 
-
-            Transaction transaction = new Transaction(payerName, amount, description, payeeName);
-
+            Transaction transaction = new Transaction(payer, amount, description, payees);
             return new AddTransactionCommand(transaction);
+        } catch (PersonNotFoundException pnfe) {
+            throw new AssertionError("The specified payer or payee(s) do not exist");
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
     }
 
+    //@@author steven-jia
+    private UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
+            throws IllegalValueException, PersonNotFoundException {
+        UniquePersonList payees = new UniquePersonList();
+        List<String> payeeNamesToAdd = argMultimap.getAllValues(PREFIX_PAYEE);
 
+        if (!payeeNamesToAdd.isEmpty()) {
+            for (String payeeName: payeeNamesToAdd) {
+                payees.add(model.findPerson(ParserUtil.parseName(payeeName)));
+            }
+        } else {
+            throw new IllegalValueException("No payees were specified");
+        }
+        return payees;
+    }
 
+    //@@author
     /**
      * Returns true if none of the prefixes contains empty {@code Optional} values in the given
      * {@code ArgumentMultimap}.
@@ -59,7 +78,6 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
-
 
 }
 

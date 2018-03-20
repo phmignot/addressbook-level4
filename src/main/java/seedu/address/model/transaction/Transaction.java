@@ -1,10 +1,11 @@
+//@@author steven-jia
 package seedu.address.model.transaction;
 
-import java.util.Date;
-import java.util.Objects;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.model.person.Person;
@@ -12,7 +13,7 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
- * Represents a Transaction in SmartSplit   .
+ * Represents a Transaction in SmartSplit.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
 public class Transaction {
@@ -22,20 +23,20 @@ public class Transaction {
     private final Integer id;
     private final Date dateTime;
     private final Person payer;
-    private final Double amount;
-    private final String description;
+    private final Amount amount;
+    private final Description description;
     private final UniquePersonList payees;
 
-    public Transaction(Person payer, Double amount, String description, UniquePersonList payees) {
-        this.id = lastTransactionId++;
+    public Transaction(Person payer, Amount amount, Description description, UniquePersonList payees) {
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
     }
 
-    public Transaction(Person payer, Double amount, String description, Set<Person> payeesToAdd) {
+    public Transaction(Person payer, Amount amount, Description description, Set<Person> payeesToAdd) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {
@@ -45,8 +46,8 @@ public class Transaction {
             }
         }
 
-        this.id = lastTransactionId++;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
@@ -65,11 +66,11 @@ public class Transaction {
         return payer;
     }
 
-    public Double getAmount() {
+    public Amount getAmount() {
         return amount;
     }
 
-    public String getDescription() {
+    public Description getDescription() {
         return description;
     }
 
@@ -101,14 +102,14 @@ public class Transaction {
         final StringBuilder builder = new StringBuilder();
         builder.append(" Transaction id: ")
                 .append(getId())
-                .append(" Created on: ")
+                .append("\n Created on: ")
                 .append(getDateTime())
-                .append(" Paid by: ")
-                .append(getPayer())
+                .append("\n Transaction paid by: ")
+                .append(getPayer().getName())
                 .append("\n Amount: ")
-                .append(getAmount())
+                .append(getAmount().toString())
                 .append("\n Description: ")
-                .append(getDescription())
+                .append(getDescription().toString())
                 .append("\n Payees: ")
                 .append(getPayees().asObservableList().toString());
         return builder.toString();

@@ -3,6 +3,7 @@ package seedu.address.model;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -38,6 +39,9 @@ public interface Model {
     void updatePerson(Person target, Person editedPerson)
             throws DuplicatePersonException, PersonNotFoundException;
 
+    /** Finds a person by name */
+    Person findPerson(Name name) throws PersonNotFoundException;
+
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
 
@@ -52,7 +56,7 @@ public interface Model {
 
     void addTransaction(Transaction transaction);
 
-    //@phmignot
+    //@@author phmignot
     /** Deletes the given person. */
     void deleteTransaction(Transaction target) throws TransactionNotFoundException;
 }
