@@ -9,7 +9,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
 import seedu.address.model.transaction.Transaction;
 
-/**
+/**@author ongkc
  * Adds a transaction to the address book.
  */
 public class AddTransactionCommand extends UndoableCommand {

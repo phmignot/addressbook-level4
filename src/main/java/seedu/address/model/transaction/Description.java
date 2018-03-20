@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import seedu.address.model.person.Address;
-
+//@authoer ongkc
 /**
  * Represents a Transaction's description in the address book.
  */
@@ -12,10 +12,9 @@ public class Description {
     public static final String MESSAGE_DESCRIPTION_CONSTRAINTS =
             "Transaction description can take any values, and it should not be blank";
     /*
-     * The first character of the address must not be a whitespace,
-     * otherwise " " (a blank string) becomes a valid input.
+     * Description must not be only space or "" (a blank string).
      */
-    public static final String DESCRIPTION_VALIDATION_REGEX = "^.+";
+    public static final String DESCRIPTION_VALIDATION_REGEX = "^(\\s|\\S)*(\\S)+(\\s|\\S)*$";
 
     public final String value;
 

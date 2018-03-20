@@ -66,6 +66,7 @@ public class TransactionListPanelHandle extends NodeHandle<ListView<TransactionC
                 .filter(card -> card.transaction.equals(transaction))
                 .findFirst();
 
+
         if (!matchingCard.isPresent()) {
             throw new IllegalArgumentException("Transaction does not exist.");
         }

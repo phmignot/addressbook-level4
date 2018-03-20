@@ -15,7 +15,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
-
+//@auother ongkc
 /**
  * Parses input arguments and creates a new AddTransactionCommand object
  */
@@ -40,8 +40,6 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             Name payeeName = ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYEE)).get();
-
-
             Transaction transaction = new Transaction(payerName, amount, description, payeeName);
 
             return new AddTransactionCommand(transaction);

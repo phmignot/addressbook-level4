@@ -24,7 +24,7 @@ public interface Logic {
     ObservableList<Person> getFilteredPersonList();
 
     /** Returns an unmodifiable view of the list of transactions */
-    ObservableList<Transaction> getTransactionList();
+    ObservableList<Transaction> getFilteredTransactionList();
 
     /** Returns the list of input entered by the user, encapsulated in a {@code ListElementPointer} object */
     ListElementPointer getHistorySnapshot();

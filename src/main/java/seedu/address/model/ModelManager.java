@@ -27,6 +27,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     private final AddressBook addressBook;
     private final FilteredList<Person> filteredPersons;
+    private final FilteredList<Transaction> filteredTransactions;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -39,6 +40,9 @@ public class ModelManager extends ComponentManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        //@auther ongkc
+        filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
+
     }
 
     public ModelManager() {
@@ -83,16 +87,30 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
     }
 
-
+    //@ongkc
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */
     @Override
-    public ObservableList<Transaction> getTransactionList() {
+    public ObservableList<Transaction> getFilteredTransactionList() {
         //TO DO: properly match the work from here
-        return addressBook.getTransactionList();
+        return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
+    //@ongkc
+    @Override
+    public void addTransaction(Transaction transaction) {
+        addressBook.addTransaction(transaction);
+        updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
+        indicateAddressBookChanged();
+    }
+
+    //@phmignot
+    @Override
+    public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
+        addressBook.removeTransaction(target);
+        indicateAddressBookChanged();
+    }
     //=========== Filtered Person List Accessors =============================================================
 
     /**
@@ -104,25 +122,20 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredPersons);
     }
 
+
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
     }
 
+    //@author ongkc
     @Override
-    public void addTransaction(Transaction transaction) {
-        addressBook.addTransaction(transaction);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        indicateAddressBookChanged();
+    public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
+        requireNonNull(predicate);
+        filteredTransactions.setPredicate(predicate);
     }
 
-    //@phmignot
-    @Override
-    public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
-        addressBook.removeTransaction(target);
-        indicateAddressBookChanged();
-    }
 
     @Override
     public boolean equals(Object obj) {

@@ -6,6 +6,8 @@ import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.HOON;
 import static seedu.address.testutil.TypicalPersons.IDA;
+import static seedu.address.testutil.TypicalTransactions.T4;
+import static seedu.address.testutil.TypicalTransactions.T5;
 
 import java.io.IOException;
 
@@ -73,6 +75,18 @@ public class XmlAddressBookStorageTest {
     }
 
     @Test
+    public void readAddressBook_invalidTransactionAddressBook_throwDataConversionException() throws Exception {
+        thrown.expect(DataConversionException.class);
+        readAddressBook("invalidTransactionAddressBook.xml");
+    }
+
+    @Test
+    public void readAddressBook_invalidAndValidTransactionAddressBook_throwDataConversionException() throws Exception {
+        thrown.expect(DataConversionException.class);
+        readAddressBook("invalidAndValidPersonAddressBook.xml");
+    }
+
+    @Test
     public void readAndSaveAddressBook_allInOrder_success() throws Exception {
         String filePath = testFolder.getRoot().getPath() + "TempAddressBook.xml";
         AddressBook original = getTypicalAddressBook();
@@ -86,12 +100,16 @@ public class XmlAddressBookStorageTest {
         //Modify data, overwrite exiting file, and read back
         original.addPerson(HOON);
         original.removePerson(ALICE);
+        //@author ongkc
+        original.addTransaction(T4);
+        original.removeTransaction(T4);
         xmlAddressBookStorage.saveAddressBook(original, filePath);
         readBack = xmlAddressBookStorage.readAddressBook(filePath).get();
         assertEquals(original, new AddressBook(readBack));
 
         //Save and read without specifying file path
         original.addPerson(IDA);
+        original.addTransaction(T5);
         xmlAddressBookStorage.saveAddressBook(original); //file path not specified
         readBack = xmlAddressBookStorage.readAddressBook().get(); //file path not specified
         assertEquals(original, new AddressBook(readBack));
