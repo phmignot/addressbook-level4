@@ -6,8 +6,8 @@ import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.HOON;
 import static seedu.address.testutil.TypicalPersons.IDA;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
-import static seedu.address.testutil.TypicalTransactions.FIVE;
-import static seedu.address.testutil.TypicalTransactions.FOUR;
+import static seedu.address.testutil.TypicalTransactions.T5;
+import static seedu.address.testutil.TypicalTransactions.T4;
 
 import java.io.IOException;
 
@@ -100,16 +100,16 @@ public class XmlAddressBookStorageTest {
         //Modify data, overwrite exiting file, and read back
         original.addPerson(HOON);
         original.removePerson(ALICE);
-        //@authoer ongkc
-        original.addTransaction(FOUR);
-        original.removeTransaction(FOUR);
+        //@author ongkc
+        original.addTransaction(T4);
+        original.removeTransaction(T4);
         xmlAddressBookStorage.saveAddressBook(original, filePath);
         readBack = xmlAddressBookStorage.readAddressBook(filePath).get();
         assertEquals(original, new AddressBook(readBack));
 
         //Save and read without specifying file path
         original.addPerson(IDA);
-        original.addTransaction(FIVE);
+        original.addTransaction(T5);
         xmlAddressBookStorage.saveAddressBook(original); //file path not specified
         readBack = xmlAddressBookStorage.readAddressBook().get(); //file path not specified
         assertEquals(original, new AddressBook(readBack));

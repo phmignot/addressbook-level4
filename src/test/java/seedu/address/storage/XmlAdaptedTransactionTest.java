@@ -1,7 +1,7 @@
 package seedu.address.storage;
 
 import static seedu.address.storage.XmlAdaptedTransaction.MISSING_FIELD_MESSAGE_FORMAT;
-import static seedu.address.testutil.TypicalTransactions.ONE;
+import static seedu.address.testutil.TypicalTransactions.T1;
 
 import org.junit.Test;
 
@@ -18,15 +18,15 @@ public class XmlAdaptedTransactionTest {
     private static final String INVALID_DESCRIPTION = " ";
     private static final String INVALID_PAYEE = "R@chel";
 
-    private static final String VALID_PAYER = ONE.getPayer().toString();
-    private static final String VALID_AMOUNT = ONE.getAmount().toString();
-    private static final String VALID_DESCRIPTION = ONE.getDescription().toString();
-    private static final String VALID_PAYEE = ONE.getPayee().toString();
+    private static final String VALID_PAYER = T1.getPayer().toString();
+    private static final String VALID_AMOUNT = T1.getAmount().toString();
+    private static final String VALID_DESCRIPTION = T1.getDescription().toString();
+    private static final String VALID_PAYEE = T1.getPayee().toString();
 
     //@Test
     //public void toModelType_validTransactionDetails_returnsTransaction() throws Exception {
-    //       XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(ONE);
-    //       assertEquals(ONE, transaction.toModelType());
+    //       XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(T1);
+    //       assertEquals(T1, transaction.toModelType());
     // }
 
     @Test
