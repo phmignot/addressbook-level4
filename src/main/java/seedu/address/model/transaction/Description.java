@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import seedu.address.model.person.Address;
-
+//@authoer ongkc
 /**
  * Represents a Transaction's description in the address book.
  */

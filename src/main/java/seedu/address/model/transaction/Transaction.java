@@ -3,7 +3,7 @@ package seedu.address.model.transaction;
 import java.util.Objects;
 
 import seedu.address.model.person.Name;
-
+//@author ongkc
 /**
  * Represent a transaction
  */

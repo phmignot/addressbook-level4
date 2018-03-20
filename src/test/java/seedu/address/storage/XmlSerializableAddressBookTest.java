@@ -51,7 +51,7 @@ public class XmlSerializableAddressBookTest {
         thrown.expect(IllegalValueException.class);
         dataFromFile.toModelType();
     }
-
+    //@author ongkc
     @Test
     public void toModelType_typicalTransactionsFile_success() throws Exception {
         XmlSerializableAddressBook dataFromFile = XmlUtil.getDataFromFile(TYPICAL_TRANSACTIONS_FILE,
@@ -60,7 +60,7 @@ public class XmlSerializableAddressBookTest {
         AddressBook typicalTransactionsAddressBook = TypicalTransactions.getTypicalAddressBook();
         assertEquals(addressBookFromFile, typicalTransactionsAddressBook);
     }
-
+    //@authoer ongkc
     @Test
     public void toModelType_invalidTransactionFile_throwsIllegalValueException() throws Exception {
         XmlSerializableAddressBook dataFromFile = XmlUtil.getDataFromFile(INVALID_TRANSACTION_FILE,

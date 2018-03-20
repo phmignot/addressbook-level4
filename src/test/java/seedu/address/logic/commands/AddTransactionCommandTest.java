@@ -26,7 +26,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 import seedu.address.testutil.TransactionBuilder;
-
+//@author ongkc
 public class AddTransactionCommandTest {
 
     @Rule

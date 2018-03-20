@@ -6,7 +6,7 @@ import java.util.List;
 
 import seedu.address.model.AddressBook;
 import seedu.address.model.transaction.Transaction;
-
+//@author ongkc
 public class TypicalTransactions {
 
     public static final Transaction ONE = new TransactionBuilder().withPayeeName("Alice Pauline")

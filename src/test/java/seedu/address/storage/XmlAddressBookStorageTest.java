@@ -100,6 +100,7 @@ public class XmlAddressBookStorageTest {
         //Modify data, overwrite exiting file, and read back
         original.addPerson(HOON);
         original.removePerson(ALICE);
+        //@authoer ongkc
         original.addTransaction(FOUR);
         original.removeTransaction(FOUR);
         xmlAddressBookStorage.saveAddressBook(original, filePath);

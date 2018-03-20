@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.model.transaction.TransactionList;
-
+//@author ongkc
 public class TransactionListTest {
 
     @Rule
