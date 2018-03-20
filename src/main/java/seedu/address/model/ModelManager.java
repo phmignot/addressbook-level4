@@ -40,6 +40,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        //@auther ongkc
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
 
     }
@@ -86,7 +87,7 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
     }
 
-
+    //@ongkc
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */
@@ -100,6 +101,7 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void addTransaction(Transaction transaction) {
         addressBook.addTransaction(transaction);
+        updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
         indicateAddressBookChanged();
     }
 
@@ -125,6 +127,13 @@ public class ModelManager extends ComponentManager implements Model {
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+
+    //@author ongkc
+    @Override
+    public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
+        requireNonNull(predicate);
+        filteredTransactions.setPredicate(predicate);
     }
 
 

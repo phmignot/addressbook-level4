@@ -11,6 +11,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
+//@author ongkc
 /**
  * JAXB-friendly adapted version of the Transaction.
  */
@@ -35,7 +36,7 @@ public class XmlAdaptedTransaction {
     public XmlAdaptedTransaction() {}
 
     /**
-     * Constructs an {@code XmlAdaptedPerson} with the given person details.
+     * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
     public XmlAdaptedTransaction(String payer, String amount, String description, String payee) {
         this.payer = payer;
@@ -59,9 +60,9 @@ public class XmlAdaptedTransaction {
     }
 
     /**
-     * Converts this jaxb-friendly adapted person object into the model's Person object.
+     * Converts this jaxb-friendly adapted person object into the model's Transaction object.
      *
-     * @throws IllegalValueException if there were any data constraints violated in the adapted person
+     * @throws IllegalValueException if there were any data constraints violated in the adapted Transaction
      */
     public Transaction toModelType() throws IllegalValueException {
 

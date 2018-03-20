@@ -142,6 +142,11 @@ public class AddPersonCommandTest {
         }
 
         @Override
+        public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
+
+        }
+
+        @Override
         public void addTransaction(Transaction transaction) {}
 
         @Override
