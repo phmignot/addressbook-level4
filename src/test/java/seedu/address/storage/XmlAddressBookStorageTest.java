@@ -6,9 +6,8 @@ import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.HOON;
 import static seedu.address.testutil.TypicalPersons.IDA;
-import static seedu.address.testutil.TypicalTransactions.T5;
 import static seedu.address.testutil.TypicalTransactions.T4;
-
+import static seedu.address.testutil.TypicalTransactions.T5;
 
 import java.io.IOException;
 
