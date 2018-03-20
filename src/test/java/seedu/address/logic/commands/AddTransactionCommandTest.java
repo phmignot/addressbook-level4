@@ -39,13 +39,14 @@ public class AddTransactionCommandTest {
     }
 
     @Test
-    public void execute_TransactionAcceptedByModel_addSuccessful() throws Exception {
-        AddTransactionCommandTest.ModelStubAcceptingTransactionAdded modelStub = new AddTransactionCommandTest.ModelStubAcceptingTransactionAdded();
+    public void execute_transactionAcceptedByModel_addSuccessful() throws Exception {
+        AddTransactionCommandTest.ModelStubAcceptingTransactionAdded modelStub =
+                new AddTransactionCommandTest.ModelStubAcceptingTransactionAdded();
         Transaction validTransaction = new TransactionBuilder().build();
 
         CommandResult commandResult = getAddCommandForTransaction(validTransaction, modelStub).execute();
-
-        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction), commandResult.feedbackToUser);
+        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
+                commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
 

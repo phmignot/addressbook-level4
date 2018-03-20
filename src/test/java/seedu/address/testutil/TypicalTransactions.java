@@ -7,6 +7,9 @@ import java.util.List;
 import seedu.address.model.AddressBook;
 import seedu.address.model.transaction.Transaction;
 //@author ongkc
+/**
+ * A utility class containing a list of {@code Transaction} objects to be used in tests.
+ */
 public class TypicalTransactions {
 
     public static final Transaction ONE = new TransactionBuilder().withPayeeName("Alice Pauline")
@@ -35,7 +38,7 @@ public class TypicalTransactions {
     public static AddressBook getTypicalAddressBook() {
         AddressBook ab = new AddressBook();
         for (Transaction transaction : getTypicalTransactions()) {
-                ab.addTransaction(transaction);
+            ab.addTransaction(transaction);
         }
         return ab;
     }

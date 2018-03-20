@@ -17,12 +17,18 @@ import seedu.address.testutil.TypicalTransactions;
 
 public class XmlSerializableAddressBookTest {
 
-    private static final String TEST_DATA_FOLDER = FileUtil.getPath("src/test/data/XmlSerializableAddressBookTest/");
-    private static final File TYPICAL_PERSONS_FILE = new File(TEST_DATA_FOLDER + "typicalPersonsAddressBook.xml");
-    private static final File INVALID_PERSON_FILE = new File(TEST_DATA_FOLDER + "invalidPersonAddressBook.xml");
-    private static final File INVALID_TAG_FILE = new File(TEST_DATA_FOLDER + "invalidTagAddressBook.xml");
-    private static final File TYPICAL_TRANSACTIONS_FILE = new File(TEST_DATA_FOLDER + "typicalTransactionsAddressBook.xml");
-    private static final File INVALID_TRANSACTION_FILE = new File(TEST_DATA_FOLDER + "invalidTransactionAddressBook.xml");
+    private static final String TEST_DATA_FOLDER =
+            FileUtil.getPath("src/test/data/XmlSerializableAddressBookTest/");
+    private static final File TYPICAL_PERSONS_FILE =
+            new File(TEST_DATA_FOLDER + "typicalPersonsAddressBook.xml");
+    private static final File INVALID_PERSON_FILE =
+            new File(TEST_DATA_FOLDER + "invalidPersonAddressBook.xml");
+    private static final File INVALID_TAG_FILE =
+            new File(TEST_DATA_FOLDER + "invalidTagAddressBook.xml");
+    private static final File TYPICAL_TRANSACTIONS_FILE =
+            new File(TEST_DATA_FOLDER + "typicalTransactionsAddressBook.xml");
+    private static final File INVALID_TRANSACTION_FILE =
+            new File(TEST_DATA_FOLDER + "invalidTransactionAddressBook.xml");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

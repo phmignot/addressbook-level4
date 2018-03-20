@@ -77,8 +77,8 @@ public class AddressBookTest {
         private final ObservableList<Person> persons = FXCollections.observableArrayList();
         private final ObservableList<Tag> tags = FXCollections.observableArrayList();
         private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-
-        AddressBookStub(Collection<Person> persons, Collection<? extends Tag> tags, Collection<Transaction> transactions) {
+        AddressBookStub(Collection<Person> persons, Collection<? extends Tag> tags,
+                        Collection<Transaction> transactions) {
             this.persons.setAll(persons);
             this.tags.setAll(tags);
             this.transactions.setAll(transactions);
