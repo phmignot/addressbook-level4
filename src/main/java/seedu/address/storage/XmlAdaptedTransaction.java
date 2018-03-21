@@ -5,11 +5,17 @@ import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
+import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
-//@author ongkc
+//@@author ongkc
 /**
  * JAXB-friendly adapted version of the Transaction.
  */
@@ -18,14 +24,13 @@ public class XmlAdaptedTransaction {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
 
     @XmlElement(required = true)
-    private String payer;
+    private Person payer;
     @XmlElement(required = true)
     private String amount;
     @XmlElement(required = true)
     private String description;
     @XmlElement(required = true)
-    private String payee;
-
+    private UniquePersonList payees;
 
     /**
      * Constructs an XmlAdaptedTransaction.
@@ -36,12 +41,11 @@ public class XmlAdaptedTransaction {
     /**
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
-    public XmlAdaptedTransaction(String payer, String amount, String description, String payee) {
+    public XmlAdaptedTransaction(Person payer, String amount, String description, UniquePersonList payees) {
         this.payer = payer;
         this.amount = amount;
         this.description = description;
-        this.payee = payee;
-
+        this.payees = payees;
     }
 
     /**
@@ -50,11 +54,10 @@ public class XmlAdaptedTransaction {
      * @param source future changes to this will not affect the created XmlAdaptedPerson
      */
     public XmlAdaptedTransaction(Transaction source) {
-        payer = source.getPayer().fullName;
+        payer = source.getPayer();
         amount = source.getAmount().value;
         description = source.getDescription().value;
-        payee = source.getPayee().fullName;
-
+        payees = source.getPayees();
     }
 
     /**
@@ -64,15 +67,14 @@ public class XmlAdaptedTransaction {
      */
     public Transaction toModelType() throws IllegalValueException {
 
-
+        //@@author steven-jia
         if (this.payer == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payer"));
         }
-        if (!Name.isValidName(this.payer)) {
-            throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
-        }
-        final Name payer = new Name(this.payer);
+        validatePersonFields(this.payer);
+        final Person payer = this.payer;
 
+        //@@author ongkc
         if (this.amount == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName()));
         }
@@ -90,17 +92,43 @@ public class XmlAdaptedTransaction {
         }
         final Description description = new Description(this.description);
 
-        if (this.payee == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+        if (this.payees == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
-        if (!Name.isValidName(this.payee)) {
-            throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
-        }
-        final Name payee = new Name(this.payee);
 
-        return new Transaction(payer, amount, description, payee);
+        //@@author steven-jia
+        for (Person payee: this.payees) {
+            validatePersonFields(payee);
+        }
+        final UniquePersonList payees = this.payees;
+
+        return new Transaction(payer, amount, description, payees);
     }
 
+    /**
+     * Checks each field of the {@code person} for validity
+     */
+    private void validatePersonFields(Person person) throws IllegalValueException {
+        if (!Name.isValidName(person.getName().fullName)) {
+            throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
+        }
+        if (!Phone.isValidPhone(person.getPhone().value)) {
+            throw new IllegalValueException(Phone.MESSAGE_PHONE_CONSTRAINTS);
+        }
+        if (!Address.isValidAddress(person.getAddress().value)) {
+            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
+        }
+        if (!Email.isValidEmail(person.getEmail().value)) {
+            throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
+        }
+        for (Tag tag: person.getTags()) {
+            if (!Tag.isValidTagName(tag.tagName)) {
+                throw new IllegalValueException(Tag.MESSAGE_TAG_CONSTRAINTS);
+            }
+        }
+    }
+
+    //@@author ongkc
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -115,7 +143,7 @@ public class XmlAdaptedTransaction {
         return Objects.equals(payer, otherTransaction.payer)
                 && Objects.equals(amount, otherTransaction.amount)
                 && Objects.equals(description, otherTransaction.description)
-                && Objects.equals(payee, otherTransaction.payee);
+                && Objects.equals(payees, otherTransaction.payees);
     }
 
 }

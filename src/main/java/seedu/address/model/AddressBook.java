@@ -21,7 +21,6 @@ import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
-
 /**
  * Wraps all data at the address-book level
  * Duplicates are not allowed (by .equals comparison)

@@ -192,10 +192,10 @@ public class AddPersonCommandSystemTest extends AddressBookSystemTest {
     }
 
     /**
-     * Executes the {@code AddCommand} that adds {@code toAdd} to the model and asserts that the,<br>
+     * Executes the {@code AddPersonCommand} that adds {@code toAdd} to the model and asserts that the,<br>
      * 1. Command box displays an empty string.<br>
      * 2. Command box has the default style class.<br>
-     * 3. Result display box displays the success message of executing {@code AddCommand} with the details of
+     * 3. Result display box displays the success message of executing {@code AddPersonCommand} with the details of
      * {@code toAdd}.<br>
      * 4. {@code Model}, {@code Storage} and {@code PersonListPanel} equal to the corresponding components in
      * the current model added with {@code toAdd}.<br>

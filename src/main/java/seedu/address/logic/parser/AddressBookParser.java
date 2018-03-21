@@ -23,6 +23,7 @@ import seedu.address.logic.commands.SelectCommand;
 import seedu.address.logic.commands.UndoCommand;
 
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.Model;
 
 /**
  * Parses user input.
@@ -34,6 +35,14 @@ public class AddressBookParser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
 
+    //@@author steven-jia
+    private final Model model;
+
+    public AddressBookParser(Model model) {
+        this.model = model;
+    }
+
+    //@@author
     /**
      * Parses user input into command for execution.
      *
@@ -52,28 +61,28 @@ public class AddressBookParser {
         switch (commandWord) {
 
         case AddPersonCommand.COMMAND_WORD:
-            return new AddPersonCommandParser().parse(arguments);
+            return new AddPersonCommandParser().parse(arguments, model);
 
         case AddTransactionCommand.COMMAND_WORD:
-            return new AddTransactionCommandParser().parse(arguments);
+            return new AddTransactionCommandParser().parse(arguments, model);
 
         case EditCommand.COMMAND_WORD:
-            return new EditCommandParser().parse(arguments);
+            return new EditCommandParser().parse(arguments, model);
 
         case SelectCommand.COMMAND_WORD:
-            return new SelectCommandParser().parse(arguments);
+            return new SelectCommandParser().parse(arguments, model);
 
         case DeleteCommand.COMMAND_WORD:
-            return new DeleteCommandParser().parse(arguments);
+            return new DeleteCommandParser().parse(arguments, model);
 
         case DeleteTransactionCommand.COMMAND_WORD:
-            return new DeleteTransactionCommandParser().parse(arguments);
+            return new DeleteTransactionCommandParser().parse(arguments, model);
 
         case ClearCommand.COMMAND_WORD:
             return new ClearCommand();
 
         case FindCommand.COMMAND_WORD:
-            return new FindCommandParser().parse(arguments);
+            return new FindCommandParser().parse(arguments, model);
 
         case ListCommand.COMMAND_WORD:
             return new ListCommand();

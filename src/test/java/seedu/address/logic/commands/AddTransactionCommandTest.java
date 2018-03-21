@@ -20,13 +20,16 @@ import seedu.address.logic.UndoRedoStack;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 import seedu.address.testutil.TransactionBuilder;
-//@author ongkc
+import seedu.address.testutil.TypicalTransactions;
+
+//@@author ongkc
 public class AddTransactionCommandTest {
 
     @Rule
@@ -44,7 +47,7 @@ public class AddTransactionCommandTest {
                 new AddTransactionCommandTest.ModelStubAcceptingTransactionAdded();
         Transaction validTransaction = new TransactionBuilder().build();
 
-        CommandResult commandResult = getAddCommandForTransaction(validTransaction, modelStub).execute();
+        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
         assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
                 commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
@@ -53,8 +56,8 @@ public class AddTransactionCommandTest {
 
     @Test
     public void equals() {
-        Transaction one = new TransactionBuilder().withPayeeName("Alice").build();
-        Transaction two = new TransactionBuilder().withPayeeName("Bob").build();
+        Transaction one = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(3)).build();
+        Transaction two = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(4)).build();
         AddTransactionCommand addOneCommand = new AddTransactionCommand(one);
         AddTransactionCommand addTwoCommand = new AddTransactionCommand(two);
 
@@ -78,7 +81,7 @@ public class AddTransactionCommandTest {
     /**
      * Generates a new AddCommand with the details of the given transaction.
      */
-    private AddTransactionCommand getAddCommandForTransaction(Transaction transaction, Model model) {
+    private AddTransactionCommand getAddTransactionCommand(Transaction transaction, Model model) {
         AddTransactionCommand command = new AddTransactionCommand(transaction);
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
@@ -113,6 +116,12 @@ public class AddTransactionCommandTest {
         public void updatePerson(Person target, Person editedPerson)
                 throws DuplicatePersonException {
             fail("This method should not be called.");
+        }
+
+        @Override
+        public Person findPerson(Name name) throws PersonNotFoundException {
+            fail("This method should not be called.");
+            return null;
         }
 
         @Override

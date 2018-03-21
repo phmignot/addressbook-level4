@@ -21,6 +21,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -44,7 +45,7 @@ public class AddPersonCommandTest {
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
         Person validPerson = new PersonBuilder().build();
 
-        CommandResult commandResult = getAddCommandForPerson(validPerson, modelStub).execute();
+        CommandResult commandResult = getAddPersonCommand(validPerson, modelStub).execute();
 
         assertEquals(String.format(AddPersonCommand.MESSAGE_SUCCESS, validPerson), commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validPerson), modelStub.personsAdded);
@@ -58,7 +59,7 @@ public class AddPersonCommandTest {
         thrown.expect(CommandException.class);
         thrown.expectMessage(AddPersonCommand.MESSAGE_DUPLICATE_PERSON);
 
-        getAddCommandForPerson(validPerson, modelStub).execute();
+        getAddPersonCommand(validPerson, modelStub).execute();
     }
 
     @Test
@@ -86,9 +87,9 @@ public class AddPersonCommandTest {
     }
 
     /**
-     * Generates a new AddCommand with the details of the given person.
+     * Generates a new AddPersonCommand with the details of the given person.
      */
-    private AddPersonCommand getAddCommandForPerson(Person person, Model model) {
+    private AddPersonCommand getAddPersonCommand(Person person, Model model) {
         AddPersonCommand command = new AddPersonCommand(person);
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
@@ -123,6 +124,12 @@ public class AddPersonCommandTest {
         public void updatePerson(Person target, Person editedPerson)
                 throws DuplicatePersonException {
             fail("This method should not be called.");
+        }
+
+        @Override
+        public Person findPerson(Name name) throws PersonNotFoundException {
+            fail("This method should not be called.");
+            return null;
         }
 
         @Override

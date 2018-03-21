@@ -499,14 +499,14 @@ b. Require developers to download those libraries manually (this creates extra w
 
 [[GetStartedProgramming]]
 [appendix]
-== Developing New Features
+== Suggested Programming Tasks to Get Started
 
-1. Ong Kok Cong:
+Suggested path for new programmers:
 
-Major Feature: Allow User to specify the type of expense spent on
-               - allow the user to keep track of his/her spending for better planning in the trip
-Minor Feature: Allow User to edit the an added transaction
-               - so the user can amend the transaction in the even any error such as the wrong amount was added
+1. First, add small local-impact (i.e. the impact of the change does not go beyond the component) enhancements to one component at a time. Some suggestions are given in <<GetStartedProgramming-EachComponent>>.
+
+2. Next, add a feature that touches multiple components to learn how to implement an end-to-end feature across all components. <<GetStartedProgramming-RemarkCommand>> explains how to go about adding such a feature.
+
 [[GetStartedProgramming-EachComponent]]
 === Improving each component
 
@@ -804,8 +804,8 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Wen Qin Jia*
 
-* Major feature:
-* Minor feature:
+* Major feature: Allow users to settle their balance by recording a payment via a "record payment" command
+* Minor feature: Allow users to split their expenses using evenly, by percentage, and by units
 
 [appendix]
 == User Stories
@@ -821,9 +821,9 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` | user |see all transactions recorded by users in a table |see a complete history of what was paid
 
-|`* * *` |user |see how much I owe to or am owed by each individual
+|`* * *` |user |see how much I owe to or am owed by each individual|
 
-|`* * *` |user |see how much I owe or am owed in total
+|`* * *` |user |see how much I owe or am owed in total|
 
 |`* * *` |user |record an offline payment to or from another user |update the balance between the 2 users
 
@@ -833,7 +833,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |filter transactions by various criteria |see similar transactions grouped together
 
-|`* * *` |user |split an expense by percentage so that unevenly shared expenses can be properly attributed to any individual that was involved
+|`* * *` |user |split an expense by percentage so that unevenly shared expenses can be properly attributed to any individual that was involved|
 
 |`* * *` |user |split an expense by units |properly attribute unevenly shared expenses to any individual that was involved
 

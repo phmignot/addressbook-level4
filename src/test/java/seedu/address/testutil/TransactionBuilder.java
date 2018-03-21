@@ -1,49 +1,59 @@
 package seedu.address.testutil;
 
-import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.util.SampleDataUtil;
 
-//@phmignot
+//@@author phmignot
 /**
  * A utility class to help with building Transaction objects.
  */
 public class TransactionBuilder {
 
-    public static final String DEFAULT_PAYER_NAME = "Alice Pauline";
     public static final String DEFAULT_AMOUNT = "123.45";
     public static final String DEFAULT_DESCRIPTION = "paying for Cookies";
-    public static final String DEFAULT_PAYEE_NAME = "Bob Jacques";
 
-    private Name payerName;
+    private Person payer;
     private Amount amount;
     private Description description;
-    private Name payeeName;
+    private UniquePersonList payees;
 
     public TransactionBuilder() {
-        payerName = new Name(DEFAULT_PAYER_NAME);
+        payer = SampleDataUtil.getSamplePersons()[0];
         amount = new Amount(DEFAULT_AMOUNT);
         description = new Description(DEFAULT_DESCRIPTION);
-        payeeName = new Name(DEFAULT_PAYEE_NAME);
+
+        UniquePersonList samplePayees = new UniquePersonList();
+        try {
+            samplePayees.add(SampleDataUtil.getSamplePersons()[1]);
+            samplePayees.add(SampleDataUtil.getSamplePersons()[2]);
+            samplePayees.add(SampleDataUtil.getSamplePersons()[3]);
+        } catch (DuplicatePersonException dpe) {
+            throw new AssertionError("This payee has already been added");
+        }
+        payees = samplePayees;
     }
 
     /**
      * Initializes the TransactionBuilder with the data of {@code transactionToCopy}.
      */
     public TransactionBuilder(Transaction transactionToCopy) {
-        payerName = transactionToCopy.getPayer();
+        payer = transactionToCopy.getPayer();
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
-        payeeName = transactionToCopy.getPayee();
+        payees = transactionToCopy.getPayees();
     }
 
 
     /**
-     * Sets the {@code payerName} of the {@code Transaction} that we are building.
+     * Sets the {@code payer} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withPayerName(String payerName) {
-        this.payerName = new Name(payerName);
+    public TransactionBuilder withPayer(Person payer) {
+        this.payer = payer;
         return this;
     }
 
@@ -66,12 +76,12 @@ public class TransactionBuilder {
     /**
      * Sets the {@code payeeName} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withPayeeName(String payeeName) {
-        this.payeeName = new Name(payeeName);
+    public TransactionBuilder withPayees(UniquePersonList payees) {
+        this.payees = payees;
         return this;
     }
 
     public Transaction build() {
-        return new Transaction(payerName, amount, description, payeeName);
+        return new Transaction(payer, amount, description, payees);
     }
 }

@@ -45,7 +45,7 @@ public class AddPersonCommandIntegrationTest {
     }
 
     /**
-     * Generates a new {@code AddCommand} which upon execution, adds {@code person} into the {@code model}.
+     * Generates a new {@code AddPersonCommand} which upon execution, adds {@code person} into the {@code model}.
      */
     private AddPersonCommand prepareCommand(Person person, Model model) {
         AddPersonCommand command = new AddPersonCommand(person);

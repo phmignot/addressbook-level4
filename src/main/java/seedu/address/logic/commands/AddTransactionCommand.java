@@ -21,12 +21,13 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_PAYER + "PAYER NAME "
             + PREFIX_AMOUNT + "AMOUNT "
             + PREFIX_DESCRIPTION + "DESCRIPTION "
-            + PREFIX_PAYEE + "PAYEE NAME \n"
+            + "[" + PREFIX_PAYEE + "PAYEE NAME]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_PAYER + "John Doe "
             + PREFIX_AMOUNT + "3456.78 "
-            + PREFIX_DESCRIPTION + "for dinner meal "
-            + PREFIX_PAYEE + "Tom Riddle ";
+            + PREFIX_DESCRIPTION + "Taxi ride to NUS "
+            + PREFIX_PAYEE + "Alex Yeoh "
+            + PREFIX_PAYEE + "Bernice Yu";
 
     public static final String MESSAGE_SUCCESS = "New transaction added";
 

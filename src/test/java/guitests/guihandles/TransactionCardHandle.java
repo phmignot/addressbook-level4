@@ -56,8 +56,12 @@ public class TransactionCardHandle extends NodeHandle<Node> {
         return descriptionLabel.getText();
     }
 
-    public String getPayee() {
-        return payeesLabel.get(0).getText();
+    public String getPayees() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < payeesLabel.size(); i++) {
+            builder.append(payeesLabel.get(i).getText());
+        }
+        return builder.toString();
     }
 }
 
