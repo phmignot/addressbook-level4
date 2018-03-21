@@ -23,11 +23,11 @@ public class XmlAdaptedTransactionTest {
     private static final String VALID_DESCRIPTION = T1.getDescription().toString();
     private static final String VALID_PAYEE = T1.getPayee().toString();
 
-    //@Test
-    //public void toModelType_validTransactionDetails_returnsTransaction() throws Exception {
-    //       XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(T1);
-    //       assertEquals(T1, transaction.toModelType());
-    // }
+    //    @Test
+    //    public void toModelType_validTransactionDetails_returnsTransaction() throws Exception {
+    //           XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(T1);
+    //           assertEquals(T1, transaction.toModelType());
+    //     }
 
     @Test
     public void toModelType_invalidPayer_throwsIllegalValueException() {
