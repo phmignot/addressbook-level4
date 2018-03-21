@@ -8,8 +8,6 @@ import javafx.scene.layout.Region;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 
-import java.util.Iterator;
-
 //@@author phmignot
 /**
  * An UI component that displays information of a {@code Transaction}.
