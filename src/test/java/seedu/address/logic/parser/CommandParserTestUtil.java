@@ -5,9 +5,7 @@ import static org.junit.Assert.fail;
 
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
-import seedu.address.model.ModelManagerTest;
 
 /**
  * Contains helper methods for testing command parsers.

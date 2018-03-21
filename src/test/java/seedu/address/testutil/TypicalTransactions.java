@@ -16,11 +16,11 @@ import seedu.address.model.util.SampleDataUtil;
  */
 public class TypicalTransactions {
 
-    private static Transaction T1 = null;
-    private static Transaction T2 = null;
-    private static Transaction T3 = null;
-    private static Transaction T4 = null;
-    private static Transaction T5 = null;
+    private static Transaction t1 = null;
+    private static Transaction t2 = null;
+    private static Transaction t3 = null;
+    private static Transaction t4 = null;
+    private static Transaction t5 = null;
 
     private static Person person1 = SampleDataUtil.getSamplePersons()[0];
     private static Person person2 = SampleDataUtil.getSamplePersons()[1];
@@ -43,16 +43,16 @@ public class TypicalTransactions {
             payeeAlice.add(TypicalPersons.ALICE);
             payeeBenson.add(TypicalPersons.BENSON);
 
-            T1 = new TransactionBuilder().withPayer(person1).withAmount("5.62")
+            t1 = new TransactionBuilder().withPayer(person1).withAmount("5.62")
                     .withDescription("Boat trip").withPayees(payee2).build();
-            T2 = new TransactionBuilder().withPayer(person3).withAmount("123.45")
+            t2 = new TransactionBuilder().withPayer(person3).withAmount("123.45")
                     .withDescription("Food for barbecue").withPayees(payee4).build();
-            T3 = new TransactionBuilder().withPayer(person5).withAmount("10.00")
+            t3 = new TransactionBuilder().withPayer(person5).withAmount("10.00")
                     .withDescription("Open air concert").withPayees(payee6).build();
-            T4 = new TransactionBuilder().withPayer(TypicalPersons.ALICE).withAmount("9999")
+            t4 = new TransactionBuilder().withPayer(TypicalPersons.ALICE).withAmount("9999")
                     .withDescription("Transport")
                     .withPayees(payeeBenson).build();
-            T5 = new TransactionBuilder().withPayer(TypicalPersons.ALICE)
+            t5 = new TransactionBuilder().withPayer(TypicalPersons.ALICE)
                     .withAmount("9999").withDescription("Dinner")
                     .withPayees(payeeBenson).build();
         } catch (DuplicatePersonException dpe) {
@@ -74,7 +74,7 @@ public class TypicalTransactions {
     }
 
     public static List<Transaction> getTypicalTransactions() {
-        return new ArrayList<>(Arrays.asList(T1, T2, T3, T4, T5));
+        return new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5));
     }
 
     public static List<UniquePersonList> getTypicalPayees() {
