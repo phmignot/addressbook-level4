@@ -17,6 +17,9 @@ public interface Model {
     /** {@code Predicate} that always evaluate to true */
     Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
 
+    /** {@code Predicate} that always evaluate to true */
+    Predicate<Transaction> PREDICATE_SHOW_ALL_TRANSACTIONS = unused -> true;
+
     /** Clears existing backing model and replaces with the provided new data. */
     void resetData(ReadOnlyAddressBook newData);
 
@@ -45,14 +48,20 @@ public interface Model {
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
 
-    /** Returns an unmodifiable view of the transaction list */
-    ObservableList<Transaction> getTransactionList();
+    /** Returns an unmodifiable view of the filtered transaction list */
+    ObservableList<Transaction> getFilteredTransactionList();
 
     /**
      * Updates the filter of the filtered person list to filter by the given {@code predicate}.
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    /**
+     * Updates the filter of the filtered person list to filter by the given {@code predicate}.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
+    void updateFilteredTransactionList(Predicate<Transaction> predicate);
 
     void addTransaction(Transaction transaction);
 

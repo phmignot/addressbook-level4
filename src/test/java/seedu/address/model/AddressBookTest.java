@@ -1,8 +1,8 @@
 package seedu.address.model;
 
 import static org.junit.Assert.assertEquals;
+import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +31,7 @@ public class AddressBookTest {
     public void constructor() {
         assertEquals(Collections.emptyList(), addressBook.getPersonList());
         assertEquals(Collections.emptyList(), addressBook.getTagList());
+        assertEquals(Collections.emptyList(), addressBook.getTransactionList());
     }
 
     @Test
@@ -75,6 +76,13 @@ public class AddressBookTest {
     private static class AddressBookStub implements ReadOnlyAddressBook {
         private final ObservableList<Person> persons = FXCollections.observableArrayList();
         private final ObservableList<Tag> tags = FXCollections.observableArrayList();
+        private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        AddressBookStub(Collection<Person> persons, Collection<? extends Tag> tags,
+                        Collection<Transaction> transactions) {
+            this.persons.setAll(persons);
+            this.tags.setAll(tags);
+            this.transactions.setAll(transactions);
+        }
 
         AddressBookStub(Collection<Person> persons, Collection<? extends Tag> tags) {
             this.persons.setAll(persons);
@@ -88,7 +96,7 @@ public class AddressBookTest {
 
         @Override
         public ObservableList<Transaction> getTransactionList() {
-            return null;
+            return transactions;
         }
 
         @Override

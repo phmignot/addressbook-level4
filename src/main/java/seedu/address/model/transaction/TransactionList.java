@@ -1,14 +1,16 @@
 package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Iterator;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
-
+//@author ongkc
 /**
  * Recard all transactions to the list.
  *
@@ -65,4 +67,14 @@ public class TransactionList implements Iterable<Transaction> {
         }
         return transactionFoundAndDeleted;
     }
+    //@phmignot
+    /**
+     * Replaces the list of transactions by a input list of transaction.
+     * @param transactions that will be the new transactions' list.
+     */
+    public void setTransactions(List<Transaction> transactions) {
+        requireAllNonNull(transactions);
+        internalList.setAll(transactions);
+    }
+
 }

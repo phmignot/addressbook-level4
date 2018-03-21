@@ -135,14 +135,14 @@ public class AddPersonCommandSystemTest extends AddressBookSystemTest {
         /* ----------------------------------- Perform invalid add operations --------------------------------------- */
 
         /* Case: add a duplicate person -> rejected */
-        command = PersonUtil.getAddCommand(HOON);
+        command = PersonUtil.getAddPersonCommand(HOON);
         assertCommandFailure(command, AddPersonCommand.MESSAGE_DUPLICATE_PERSON);
 
         /* Case: add a duplicate person except with different tags -> rejected */
         // "friends" is an existing tag used in the default model, see TypicalPersons#ALICE
         // This test will fail if a new tag that is not in the model is used, see the bug documented in
         // AddressBook#addPerson(Person)
-        command = PersonUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
+        command = PersonUtil.getAddPersonCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
         assertCommandFailure(command, AddPersonCommand.MESSAGE_DUPLICATE_PERSON);
 
         /* Case: missing name -> rejected */
@@ -166,24 +166,28 @@ public class AddPersonCommandSystemTest extends AddressBookSystemTest {
         assertCommandFailure(command, Messages.MESSAGE_UNKNOWN_COMMAND);
 
         /* Case: invalid name -> rejected */
-        command = AddPersonCommand.COMMAND_WORD + INVALID_NAME_DESC + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
+        command = AddPersonCommand.COMMAND_WORD + INVALID_NAME_DESC + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY;
         assertCommandFailure(command, Name.MESSAGE_NAME_CONSTRAINTS);
 
         /* Case: invalid phone -> rejected */
-        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + INVALID_PHONE_DESC + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
+        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + INVALID_PHONE_DESC + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY;
         assertCommandFailure(command, Phone.MESSAGE_PHONE_CONSTRAINTS);
 
         /* Case: invalid email -> rejected */
-        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + INVALID_EMAIL_DESC + ADDRESS_DESC_AMY;
+        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + INVALID_EMAIL_DESC
+                + ADDRESS_DESC_AMY;
         assertCommandFailure(command, Email.MESSAGE_EMAIL_CONSTRAINTS);
 
         /* Case: invalid address -> rejected */
-        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + INVALID_ADDRESS_DESC;
+        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + INVALID_ADDRESS_DESC;
         assertCommandFailure(command, Address.MESSAGE_ADDRESS_CONSTRAINTS);
 
         /* Case: invalid tag -> rejected */
-        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY
-                + INVALID_TAG_DESC;
+        command = AddPersonCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY + INVALID_TAG_DESC;
         assertCommandFailure(command, Tag.MESSAGE_TAG_CONSTRAINTS);
     }
 
@@ -202,7 +206,7 @@ public class AddPersonCommandSystemTest extends AddressBookSystemTest {
      * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
      */
     private void assertCommandSuccess(Person toAdd) {
-        assertCommandSuccess(PersonUtil.getAddCommand(toAdd), toAdd);
+        assertCommandSuccess(PersonUtil.getAddPersonCommand(toAdd), toAdd);
     }
 
     /**

@@ -62,9 +62,14 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.persons.setPersons(persons);
     }
 
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions.setTransactions(transactions);
+    }
+
     public void setTags(Set<Tag> tags) {
         this.tags.setTags(tags);
     }
+
 
     /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
@@ -75,9 +80,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         List<Person> syncedPersonList = newData.getPersonList().stream()
                 .map(this::syncWithMasterTagList)
                 .collect(Collectors.toList());
+        List<Transaction> syncedTransactionList = newData.getTransactionList();
 
         try {
             setPersons(syncedPersonList);
+            setTransactions(syncedTransactionList);
         } catch (DuplicatePersonException e) {
             throw new AssertionError("AddressBooks should not have duplicate persons");
         }

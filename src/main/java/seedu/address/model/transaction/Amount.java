@@ -4,19 +4,20 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import seedu.address.model.person.Address;
-
+//@authoer ongkc
 /**
  * Represents the amount that a Payer paid in a SmartSplit transaction.
  */
 public class Amount {
 
     public static final String MESSAGE_AMOUNT_CONSTRAINTS =
-            "Payer amount can only take in numerical number with 2 decimals, and it should not be blank";
+            "Payer amount can only take in numerical number with any decimal number precision, "
+                    + "and it should not be blank";
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String AMOUNT_VALIDATION_REGEX = "^\\d+\\.\\d{0,2}$";
+    public static final String AMOUNT_VALIDATION_REGEX = "\\d+(\\.\\d*)?|\\.\\d+\n";
 
     public final String value;
 

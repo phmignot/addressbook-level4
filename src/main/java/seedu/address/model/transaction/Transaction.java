@@ -108,7 +108,7 @@ public class Transaction {
                 .append(getPayer().getName())
                 .append("\n Amount: ")
                 .append(getAmount().toString())
-                .append("\n Description: ")
+                .append("\r\n Description: ")
                 .append(getDescription().toString())
                 .append("\n Payees: ")
                 .append(getPayees().asObservableList().toString());

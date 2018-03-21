@@ -794,8 +794,8 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Kok Cong Ong*
 
-* Major feature:
-* Minor feature:
+* Major feature: Allow user to categorise their spending into different categories, so as to allow the ease of tracking what they spent most on
+* Minor feature: Allow user to edit their added transaction
 
 *Paul Mignot*
 
@@ -804,8 +804,8 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Wen Qin Jia*
 
-* Major feature:
-* Minor feature: 
+* Major feature: Allow users to settle their balance by recording a payment via a "record payment" command
+* Minor feature: Allow users to split their expenses using evenly, by percentage, and by units
 
 [appendix]
 == User Stories
@@ -821,9 +821,9 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` | user |see all transactions recorded by users in a table |see a complete history of what was paid
 
-|`* * *` |user |see how much I owe to or am owed by each individual
+|`* * *` |user |see how much I owe to or am owed by each individual|
 
-|`* * *` |user |see how much I owe or am owed in total
+|`* * *` |user |see how much I owe or am owed in total|
 
 |`* * *` |user |record an offline payment to or from another user |update the balance between the 2 users
 
@@ -833,7 +833,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |filter transactions by various criteria |see similar transactions grouped together
 
-|`* * *` |user |split an expense by percentage so that unevenly shared expenses can be properly attributed to any individual that was involved
+|`* * *` |user |split an expense by percentage so that unevenly shared expenses can be properly attributed to any individual that was involved|
 
 |`* * *` |user |split an expense by units |properly attribute unevenly shared expenses to any individual that was involved
 

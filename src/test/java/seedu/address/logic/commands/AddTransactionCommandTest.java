@@ -17,7 +17,6 @@ import org.junit.rules.ExpectedException;
 import javafx.collections.ObservableList;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
@@ -27,70 +26,63 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TransactionBuilder;
+import seedu.address.testutil.TypicalTransactions;
 
-public class AddPersonCommandTest {
+//@@author ongkc
+public class AddTransactionCommandTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void constructor_nullPerson_throwsNullPointerException() {
+    public void constructor_nullTransaction_throwsNullPointerException() {
         thrown.expect(NullPointerException.class);
-        new AddPersonCommand(null);
+        new AddTransactionCommand(null);
     }
 
     @Test
-    public void execute_personAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-        Person validPerson = new PersonBuilder().build();
+    public void execute_transactionAcceptedByModel_addSuccessful() throws Exception {
+        AddTransactionCommandTest.ModelStubAcceptingTransactionAdded modelStub =
+                new AddTransactionCommandTest.ModelStubAcceptingTransactionAdded();
+        Transaction validTransaction = new TransactionBuilder().build();
 
-        CommandResult commandResult = getAddPersonCommand(validPerson, modelStub).execute();
-
-        assertEquals(String.format(AddPersonCommand.MESSAGE_SUCCESS, validPerson), commandResult.feedbackToUser);
-        assertEquals(Arrays.asList(validPerson), modelStub.personsAdded);
+        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
+        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
+                commandResult.feedbackToUser);
+        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
 
-    @Test
-    public void execute_duplicatePerson_throwsCommandException() throws Exception {
-        ModelStub modelStub = new ModelStubThrowingDuplicatePersonException();
-        Person validPerson = new PersonBuilder().build();
-
-        thrown.expect(CommandException.class);
-        thrown.expectMessage(AddPersonCommand.MESSAGE_DUPLICATE_PERSON);
-
-        getAddPersonCommand(validPerson, modelStub).execute();
-    }
 
     @Test
     public void equals() {
-        Person alice = new PersonBuilder().withName("Alice").build();
-        Person bob = new PersonBuilder().withName("Bob").build();
-        AddPersonCommand addAliceCommand = new AddPersonCommand(alice);
-        AddPersonCommand addBobCommand = new AddPersonCommand(bob);
+        Transaction one = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(3)).build();
+        Transaction two = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(4)).build();
+        AddTransactionCommand addOneCommand = new AddTransactionCommand(one);
+        AddTransactionCommand addTwoCommand = new AddTransactionCommand(two);
 
         // same object -> returns true
-        assertTrue(addAliceCommand.equals(addAliceCommand));
+        assertTrue(addOneCommand.equals(addOneCommand));
 
         // same values -> returns true
-        AddPersonCommand addAliceCommandCopy = new AddPersonCommand(alice);
-        assertTrue(addAliceCommand.equals(addAliceCommandCopy));
+        AddTransactionCommand addOneCommandCopy = new AddTransactionCommand(one);
+        assertTrue(addOneCommand.equals(addOneCommandCopy));
 
         // different types -> returns false
-        assertFalse(addAliceCommand.equals(1));
+        assertFalse(addOneCommand.equals(1));
 
         // null -> returns false
-        assertFalse(addAliceCommand.equals(null));
+        assertFalse(addOneCommand.equals(null));
 
-        // different person -> returns false
-        assertFalse(addAliceCommand.equals(addBobCommand));
+        // different Transaction -> returns false
+        assertFalse(addOneCommand.equals(addTwoCommand));
     }
 
     /**
-     * Generates a new AddPersonCommand with the details of the given person.
+     * Generates a new AddCommand with the details of the given transaction.
      */
-    private AddPersonCommand getAddPersonCommand(Person person, Model model) {
-        AddPersonCommand command = new AddPersonCommand(person);
+    private AddTransactionCommand getAddTransactionCommand(Transaction transaction, Model model) {
+        AddTransactionCommand command = new AddTransactionCommand(transaction);
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
     }
@@ -160,33 +152,19 @@ public class AddPersonCommandTest {
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
     }
 
-    public class ModelStubImpl extends ModelStub { }
+    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub { }
 
-    /**
-     * A Model stub that always throw a DuplicatePersonException when trying to add a person.
-     */
-    private class ModelStubThrowingDuplicatePersonException extends ModelStub {
-        @Override
-        public void addPerson(Person person) throws DuplicatePersonException {
-            throw new DuplicatePersonException();
-        }
-
-        @Override
-        public ReadOnlyAddressBook getAddressBook() {
-            return new AddressBook();
-        }
-    }
 
     /**
      * A Model stub that always accept the person being added.
      */
-    private class ModelStubAcceptingPersonAdded extends ModelStub {
-        final ArrayList<Person> personsAdded = new ArrayList<>();
+    private class ModelStubAcceptingTransactionAdded extends AddTransactionCommandTest.ModelStub {
+        final ArrayList<Transaction> transactionsAdded = new ArrayList<>();
 
         @Override
-        public void addPerson(Person person) throws DuplicatePersonException {
-            requireNonNull(person);
-            personsAdded.add(person);
+        public void addTransaction(Transaction transaction) {
+            requireNonNull(transaction);
+            transactionsAdded.add(transaction);
         }
 
         @Override
@@ -194,5 +172,4 @@ public class AddPersonCommandTest {
             return new AddressBook();
         }
     }
-
 }
