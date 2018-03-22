@@ -43,9 +43,9 @@ public class ModelManager extends ComponentManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
-        //@auther ongkc
+        //@@author ongkc
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
-
+        //@@author
     }
 
     public ModelManager() {
@@ -91,7 +91,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
     //@@author steven-jia
     @Override
-    public Person findPerson(Name name) throws PersonNotFoundException {
+    public Person findPersonByName(Name name) throws PersonNotFoundException {
         Set<Person> matchingPersons = addressBook.getPersonList()
                 .stream()
                 .filter(person -> person.getName().equals(name))
@@ -101,6 +101,34 @@ public class ModelManager extends ComponentManager implements Model {
             return matchingPersons.iterator().next();
         } else {
             throw new PersonNotFoundException();
+        }
+    }
+
+    @Override
+    public Set<Transaction> findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
+        Set<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .stream()
+                .filter(transaction -> transaction.getPayer().equals(person))
+                .collect(Collectors.toSet());
+
+        if (!matchingTransactions.isEmpty()) {
+            return matchingTransactions;
+        } else {
+            throw new TransactionNotFoundException();
+        }
+    }
+
+    @Override
+    public Set<Transaction> findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
+        Set<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .stream()
+                .filter(transaction -> transaction.getPayees().contains(person))
+                .collect(Collectors.toSet());
+
+        if (!matchingTransactions.isEmpty()) {
+            return matchingTransactions;
+        } else {
+            throw new TransactionNotFoundException();
         }
     }
 

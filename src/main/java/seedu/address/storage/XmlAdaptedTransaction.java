@@ -1,5 +1,7 @@
 package seedu.address.storage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -24,13 +26,13 @@ public class XmlAdaptedTransaction {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
 
     @XmlElement(required = true)
-    private Person payer;
+    private XmlAdaptedPerson payer;
     @XmlElement(required = true)
     private String amount;
     @XmlElement(required = true)
     private String description;
     @XmlElement(required = true)
-    private UniquePersonList payees;
+    private List<XmlAdaptedPerson> payees = new ArrayList<>();
 
     /**
      * Constructs an XmlAdaptedTransaction.
@@ -42,22 +44,32 @@ public class XmlAdaptedTransaction {
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
     public XmlAdaptedTransaction(Person payer, String amount, String description, UniquePersonList payees) {
-        this.payer = payer;
+        this.payer = new XmlAdaptedPerson(payer);
         this.amount = amount;
         this.description = description;
-        this.payees = payees;
+
+        //@@author steven-jia
+        List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
+        payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
+        this.payees = payeesToStore;
+        //@@author
     }
 
     /**
      * Converts a given Transaction into this class for JAXB use.
      *
-     * @param source future changes to this will not affect the created XmlAdaptedPerson
+     * @param source future changes to this will not affect the created XmlAdaptedTransaction
      */
     public XmlAdaptedTransaction(Transaction source) {
-        payer = source.getPayer();
+        payer = new XmlAdaptedPerson(source.getPayer());
         amount = source.getAmount().value;
         description = source.getDescription().value;
-        payees = source.getPayees();
+
+        //@@author steven-jia
+        List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
+        source.getPayees().asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
+        payees = payeesToStore;
+        //@@author
     }
 
     /**
@@ -71,8 +83,8 @@ public class XmlAdaptedTransaction {
         if (this.payer == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payer"));
         }
-        validatePersonFields(this.payer);
-        final Person payer = this.payer;
+        validatePersonFields(this.payer.toModelType());
+        final Person payer = this.payer.toModelType();
 
         //@@author ongkc
         if (this.amount == null) {
@@ -92,35 +104,56 @@ public class XmlAdaptedTransaction {
         }
         final Description description = new Description(this.description);
 
+        //@@author steven-jia
         if (this.payees == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
-
-        //@@author steven-jia
-        for (Person payee: this.payees) {
-            validatePersonFields(payee);
+        for (XmlAdaptedPerson payee: this.payees) {
+            validatePersonFields(payee.toModelType());
         }
-        final UniquePersonList payees = this.payees;
+
+        UniquePersonList convertedPayees = new UniquePersonList();
+        for (XmlAdaptedPerson payee: this.payees) {
+            convertedPayees.add(payee.toModelType());
+        }
+        final UniquePersonList payees = convertedPayees;
 
         return new Transaction(payer, amount, description, payees);
     }
 
+    //@@author steven-jia
     /**
      * Checks each field of the {@code person} for validity
      */
     private void validatePersonFields(Person person) throws IllegalValueException {
+        if (person.getName().fullName == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+        }
         if (!Name.isValidName(person.getName().fullName)) {
             throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
+        }
+
+        if (person.getPhone().value == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
         }
         if (!Phone.isValidPhone(person.getPhone().value)) {
             throw new IllegalValueException(Phone.MESSAGE_PHONE_CONSTRAINTS);
         }
-        if (!Address.isValidAddress(person.getAddress().value)) {
-            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
+
+        if (person.getEmail().value == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
         }
         if (!Email.isValidEmail(person.getEmail().value)) {
             throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
         }
+
+        if (person.getAddress().value == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
+        }
+        if (!Address.isValidAddress(person.getAddress().value)) {
+            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
+        }
+
         for (Tag tag: person.getTags()) {
             if (!Tag.isValidTagName(tag.tagName)) {
                 throw new IllegalValueException(Tag.MESSAGE_TAG_CONSTRAINTS);

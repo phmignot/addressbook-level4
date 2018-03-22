@@ -40,7 +40,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         }
 
         try {
-            Person payer = model.findPerson(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
+            Person payer = model.findPersonByName(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
@@ -48,7 +48,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Transaction transaction = new Transaction(payer, amount, description, payees);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
-            throw new AssertionError("The specified payer or payee(s) do not exist");
+            throw new ParseException(pnfe.getMessage(), pnfe);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
@@ -62,7 +62,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
 
         if (!payeeNamesToAdd.isEmpty()) {
             for (String payeeName: payeeNamesToAdd) {
-                payees.add(model.findPerson(ParserUtil.parseName(payeeName)));
+                payees.add(model.findPersonByName(ParserUtil.parseName(payeeName)));
             }
         } else {
             throw new IllegalValueException("No payees were specified");

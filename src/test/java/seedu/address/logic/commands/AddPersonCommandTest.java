@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.junit.Rule;
@@ -127,13 +128,25 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public Person findPerson(Name name) throws PersonNotFoundException {
+        public Person findPersonByName(Name name) throws PersonNotFoundException {
             fail("This method should not be called.");
             return null;
         }
 
         @Override
         public ObservableList<Person> getFilteredPersonList() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public Set<Transaction> findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public Set<Transaction> findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
             fail("This method should not be called.");
             return null;
         }
