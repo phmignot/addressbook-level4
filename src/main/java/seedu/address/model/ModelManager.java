@@ -45,7 +45,7 @@ public class ModelManager extends ComponentManager implements Model {
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         //@@author ongkc
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
-
+        //@@author
     }
 
     public ModelManager() {

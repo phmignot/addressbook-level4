@@ -24,8 +24,6 @@ public class XmlSerializableAddressBook {
     @XmlElement
     private List<XmlAdaptedTransaction> transactions;
 
-
-
     /**
      * Creates an empty XmlSerializableAddressBook.
      * This empty constructor is required for marshalling.
@@ -45,8 +43,6 @@ public class XmlSerializableAddressBook {
         tags.addAll(src.getTagList().stream().map(XmlAdaptedTag::new).collect(Collectors.toList()));
         transactions.addAll(src.getTransactionList().stream()
                 .map(XmlAdaptedTransaction::new).collect(Collectors.toList()));
-
-
     }
 
     /**
