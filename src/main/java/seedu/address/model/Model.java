@@ -1,5 +1,6 @@
 package seedu.address.model;
 
+import java.util.Set;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
@@ -42,12 +43,22 @@ public interface Model {
     void updatePerson(Person target, Person editedPerson)
             throws DuplicatePersonException, PersonNotFoundException;
 
+    //@@author steven-jia
     /** Finds a person by name */
-    Person findPerson(Name name) throws PersonNotFoundException;
+    Person findPersonByName(Name name) throws PersonNotFoundException;
 
+    //@@author
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
 
+    //@@author steven-jia
+    /** Returns a set of transactions that have {@code person} as the payer */
+    Set<Transaction> findTransactionsWithPayer(Person person) throws TransactionNotFoundException;
+
+    /** Returns a set of transactions that have {@code person} as a payee */
+    Set<Transaction> findTransactionsWithPayee(Person person) throws TransactionNotFoundException;
+
+    //@@author
     /** Returns an unmodifiable view of the filtered transaction list */
     ObservableList<Transaction> getFilteredTransactionList();
 
@@ -63,7 +74,7 @@ public interface Model {
      */
     void updateFilteredTransactionList(Predicate<Transaction> predicate);
 
-    void addTransaction(Transaction transaction);
+    void addTransaction(Transaction transaction) throws PersonNotFoundException;
 
     //@@author phmignot
     /** Deletes the given person. */

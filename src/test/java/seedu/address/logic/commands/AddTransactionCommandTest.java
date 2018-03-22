@@ -119,7 +119,7 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public Person findPerson(Name name) throws PersonNotFoundException {
+        public Person findPersonByName(Name name) throws PersonNotFoundException {
             fail("This method should not be called.");
             return null;
         }
