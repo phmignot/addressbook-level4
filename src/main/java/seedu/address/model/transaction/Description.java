@@ -10,7 +10,7 @@ import seedu.address.model.person.Address;
  */
 public class Description {
     public static final String MESSAGE_DESCRIPTION_CONSTRAINTS =
-            "Transaction description can take any values, and it should not be blank";
+            "Transaction description can take any value and should not be blank";
     /*
      * Description must not be only space or "" (a blank string).
      */
@@ -52,8 +52,5 @@ public class Description {
     public int hashCode() {
         return value.hashCode();
     }
-
-
-
 }
 

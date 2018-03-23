@@ -1,27 +1,68 @@
+//@@author steven-jia
 package seedu.address.model.transaction;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
-import seedu.address.model.person.Name;
-//@author ongkc
+import seedu.address.model.person.Person;
+import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
+
 /**
- * Represent a transaction
+ * Represents a Transaction in SmartSplit.
+ * Guarantees: details are present and not null, field values are validated, immutable.
  */
 public class Transaction {
 
-    private final Name payer;
+    private static Integer lastTransactionId = 0;
+
+    private final Integer id;
+    private final Date dateTime;
+    private final Person payer;
     private final Amount amount;
     private final Description description;
-    private final Name payee;
+    private final UniquePersonList payees;
 
-    public Transaction(Name payer, Amount amount, Description description, Name payee) {
+    public Transaction(Person payer, Amount amount, Description description, UniquePersonList payees) {
+        this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
-        this.payee = payee;
+        this.payees = payees;
     }
 
-    public Name getPayer() {
+    public Transaction(Person payer, Amount amount, Description description, Set<Person> payeesToAdd) {
+        UniquePersonList payees = new UniquePersonList();
+        for (Person p: payeesToAdd) {
+            try {
+                payees.add(p);
+            } catch (DuplicatePersonException e) {
+                System.out.println("Duplicate person" + p.getName() + " not added to list of payees");
+            }
+        }
+
+        this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
+        this.payer = payer;
+        this.amount = amount;
+        this.description = description;
+        this.payees = payees;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public Person getPayer() {
         return payer;
     }
 
@@ -33,8 +74,8 @@ public class Transaction {
         return description;
     }
 
-    public Name getPayee() {
-        return payee;
+    public UniquePersonList getPayees() {
+        return payees;
     }
 
     @Override
@@ -48,28 +89,29 @@ public class Transaction {
         }
 
         Transaction otherTransaction = (Transaction) other;
-        return otherTransaction.getPayer().equals(this.getPayer())
-                && otherTransaction.getAmount().equals(this.getAmount())
-                && otherTransaction.getDescription().equals(this.getDescription())
-                && otherTransaction.getPayee().equals(this.getPayee());
+        return otherTransaction.getId().equals(this.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(payer, amount, description, payee);
+        return Objects.hash(id, dateTime, payer, amount, description, payees);
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append(" Transaction paid by: ")
-                .append(getPayer().toString())
-                .append("\r\n Amount: ")
+        builder.append(" Transaction id: ")
+                .append(getId())
+                .append("\n Created on: ")
+                .append(getDateTime())
+                .append("\n Transaction paid by: ")
+                .append(getPayer().getName())
+                .append("\n Amount: ")
                 .append(getAmount().toString())
                 .append("\r\n Description: ")
                 .append(getDescription().toString())
-                .append("\r\n Payees: ")
-                .append(getPayee().toString());
+                .append("\n Payees: ")
+                .append(getPayees().asObservableList().toString());
         return builder.toString();
     }
 

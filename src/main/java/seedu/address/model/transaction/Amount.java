@@ -6,7 +6,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 import seedu.address.model.person.Address;
 //@authoer ongkc
 /**
- * Represents a Payer paid amount in the address book.
+ * Represents the amount that a Payer paid in a SmartSplit transaction.
  */
 public class Amount {
 

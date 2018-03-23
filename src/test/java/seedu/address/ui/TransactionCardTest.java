@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import guitests.guihandles.TransactionCardHandle;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.util.SampleDataUtil;
 import seedu.address.testutil.TransactionBuilder;
 
 //@phmignot
@@ -40,7 +41,9 @@ public class TransactionCardTest extends GuiUnitTest {
         assertFalse(transactionCard.equals(0));
 
         // different transaction, same index -> returns false
-        Transaction differentTransaction = new TransactionBuilder().withPayerName("differentPayer").build();
+        Transaction differentTransaction = new TransactionBuilder()
+                .withPayer(SampleDataUtil.getSamplePersons()[1])
+                .build();
         assertFalse(transactionCard.equals(new TransactionCard(differentTransaction, 0)));
     }
 

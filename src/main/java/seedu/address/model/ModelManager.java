@@ -3,8 +3,10 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +14,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -40,9 +43,9 @@ public class ModelManager extends ComponentManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
-        //@auther ongkc
+        //@@author ongkc
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
-
+        //@@author
     }
 
     public ModelManager() {
@@ -86,8 +89,50 @@ public class ModelManager extends ComponentManager implements Model {
         addressBook.updatePerson(target, editedPerson);
         indicateAddressBookChanged();
     }
+    //@@author steven-jia
+    @Override
+    public Person findPersonByName(Name name) throws PersonNotFoundException {
+        Set<Person> matchingPersons = addressBook.getPersonList()
+                .stream()
+                .filter(person -> person.getName().equals(name))
+                .collect(Collectors.toSet());
 
-    //@ongkc
+        if (!matchingPersons.isEmpty()) {
+            return matchingPersons.iterator().next();
+        } else {
+            throw new PersonNotFoundException();
+        }
+    }
+
+    @Override
+    public Set<Transaction> findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
+        Set<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .stream()
+                .filter(transaction -> transaction.getPayer().equals(person))
+                .collect(Collectors.toSet());
+
+        if (!matchingTransactions.isEmpty()) {
+            return matchingTransactions;
+        } else {
+            throw new TransactionNotFoundException();
+        }
+    }
+
+    @Override
+    public Set<Transaction> findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
+        Set<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .stream()
+                .filter(transaction -> transaction.getPayees().contains(person))
+                .collect(Collectors.toSet());
+
+        if (!matchingTransactions.isEmpty()) {
+            return matchingTransactions;
+        } else {
+            throw new TransactionNotFoundException();
+        }
+    }
+
+    //@@author ongkc
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */
@@ -97,7 +142,7 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
-    //@ongkc
+    //@@author ongkc
     @Override
     public void addTransaction(Transaction transaction) {
         addressBook.addTransaction(transaction);
@@ -105,7 +150,7 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
     }
 
-    //@phmignot
+    //@@author phmignot
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
         addressBook.removeTransaction(target);

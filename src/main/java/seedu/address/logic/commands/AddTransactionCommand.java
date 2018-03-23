@@ -7,6 +7,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
+import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 
 /**@author ongkc
@@ -21,14 +23,16 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_PAYER + "PAYER NAME "
             + PREFIX_AMOUNT + "AMOUNT "
             + PREFIX_DESCRIPTION + "DESCRIPTION "
-            + PREFIX_PAYEE + "PAYEE NAME \n"
+            + "[" + PREFIX_PAYEE + "PAYEE NAME]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_PAYER + "John Doe "
             + PREFIX_AMOUNT + "3456.78 "
-            + PREFIX_DESCRIPTION + "for dinner meal "
-            + PREFIX_PAYEE + "Tom Riddle ";
+            + PREFIX_DESCRIPTION + "Taxi ride to NUS "
+            + PREFIX_PAYEE + "Alex Yeoh "
+            + PREFIX_PAYEE + "Bernice Yu";
 
     public static final String MESSAGE_SUCCESS = "New transaction added";
+    public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
 
     private final Transaction toAdd;
 
@@ -41,10 +45,14 @@ public class AddTransactionCommand extends UndoableCommand {
     }
 
     @Override
-    public CommandResult executeUndoableCommand() {
+    public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(model);
-        model.addTransaction(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
+        try {
+            model.addTransaction(toAdd);
+            return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
+        } catch (PersonNotFoundException pnfe) {
+            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
+        }
 
     }
 

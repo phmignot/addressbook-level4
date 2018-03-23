@@ -5,28 +5,62 @@ import java.util.Arrays;
 import java.util.List;
 
 import seedu.address.model.AddressBook;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.util.SampleDataUtil;
 //@author ongkc
 /**
  * A utility class containing a list of {@code Transaction} objects to be used in tests.
  */
 public class TypicalTransactions {
 
-    public static final Transaction T1 = new TransactionBuilder().withPayerName("Alice Dupree").withAmount("5.62")
-            .withDescription("Boat trip").withPayeeName("John Remi").build();
-    public static final Transaction T2 = new TransactionBuilder().withPayerName("Joseph Marie").withAmount("123.45")
-            .withDescription("Food for barbecue").withPayerName("Marie Joe").build();
-    public static final Transaction T3 = new TransactionBuilder().withPayerName("Damien Francois").withAmount("10.00")
-            .withDescription("Open air concert").withPayeeName("Patrick Bruel").build();
-    // Manually added
-    public static final Transaction T4 = new TransactionBuilder().withPayeeName("Alice Pauline")
-            .withAmount("9999").withDescription("for transport")
-            .withPayeeName("Brandon Ingram").build();
-    public static final Transaction T5 = new TransactionBuilder().withPayeeName("Alice Pauline")
-            .withAmount("9999").withDescription("for dinner")
-            .withPayeeName("Brandon Ingram").build();
+    private static Transaction t1 = null;
+    private static Transaction t2 = null;
+    private static Transaction t3 = null;
+    private static Transaction t4 = null;
+    private static Transaction t5 = null;
 
-    private TypicalTransactions() {} // prevents instantiation
+    private static Person person1 = SampleDataUtil.getSamplePersons()[0];
+    private static Person person2 = SampleDataUtil.getSamplePersons()[1];
+    private static Person person3 = SampleDataUtil.getSamplePersons()[2];
+    private static Person person4 = SampleDataUtil.getSamplePersons()[3];
+    private static Person person5 = SampleDataUtil.getSamplePersons()[4];
+    private static Person person6 = SampleDataUtil.getSamplePersons()[5];
+
+    private static UniquePersonList payee2 = new UniquePersonList();
+    private static UniquePersonList payee4 = new UniquePersonList();
+    private static UniquePersonList payee6 = new UniquePersonList();
+    private static UniquePersonList payeeAlice = new UniquePersonList();
+    private static UniquePersonList payeeBenson = new UniquePersonList();
+
+    static {
+        try {
+            payee2.add(person2);
+            payee4.add(person4);
+            payee6.add(person6);
+            payeeAlice.add(TypicalPersons.ALICE);
+            payeeBenson.add(TypicalPersons.BENSON);
+
+            t1 = new TransactionBuilder().withPayer(person1).withAmount("5.62")
+                    .withDescription("Boat trip").withPayees(payee2).build();
+            t2 = new TransactionBuilder().withPayer(person3).withAmount("123.45")
+                    .withDescription("Food for barbecue").withPayees(payee4).build();
+            t3 = new TransactionBuilder().withPayer(person5).withAmount("10.00")
+                    .withDescription("Open air concert").withPayees(payee6).build();
+            t4 = new TransactionBuilder().withPayer(TypicalPersons.ALICE).withAmount("9999")
+                    .withDescription("Transport")
+                    .withPayees(payeeBenson).build();
+            t5 = new TransactionBuilder().withPayer(TypicalPersons.ALICE)
+                    .withAmount("9999").withDescription("Dinner")
+                    .withPayees(payeeBenson).build();
+        } catch (DuplicatePersonException dpe) {
+            dpe.printStackTrace();
+        }
+    }
+
+    private TypicalTransactions() { } // prevents instantiation
 
     /**
      * Returns an {@code AddressBook} with all the typical persons.
@@ -39,8 +73,11 @@ public class TypicalTransactions {
         return ab;
     }
 
-
     public static List<Transaction> getTypicalTransactions() {
-        return new ArrayList<>(Arrays.asList(T1, T2, T3));
+        return new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5));
+    }
+
+    public static List<UniquePersonList> getTypicalPayees() {
+        return new ArrayList<>(Arrays.asList(payee2, payee4, payee6, payeeAlice, payeeBenson));
     }
 }
