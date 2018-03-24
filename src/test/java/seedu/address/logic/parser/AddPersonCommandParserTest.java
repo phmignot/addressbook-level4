@@ -34,6 +34,7 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 import org.junit.Test;
 
 import seedu.address.logic.commands.AddPersonCommand;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -46,7 +47,7 @@ public class AddPersonCommandParserTest {
     private AddPersonCommandParser parser = new AddPersonCommandParser();
 
     @Test
-    public void parse_allFieldsPresent_success() {
+    public void parse_allFieldsPresent_success() throws CommandException {
         Person expectedPerson = new PersonBuilder().withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
                 .withEmail(VALID_EMAIL_BOB).withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_FRIEND).build();
 
@@ -79,7 +80,7 @@ public class AddPersonCommandParserTest {
     }
 
     @Test
-    public void parse_optionalFieldsMissing_success() {
+    public void parse_optionalFieldsMissing_success() throws CommandException {
         // zero tags
         Person expectedPerson = new PersonBuilder().withName(VALID_NAME_AMY).withPhone(VALID_PHONE_AMY)
                 .withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY).withTags().build();
@@ -88,7 +89,7 @@ public class AddPersonCommandParserTest {
     }
 
     @Test
-    public void parse_compulsoryFieldMissing_failure() {
+    public void parse_compulsoryFieldMissing_failure() throws CommandException {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddPersonCommand.MESSAGE_USAGE);
 
         // missing name prefix
@@ -113,7 +114,7 @@ public class AddPersonCommandParserTest {
     }
 
     @Test
-    public void parse_invalidValue_failure() {
+    public void parse_invalidValue_failure() throws CommandException {
         // invalid name
         assertParseFailure(parser, INVALID_NAME_DESC + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
                 + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Name.MESSAGE_NAME_CONSTRAINTS);

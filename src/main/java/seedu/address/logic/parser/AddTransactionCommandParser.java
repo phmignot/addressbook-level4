@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
@@ -11,6 +12,7 @@ import java.util.stream.Stream;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
@@ -29,7 +31,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      * and returns an AddTransactionCommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
-    public AddTransactionCommand parse(String args, Model model) throws ParseException {
+    public AddTransactionCommand parse(String args, Model model) throws ParseException, CommandException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE);
 
@@ -48,7 +50,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Transaction transaction = new Transaction(payer, amount, description, payees);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
-            throw new ParseException(pnfe.getMessage(), pnfe);
+            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
