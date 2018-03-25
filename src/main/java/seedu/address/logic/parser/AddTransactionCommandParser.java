@@ -7,6 +7,10 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -46,12 +50,11 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
-
-            SetPayerAmount(Double.parseDouble(amount.value), payer);
+            Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+            setPayerAmount(Double.parseDouble(amount.value), payer);
             setPayeesAmount(Double.parseDouble(amount.value), payees);
 
-
-            Transaction transaction = new Transaction(payer, amount, description, payees);
+            Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
@@ -61,12 +64,12 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
     }
 
     private void setPayeesAmount(double amount, UniquePersonList payees) {
-        for(Person i: payees){
-            i.setAmount((-1*amount)/payees.asObservableList().size());
+        for(Person p: payees){
+            p.setAmount((amount)/payees.asObservableList().size());
         }
     }
 
-    private void SetPayerAmount(double amount, Person payer) {
+    private void setPayerAmount(double amount, Person payer) {
         payer.setAmount(amount);
     }
 

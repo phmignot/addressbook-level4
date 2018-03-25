@@ -1,6 +1,10 @@
 package seedu.address.storage;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +36,8 @@ public class XmlAdaptedTransaction {
     @XmlElement(required = true)
     private String description;
     @XmlElement(required = true)
+    private Date dateTime;
+    @XmlElement(required = true)
     private List<XmlAdaptedPerson> payees = new ArrayList<>();
 
     /**
@@ -47,6 +53,8 @@ public class XmlAdaptedTransaction {
         this.payer = new XmlAdaptedPerson(payer);
         this.amount = amount;
         this.description = description;
+        this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+
 
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
@@ -64,6 +72,7 @@ public class XmlAdaptedTransaction {
         payer = new XmlAdaptedPerson(source.getPayer());
         amount = source.getAmount().value;
         description = source.getDescription().value;
+        this.dateTime = source.getDateTime();
 
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
@@ -118,7 +127,7 @@ public class XmlAdaptedTransaction {
         }
         final UniquePersonList payees = convertedPayees;
 
-        return new Transaction(payer, amount, description, payees);
+        return new Transaction(payer, amount, description, dateTime, payees);
     }
 
     //@@author steven-jia
