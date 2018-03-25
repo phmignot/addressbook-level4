@@ -20,20 +20,20 @@ public class Person {
     private final Phone phone;
     private final Email email;
     private final Address address;
-    private Amount amount;
+    private Amount balance;
 
     private final UniqueTagList tags;
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Amount amount, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, amount, tags);
+    public Person(Name name, Phone phone, Email email, Address address, Amount balance, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, address, balance, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
-        this.amount = amount;
+        this.balance = balance;
         // protect internal tags from changes in the arg list
         this.tags = new UniqueTagList(tags);
     }
@@ -54,7 +54,7 @@ public class Person {
         return address;
     }
     public Amount getAmount() {
-        return amount;
+        return balance;
     }
 
     /**
@@ -83,12 +83,12 @@ public class Person {
     }
 
     public void setAmount(Double amount) {
-        this.amount = new Amount(Double.toString(Double.parseDouble(getAmount().toString()) + amount));
+        this.balance = new Amount(Double.toString(Double.parseDouble(getAmount().toString()) + amount));
     }
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, address, balance, tags);
     }
 
     @Override

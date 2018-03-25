@@ -107,7 +107,7 @@ public class EditCommand extends UndoableCommand {
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-        Amount updatedAmount = editPersonDescriptor.getAmount().orElse(personToEdit.getAmount());
+        Amount updatedAmount = personToEdit.getAmount();
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
         return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedAmount, updatedTags);
@@ -141,7 +141,6 @@ public class EditCommand extends UndoableCommand {
         private Phone phone;
         private Email email;
         private Address address;
-        private Amount amount;
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
@@ -155,7 +154,6 @@ public class EditCommand extends UndoableCommand {
             setPhone(toCopy.phone);
             setEmail(toCopy.email);
             setAddress(toCopy.address);
-            setAmount(toCopy.amount);
             setTags(toCopy.tags);
         }
 
@@ -197,12 +195,6 @@ public class EditCommand extends UndoableCommand {
         public Optional<Address> getAddress() {
             return Optional.ofNullable(address);
         }
-
-        public void setAmount(Amount amount) {
-            this.amount = amount; }
-
-        public Optional<Amount> getAmount() {
-            return Optional.ofNullable(amount); }
 
         /**
          * Sets {@code tags} to this object's {@code tags}.
