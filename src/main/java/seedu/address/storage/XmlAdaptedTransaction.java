@@ -70,7 +70,7 @@ public class XmlAdaptedTransaction {
      */
     public XmlAdaptedTransaction(Transaction source) {
         payer = new XmlAdaptedPerson(source.getPayer());
-        amount = source.getAmount().value;
+        amount = source.getAmount().toString();
         description = source.getDescription().value;
         this.dateTime = source.getDateTime();
 

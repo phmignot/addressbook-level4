@@ -51,8 +51,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
-            setPayerAmount(Double.parseDouble(amount.value), payer);
-            setPayeesAmount(Double.parseDouble(amount.value), payees);
+            setPayerAmount(Double.parseDouble(amount.toString()), payer);
+            setPayeesAmount(Double.parseDouble(amount.toString()), payees);
 
             Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
             return new AddTransactionCommand(transaction);
@@ -64,8 +64,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
     }
 
     private void setPayeesAmount(double amount, UniquePersonList payees) {
-        for(Person p: payees){
-            p.setAmount((amount)/payees.asObservableList().size());
+        for (Person p: payees) {
+            p.setAmount((amount) / payees.asObservableList().size());
         }
     }
 

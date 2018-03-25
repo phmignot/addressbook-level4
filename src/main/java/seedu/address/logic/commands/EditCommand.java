@@ -198,10 +198,11 @@ public class EditCommand extends UndoableCommand {
             return Optional.ofNullable(address);
         }
 
-        public void setAmount(Amount amount) { this.amount = amount;
-        }
+        public void setAmount(Amount amount) {
+            this.amount = amount; }
 
-        public Optional<Amount> getAmount() {return Optional.ofNullable(amount); }
+        public Optional<Amount> getAmount() {
+            return Optional.ofNullable(amount); }
 
         /**
          * Sets {@code tags} to this object's {@code tags}.

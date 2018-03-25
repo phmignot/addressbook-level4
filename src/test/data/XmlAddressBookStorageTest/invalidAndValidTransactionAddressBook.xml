@@ -5,6 +5,7 @@
         <payer>Ha!ns Mu@ster</payer>
         <amount isPrivate="false">9482424.3</amount>
         <description isPrivate="false">for lunch and dinner</description>
+        <date isPrivate="false">Sun Mar 25 18:30:03 SGT 2018</date>
         <payee isPrivate="false">Kobe Bryant</payee>
     </persons>
     <!-- Valid Transaction-->
@@ -12,6 +13,7 @@
         <payer>Hans Muster</payer>
         <amount isPrivate="false">9482424.3</amount>
         <description isPrivate="false">for lunch and dinner</description>
+        <date isPrivate="false">Sun Mar 25 18:30:03 SGT 2018</date>
         <payee isPrivate="false">Kobe Bryant</payee>
     </persons>
 </addressbook>

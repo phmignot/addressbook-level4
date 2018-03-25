@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addressbook>
-    <!-- Transaction with invalid payer field -->
-    <persons>
-        <payer>Ha!ns Mu@ster</payer>
-        <amount isPrivate="false">9482424.3</amount>
-        <description isPrivate="false">for lunch and dinner</description>
-        <payee isPrivate="false">Kobe Bryant</payee>
-    </persons>
+    <!-- Transaction with invalid payer name field -->
+    <transactions>
+        <payer>
+            <name>Alice P*^*se</name>
+            <phone>91031282</phone>
+            <email>a.pauline@nus.com</email>
+            <address>452 Example Road, #16-43</address>
+            <amount>123.45</amount>
+            <tagged>friend</tagged>
+        </payer>
+        <amount>85355255</amount>
+        <description>for lunch meal</description>
+        <date>Sun Mar 25 18:30:03 SGT 2018</date>
+        <payees>
+            <name>Brandon Ingram</name>
+            <phone>42398390</phone>
+            <email>ingram.b@contact.me</email>
+            <address>135 College Avenue East</address>
+            <amount>123.45</amount>
+            <tagged>acquaintance</tagged>
+        </payees>
+    </transactions>
 </addressbook>

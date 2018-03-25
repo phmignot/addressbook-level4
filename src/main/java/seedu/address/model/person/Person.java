@@ -27,7 +27,7 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address,Amount amount, Set<Tag> tags) {
+    public Person(Name name, Phone phone, Email email, Address address, Amount amount, Set<Tag> tags) {
         requireAllNonNull(name, phone, email, address, amount, tags);
         this.name = name;
         this.phone = phone;
@@ -50,10 +50,11 @@ public class Person {
         return email;
     }
 
-    public Address getAddress() { return address;
+    public Address getAddress() {
+        return address;
     }
-
-    public Amount getAmount() { return amount;
+    public Amount getAmount() {
+        return amount;
     }
 
     /**
@@ -82,7 +83,7 @@ public class Person {
     }
 
     public void setAmount(Double amount) {
-        this.amount = new Amount(Double.toString(Double.parseDouble(getAmount().value) + amount));
+        this.amount = new Amount(Double.toString(Double.parseDouble(getAmount().toString()) + amount));
     }
     @Override
     public int hashCode() {

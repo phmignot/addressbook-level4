@@ -93,7 +93,7 @@ public class GuiTestAssert {
     public static void assertCardDisplaysTransaction(Transaction expectedTransaction,
                                                      TransactionCardHandle actualCard) {
         assertEquals(expectedTransaction.getPayer().getName().fullName, actualCard.getPayer());
-        assertEquals(expectedTransaction.getAmount().value, actualCard.getAmount());
+        assertEquals(expectedTransaction.getAmount().toString(), actualCard.getAmount());
         assertEquals(expectedTransaction.getDescription().value, actualCard.getDescription());
 
         String expectedPayeesString = "";

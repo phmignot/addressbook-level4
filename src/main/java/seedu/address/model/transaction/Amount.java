@@ -19,7 +19,7 @@ public class Amount {
      */
     public static final String AMOUNT_VALIDATION_REGEX = "\\d+(\\.\\d*)?|\\.\\d+\n";
 
-    public String value;
+    private String value;
 
     /**
      * Constructs an {@code Amount}.
