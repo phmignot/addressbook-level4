@@ -1,12 +1,13 @@
 package seedu.address.model.transaction;
 
-import seedu.address.model.person.Person;
-
 import java.util.function.Predicate;
+
+import seedu.address.model.person.Person;
 
 /**
  * Tests that the {@code Person} involved in a transaction matches the {@code Person} given.
  */
+//@@author phmignot
 public class TransactionContainsPersonPredicate implements Predicate<Transaction> {
 
     private final Person person;
