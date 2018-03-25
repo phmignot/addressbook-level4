@@ -50,8 +50,7 @@ public class Person {
         return email;
     }
 
-    public Address getAddress() {
-        return address;
+    public Address getAddress() { return address;
     }
 
     public Amount getAmount() { return amount;
@@ -83,6 +82,9 @@ public class Person {
                 && otherPerson.getAmount().equals(this.getAmount());
     }
 
+    public void setAmount(Double amount) {
+        this.amount = new Amount(Double.toString(Double.parseDouble(getAmount().value) + amount));
+    }
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own

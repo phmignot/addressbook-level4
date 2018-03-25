@@ -47,6 +47,10 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
 
+            SetPayerAmount(Double.parseDouble(amount.value), payer);
+            setPayeesAmount(Double.parseDouble(amount.value), payees);
+
+
             Transaction transaction = new Transaction(payer, amount, description, payees);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
@@ -54,6 +58,16 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
+    }
+
+    private void setPayeesAmount(double amount, UniquePersonList payees) {
+        for(Person i: payees){
+            i.setAmount((-1*amount)/payees.asObservableList().size());
+        }
+    }
+
+    private void SetPayerAmount(double amount, Person payer) {
+        payer.setAmount(amount);
     }
 
     //@@author steven-jia
