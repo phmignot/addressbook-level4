@@ -5,6 +5,7 @@ import seedu.address.commons.events.BaseEvent;
 /**
  * Represents no selection in the Person List Panel
  */
+//@@author phmignot
 public class PersonPanelNoSelectionEvent extends BaseEvent {
 
     public PersonPanelNoSelectionEvent() {
