@@ -39,7 +39,7 @@
   </GridPane>
    <VBox prefHeight="105.0" prefWidth="63.0">
       <children>
-         <Label prefHeight="57.0" prefWidth="63.0" text="\$0.00">
+         <Label fx:id="amount" prefHeight="57.0" prefWidth="63.0" text="\$amount">
             <padding>
                <Insets top="40.0" />
             </padding>

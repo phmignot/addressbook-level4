@@ -8,6 +8,7 @@ import java.util.Set;
 
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.transaction.Amount;
 
 /**
  * Represents a Person in the address book.
@@ -19,18 +20,20 @@ public class Person {
     private final Phone phone;
     private final Email email;
     private final Address address;
+    private Amount amount;
 
     private final UniqueTagList tags;
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Person(Name name, Phone phone, Email email, Address address,Amount amount, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, address, amount, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.amount = amount;
         // protect internal tags from changes in the arg list
         this.tags = new UniqueTagList(tags);
     }
@@ -49,6 +52,9 @@ public class Person {
 
     public Address getAddress() {
         return address;
+    }
+
+    public Amount getAmount() { return amount;
     }
 
     /**
@@ -73,13 +79,14 @@ public class Person {
         return otherPerson.getName().equals(this.getName())
                 && otherPerson.getPhone().equals(this.getPhone())
                 && otherPerson.getEmail().equals(this.getEmail())
-                && otherPerson.getAddress().equals(this.getAddress());
+                && otherPerson.getAddress().equals(this.getAddress())
+                && otherPerson.getAmount().equals(this.getAmount());
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, address, amount, tags);
     }
 
     @Override
@@ -92,6 +99,7 @@ public class Person {
                 .append(getEmail())
                 .append(" Address: ")
                 .append(getAddress())
+                .append(getAmount())
                 .append(" Tags: ");
         getTags().forEach(builder::append);
         return builder.toString();
