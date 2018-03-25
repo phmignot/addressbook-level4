@@ -63,6 +63,11 @@ public class LogicManager extends ComponentManager implements Logic {
     }
 
     @Override
+    public void updateFilteredTransactionList() {
+        model.updateFilteredTransactionList(Model.PREDICATE_SHOW_ALL_TRANSACTIONS);
+    }
+
+    @Override
     public void updateFilteredTransactionList(Person person) {
         TransactionContainsPersonPredicate predicate = new TransactionContainsPersonPredicate(person);
         model.updateFilteredTransactionList(predicate);

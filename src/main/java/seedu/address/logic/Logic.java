@@ -30,6 +30,11 @@ public interface Logic {
     ListElementPointer getHistorySnapshot();
 
     /**
+     * Removes any filter from the transaction list.
+     */
+    void updateFilteredTransactionList();
+
+    /**
      * Filters the transaction list by the person.
      * @param person to filter with.
      */
