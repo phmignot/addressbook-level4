@@ -11,7 +11,6 @@ import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -154,13 +153,6 @@ public class XmlAdaptedTransaction {
         }
         if (!Email.isValidEmail(person.getEmail().value)) {
             throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
-        }
-
-        if (person.getAddress().value == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
-        }
-        if (!Address.isValidAddress(person.getAddress().value)) {
-            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
         }
 
         for (Tag tag: person.getTags()) {
