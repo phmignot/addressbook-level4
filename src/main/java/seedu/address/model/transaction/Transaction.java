@@ -112,4 +112,13 @@ public class Transaction {
         return builder.toString();
     }
 
+    /**
+     * Tests if a person is implied in this transaction.
+     * @param person to check his implication.
+     * @return true if the person is the payer or one of the payee;
+     * false otherwise.
+     */
+    public boolean isImplied(Person person) {
+        return (payer.equals(person) || payees.contains(person));
+    }
 }

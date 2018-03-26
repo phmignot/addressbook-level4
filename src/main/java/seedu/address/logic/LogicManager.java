@@ -13,6 +13,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionContainsPersonPredicate;
 
 /**
  * The main LogicManager of the app.
@@ -59,5 +60,16 @@ public class LogicManager extends ComponentManager implements Logic {
     @Override
     public ListElementPointer getHistorySnapshot() {
         return new ListElementPointer(history.getHistory());
+    }
+
+    @Override
+    public void updateFilteredTransactionList() {
+        model.updateFilteredTransactionList(Model.PREDICATE_SHOW_ALL_TRANSACTIONS);
+    }
+
+    @Override
+    public void updateFilteredTransactionList(Person person) {
+        TransactionContainsPersonPredicate predicate = new TransactionContainsPersonPredicate(person);
+        model.updateFilteredTransactionList(predicate);
     }
 }
