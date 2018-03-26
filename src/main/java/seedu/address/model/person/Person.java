@@ -53,7 +53,7 @@ public class Person {
     public Address getAddress() {
         return address;
     }
-    public Amount getAmount() {
+    public Amount getBalance() {
         return balance;
     }
 
@@ -82,8 +82,8 @@ public class Person {
                 && otherPerson.getAddress().equals(this.getAddress());
     }
 
-    public void setAmount(Double amount) {
-        this.balance = new Amount(Double.toString(Double.parseDouble(getAmount().toString()) + amount));
+    public void setBalance(Double amount) {
+        this.balance = new Amount(Double.toString(Double.parseDouble(getBalance().toString()) + amount));
     }
     @Override
     public int hashCode() {
@@ -101,7 +101,7 @@ public class Person {
                 .append(getEmail())
                 .append(" Address: ")
                 .append(getAddress())
-                .append(getAmount())
+                .append(getBalance())
                 .append(" Tags: ");
         getTags().forEach(builder::append);
         return builder.toString();

@@ -65,12 +65,12 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
 
     private void setPayeesAmount(double amount, UniquePersonList payees) {
         for (Person p: payees) {
-            p.setAmount((amount) / payees.asObservableList().size());
+            p.setBalance((amount) / payees.asObservableList().size());
         }
     }
 
     private void setPayerAmount(double amount, Person payer) {
-        payer.setAmount(amount);
+        payer.setBalance(amount);
     }
 
     //@@author steven-jia

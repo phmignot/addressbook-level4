@@ -48,7 +48,7 @@ public class PersonBuilder {
         phone = personToCopy.getPhone();
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
-        amount = personToCopy.getAmount();
+        amount = personToCopy.getBalance();
         tags = new HashSet<>(personToCopy.getTags());
     }
 
