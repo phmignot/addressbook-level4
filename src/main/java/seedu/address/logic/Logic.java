@@ -28,4 +28,15 @@ public interface Logic {
 
     /** Returns the list of input entered by the user, encapsulated in a {@code ListElementPointer} object */
     ListElementPointer getHistorySnapshot();
+
+    /**
+     * Removes any filter from the transaction list.
+     */
+    void updateFilteredTransactionList();
+
+    /**
+     * Filters the transaction list by the person.
+     * @param person to filter with.
+     */
+    void updateFilteredTransactionList(Person person);
 }
