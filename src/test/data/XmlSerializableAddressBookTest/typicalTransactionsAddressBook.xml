@@ -7,7 +7,6 @@
             <name>Alice Pauline</name>
             <phone>91031282</phone>
             <email>a.pauline@nus.com</email>
-            <address>452 Example Road, #16-43</address>
             <amount>123.45</amount>
             <tagged>friend</tagged>
         </payer>
@@ -17,7 +16,6 @@
             <name>Brandon Ingram</name>
             <phone>42398390</phone>
             <email>ingram.b@contact.me</email>
-            <address>135 College Avenue East</address>
             <amount>123.45</amount>
             <tagged>acquaintance</tagged>
         </payees>
