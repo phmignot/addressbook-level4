@@ -380,19 +380,21 @@ Instead of only saving each transaction details to every person involved, a new 
 .Component interactions for `select` command 
 image::SelectCommandDiagram.png[width="800"]
 From the diagram above, when users enter the command select INDEX to select the first person in the persons list, SelectCommandParser will parse the argument, and return SelectCommand.
-Next, SelectCommand will call its method execute(). After select command is executed, an JumpToListRequestEvent is raised.
+Next, SelectCommand will call its method execute(). + 
+After select command is executed, a JumpToListRequestEvent is raised.
 
 ==== JumpToListRequest Event process
 .Component interactions for `JumpToListRequest` event 
 image::JumpToListRequestEventDiagram.png[width="800"]
-With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
+With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, 
+that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
 
 ==== PersonPanelSelectionChanged Event process
 There are two ways to raise this event. The first one is by using this select command, the second one is by directly clicking on the PersonCard in the Addressbook.
 
 .Component interactions for `PersonPanelSelectionChanged` event 
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelSelectionChanged event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep only transactions related with the person selected.
+With reference to the diagram above, the PersonPanelSelectionChanged event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep only transactions related with the person selected. + 
 The FilteredTransactionList will be updated, the UI will display the new list.
 
 
@@ -401,8 +403,8 @@ In order to raise this event, the selection has to be cleared. There are several
 
 .Component interactions for `PersonPanelSelectionChanged` event 
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelNoSelection event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep every transactions.
-The FilteredTransactionList will be updated, the UI will display the new list.
+With reference to the diagram above, the PersonPanelNoSelection event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep every transactions. + 
+The FilteredTransactionList will be updated, the UI will display the new list of transactions.
 
 ==== Why it is implemented that way
 
