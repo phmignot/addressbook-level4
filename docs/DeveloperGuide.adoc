@@ -368,8 +368,9 @@ Next, AddTransactionCommand will call its method execute(). After addTransaction
 ==== Add Transaction Event process
 .Component interactions for `addTransaction` command (part 2)
 image::SDforDeletePersonEventHandling.png[width="800"]
-With reference to the diagram above, after addTransaction method is executed, it will post an AddressBookChangeEvent and allow the storage to handle this event and save the new transaction into the hard disk. The UI will also handle this event and
-status bar of the UI will be updated and reflect the new transaction in the TransactionList Panel.
+With reference to the diagram above, after addTransaction method is executed, the AddTransactionCommandParser, as part of the Logic component, will calculate a new balance for the payer and each payee.
+An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
 
 ==== Why it is implemented that way
 
