@@ -373,7 +373,7 @@ status bar of the UI will be updated and reflect the new transaction in the Tran
 
 ==== Why it is implemented that way
 
-Instead of only saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
+Instead of saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
 
 // tag::dataencryption[]
 === [Proposed] Data Encryption
