@@ -10,6 +10,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.testutil.Assert;
 import seedu.address.testutil.TypicalTransactions;
