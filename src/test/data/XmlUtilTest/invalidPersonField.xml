@@ -4,6 +4,6 @@
     <name>Hans Muster</name>
     <phone>9482asf424</phone>
     <email>hans@example</email>
-    <amount>123.23</amount>
+    <balance>0.00</balance>
     <tagged>friends</tagged>
 </person>

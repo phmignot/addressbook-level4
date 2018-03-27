@@ -64,7 +64,7 @@ Format: `help`
 === Adding a person: `addPerson`
 
 Adds a person to SmartSplit +
-Format: `addPerson n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
+Format: `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...`
 
 [TIP]
 A person can have any number of tags (including 0)
@@ -307,6 +307,7 @@ _{explain how the user can enable/disable data encryption}_
 == Command Summary
 
 * *AddPerson* `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...` +
+
 e.g. `addPerson n/James Ho p/22224444 e/jamesho@example.com t/friend t/colleague`
 * *AddTransaction* `r/PAYER NAME a/AMOUNT d/DESCRIPTION [e/PAYEE NAME]...` +
 e.g. `addTransaction r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle e/Becky Simmons`

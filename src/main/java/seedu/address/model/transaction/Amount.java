@@ -2,22 +2,23 @@ package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-//@authoer ongkc
+
+//@@author ongkc
 /**
  * Represents the amount that a Payer paid in a SmartSplit transaction.
  */
 public class Amount {
 
     public static final String MESSAGE_AMOUNT_CONSTRAINTS =
-            "Payer amount can only take in numerical number with any decimal number precision, "
+            "Amount can only take in a numerical number up to 2 decimal places, "
                     + "and it should not be blank";
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String AMOUNT_VALIDATION_REGEX = "\\d+(\\.\\d*)?|\\.\\d+\n";
+    public static final String AMOUNT_VALIDATION_REGEX = "^\\d+(\\.\\d{1,2})?$";
 
-    private String value;
+    public final String value;
 
     /**
      * Constructs an {@code Amount}.
@@ -40,6 +41,13 @@ public class Amount {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this // short circuit if same object
+                || (other instanceof Amount // instanceof handles nulls
+                && this.value.equals(((Amount) other).value)); // state check
     }
 
     @Override
