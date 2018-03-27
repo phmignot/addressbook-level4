@@ -1,5 +1,10 @@
 package seedu.address.testutil;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
+
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -20,6 +25,7 @@ public class TransactionBuilder {
     private Person payer;
     private Amount amount;
     private Description description;
+    private Date dateTime;
     private UniquePersonList payees;
 
     public TransactionBuilder() {
@@ -35,6 +41,7 @@ public class TransactionBuilder {
         } catch (DuplicatePersonException dpe) {
             throw new AssertionError("This payee has already been added");
         }
+        dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         payees = samplePayees;
     }
 
@@ -45,6 +52,7 @@ public class TransactionBuilder {
         payer = transactionToCopy.getPayer();
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
+        dateTime = transactionToCopy.getDateTime();
         payees = transactionToCopy.getPayees();
     }
 
@@ -80,8 +88,15 @@ public class TransactionBuilder {
         this.payees = payees;
         return this;
     }
+    /**
+     * Sets the {@code date & time} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withDate(Date dateTime) {
+        this.dateTime = dateTime;
+        return this;
+    }
 
     public Transaction build() {
-        return new Transaction(payer, amount, description, payees);
+        return new Transaction(payer, amount, description, dateTime, payees);
     }
 }

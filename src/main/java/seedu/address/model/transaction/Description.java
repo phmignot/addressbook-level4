@@ -2,8 +2,6 @@ package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-
-import seedu.address.model.person.Address;
 //@authoer ongkc
 /**
  * Represents a Transaction's description in the address book.
@@ -39,13 +37,6 @@ public class Description {
     @Override
     public String toString() {
         return value;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof Address // instanceof handles nulls
-                && this.value.equals(((Address) other).value)); // state check
     }
 
     @Override

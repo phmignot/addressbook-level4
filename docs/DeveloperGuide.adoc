@@ -358,6 +358,23 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
 // end::undoredo[]
 
+===  Add Transaction feature
+==== Add Transaction Command Implementation
+.Component interactions for `addTransaction` command (part 1)
+image::AddTransaction.png[width="800"]
+From the diagram above, when users enter the command addTransaction /r Payer /a Amount /d Description /e Payee to add a new a Transaction in their address book, AddTransactionCommandParser will parse the arguments, and return AddTransactionCommand.
+Next, AddTransactionCommand will call its method execute(). After addTransaction command is executed, an addTransaction() method will be called. will be
+
+==== Add Transaction Event process
+.Component interactions for `addTransaction` command (part 2)
+image::SDforDeletePersonEventHandling.png[width="800"]
+With reference to the diagram above, after addTransaction method is executed, it will post an AddressBookChangeEvent and allow the storage to handle this event and save the new transaction into the hard disk. The UI will also handle this event and
+status bar of the UI will be updated and reflect the new transaction in the TransactionList Panel.
+
+==== Why it is implemented that way
+
+Instead of only saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
+
 // tag::dataencryption[]
 === [Proposed] Data Encryption
 
