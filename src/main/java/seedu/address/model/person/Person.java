@@ -8,6 +8,7 @@ import java.util.Set;
 
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.transaction.Amount;
 
 /**
  * Represents a Person in the address book.
@@ -18,19 +19,19 @@ public class Person {
     private final Name name;
     private final Phone phone;
     private final Email email;
-    private final Address address;
+    private Amount balance;
 
     private final UniqueTagList tags;
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Person(Name name, Phone phone, Email email, Amount balance, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, balance, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        this.balance = balance;
         // protect internal tags from changes in the arg list
         this.tags = new UniqueTagList(tags);
     }
@@ -47,8 +48,8 @@ public class Person {
         return email;
     }
 
-    public Address getAddress() {
-        return address;
+    public Amount getBalance() {
+        return balance;
     }
 
     /**
@@ -72,14 +73,16 @@ public class Person {
         Person otherPerson = (Person) other;
         return otherPerson.getName().equals(this.getName())
                 && otherPerson.getPhone().equals(this.getPhone())
-                && otherPerson.getEmail().equals(this.getEmail())
-                && otherPerson.getAddress().equals(this.getAddress());
+                && otherPerson.getEmail().equals(this.getEmail());
     }
 
+    public void setBalance(Double amount) {
+        this.balance = new Amount(Double.toString(Double.parseDouble(getBalance().toString()) + amount));
+    }
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, balance, tags);
     }
 
     @Override
@@ -90,8 +93,7 @@ public class Person {
                 .append(getPhone())
                 .append(" Email: ")
                 .append(getEmail())
-                .append(" Address: ")
-                .append(getAddress())
+                .append(getBalance())
                 .append(" Tags: ");
         getTags().forEach(builder::append);
         return builder.toString();

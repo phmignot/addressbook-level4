@@ -36,6 +36,7 @@ public class XmlAdaptedTransactionTest {
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         }
+
     }
 
     @Ignore

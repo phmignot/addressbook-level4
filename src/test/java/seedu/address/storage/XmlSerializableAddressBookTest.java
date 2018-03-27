@@ -68,7 +68,6 @@ public class XmlSerializableAddressBookTest {
         AddressBook typicalTransactionsAddressBook = TypicalTransactions.getTypicalAddressBook();
         assertEquals(addressBookFromFile, typicalTransactionsAddressBook);
     }
-
     @Test
     public void toModelType_invalidTransactionFile_throwsIllegalValueException() throws Exception {
         XmlSerializableAddressBook dataFromFile = XmlUtil.getDataFromFile(INVALID_TRANSACTION_FILE,
