@@ -33,12 +33,12 @@ public class AmountTest {
         assertFalse(Amount.isValidAmount("1.2.3")); // contains irregular numeric format
         assertFalse(Amount.isValidAmount("one dollars")); // contains alphabet characters
         assertFalse(Amount.isValidAmount("1 2 3")); // contains spacing between numbers
+        assertFalse(Amount.isValidAmount("12345.123")); // numbers & more than 2 decimals
+        assertFalse(Amount.isValidAmount("12345.")); // numbers & decimal point only
 
         // valid name
         assertTrue(Amount.isValidAmount("12345")); // numbers only
+        assertTrue(Amount.isValidAmount("12345.1")); // numbers & 1 decimal only
         assertTrue(Amount.isValidAmount("12345.78")); // numbers & 2 decimals only
-        assertTrue(Amount.isValidAmount("12345.")); // numbers & 2 decimals only
-        assertTrue(Amount.isValidAmount("12345.1")); // numbers & 2 decimals only
-        assertTrue(Amount.isValidAmount("12345.123")); // numbers & 3 decimals only
     }
 }
