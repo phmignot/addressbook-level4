@@ -3,7 +3,6 @@ package seedu.address.model.transaction;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
-import seedu.address.model.person.Address;
 //@@author ongkc
 /**
  * Represents the amount that a Payer paid in a SmartSplit transaction.
@@ -47,8 +46,8 @@ public class Amount {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof Address // instanceof handles nulls
-                && this.value.equals(((Address) other).value)); // state check
+                || (other instanceof Amount // instanceof handles nulls
+                && this.value.equals(((Amount) other).value)); // state check
     }
 
     @Override

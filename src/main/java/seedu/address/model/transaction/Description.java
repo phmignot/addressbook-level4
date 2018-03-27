@@ -17,7 +17,7 @@ public class Description {
     public final String value;
 
     /**
-     * Constructs an {@code Address}.
+     * Constructs an {@code Description}.
      *
      * @param description A valid description.
      */
