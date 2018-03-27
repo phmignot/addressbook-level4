@@ -9,12 +9,12 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.person.Balance;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.transaction.Amount;
 
 /**
  * JAXB-friendly version of the Person.
@@ -30,7 +30,7 @@ public class XmlAdaptedPerson {
     @XmlElement(required = true)
     private String email;
     @XmlElement(required = true)
-    private String amount;
+    private String balance;
 
     @XmlElement
     private List<XmlAdaptedTag> tagged = new ArrayList<>();
@@ -44,12 +44,12 @@ public class XmlAdaptedPerson {
     /**
      * Constructs an {@code XmlAdaptedPerson} with the given person details.
      */
-    public XmlAdaptedPerson(String name, String phone,
-                            String email, String amount, List<XmlAdaptedTag> tagged) {
+    public XmlAdaptedPerson(String name, String phone, String email, String balance,
+                            List<XmlAdaptedTag> tagged) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.amount = amount;
+        this.balance = balance;
         if (tagged != null) {
             this.tagged = new ArrayList<>(tagged);
         }
@@ -64,7 +64,7 @@ public class XmlAdaptedPerson {
         name = source.getName().fullName;
         phone = source.getPhone().value;
         email = source.getEmail().value;
-        amount = source.getBalance().toString();
+        balance = source.getBalance().value;
         tagged = new ArrayList<>();
         for (Tag tag : source.getTags()) {
             tagged.add(new XmlAdaptedTag(tag));
@@ -106,16 +106,19 @@ public class XmlAdaptedPerson {
         }
         final Email email = new Email(this.email);
 
-        if (this.amount == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName()));
+        //@@author steven-jia
+        if (this.balance == null) {
+            // Retroactively apply a balance of 0.00 to saved Persons without a balance
+            this.balance = "0.00";
         }
-        if (!Amount.isValidAmount(this.amount)) {
-            throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
+        if (!Balance.isValidBalance(this.balance)) {
+            throw new IllegalValueException(Balance.MESSAGE_BALANCE_CONSTRAINTS);
         }
-        Amount amount = new Amount(this.amount);
+        final Balance balance = new Balance(this.balance);
+        //@@author
 
         final Set<Tag> tags = new HashSet<>(personTags);
-        return new Person(name, phone, email, amount, tags);
+        return new Person(name, phone, email, balance, tags);
     }
 
     @Override
@@ -132,7 +135,7 @@ public class XmlAdaptedPerson {
         return Objects.equals(name, otherPerson.name)
                 && Objects.equals(phone, otherPerson.phone)
                 && Objects.equals(email, otherPerson.email)
-                && Objects.equals(amount, otherPerson.amount)
+                && Objects.equals(balance, otherPerson.balance)
                 && tagged.equals(otherPerson.tagged);
     }
 }

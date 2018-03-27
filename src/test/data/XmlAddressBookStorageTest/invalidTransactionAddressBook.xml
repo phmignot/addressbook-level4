@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addressbook>
-    <!-- Transaction with invalid payer name field -->
-    <transactions>
+    <!-- Transaction with invalid payer field -->
+    <persons>
         <payer>
-            <name>Alice P*^*se</name>
-            <phone>91031282</phone>
-            <email>a.pauline@nus.com</email>
-            <amount>123.45</amount>
-            <tagged>friend</tagged>
+            <name>Hans Mu@ster</name>
+            <phone>98765432</phone>
+            <email>hansmuster@example.com</email>
+            <balance>0.00</balance>
         </payer>
-        <amount>85355255</amount>
-        <description>for lunch meal</description>
-        <date>Sun Mar 25 18:30:03 SGT 2018</date>
-        <payees>
-            <name>Brandon Ingram</name>
-            <phone>42398390</phone>
-            <email>ingram.b@contact.me</email>
-            <amount>123.45</amount>
-            <tagged>acquaintance</tagged>
+        <amount isPrivate="false">9482424.3</amount>
+        <description isPrivate="false">for lunch and dinner</description>
+        <payees isPrivate="false">
+            <name>Kobe Bryant</name>
+            <phone>123498732</phone>
+            <email>kobebryant@example.com</email>
+            <balance>0.00</balance>
         </payees>
-    </transactions>
+    </persons>
 </addressbook>

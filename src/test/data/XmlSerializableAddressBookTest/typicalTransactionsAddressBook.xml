@@ -7,7 +7,7 @@
             <name>Alice Pauline</name>
             <phone>91031282</phone>
             <email>a.pauline@nus.com</email>
-            <amount>123.45</amount>
+            <balance>0.00</balance>
             <tagged>friend</tagged>
         </payer>
         <amount>85355255</amount>
@@ -16,7 +16,7 @@
             <name>Brandon Ingram</name>
             <phone>42398390</phone>
             <email>ingram.b@contact.me</email>
-            <amount>123.45</amount>
+            <balance>0.00</balance>
             <tagged>acquaintance</tagged>
         </payees>
     </transactions>
