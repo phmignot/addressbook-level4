@@ -31,6 +31,8 @@ public class Transaction {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+        updatePayerBalance(Double.parseDouble(amount.toString()), payer);
+        updatePayeesBalance(Double.parseDouble(amount.toString()), payees);
     }
 
     public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
@@ -42,6 +44,9 @@ public class Transaction {
                 System.out.println("Duplicate person" + p.getName() + " not added to list of payees");
             }
         }
+
+        updatePayerBalance(Double.parseDouble(amount.toString()), payer);
+        updatePayeesBalance(Double.parseDouble(amount.toString()), payeesToAdd);
 
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
@@ -120,5 +125,21 @@ public class Transaction {
      */
     public boolean isImplied(Person person) {
         return (payer.equals(person) || payees.contains(person));
+    }
+
+    private void updatePayeesBalance(double amount, UniquePersonList payees) {
+        for (Person p: payees) {
+            p.setBalance((amount) / payees.asObservableList().size());
+        }
+    }
+
+    private void updatePayeesBalance(double amount, Set<Person> payees) {
+        for (Person p: payees) {
+            p.setBalance((amount) / payees.size());
+        }
+    }
+
+    private void updatePayerBalance(double amount, Person payer) {
+        payer.setBalance(amount);
     }
 }
