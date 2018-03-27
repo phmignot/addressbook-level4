@@ -176,7 +176,6 @@ public class ParserUtil {
     public static Optional<Amount> parseAmount(Optional<String> amount) throws IllegalValueException {
         requireNonNull(amount);
         return amount.isPresent() ? Optional.of(parseAmount(amount.get())) : Optional.empty();
-
     }
 
     /**

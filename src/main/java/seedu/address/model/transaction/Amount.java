@@ -2,7 +2,9 @@ package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-//@authoer ongkc
+
+import seedu.address.model.person.Address;
+//@@author ongkc
 /**
  * Represents the amount that a Payer paid in a SmartSplit transaction.
  */
@@ -17,7 +19,7 @@ public class Amount {
      */
     public static final String AMOUNT_VALIDATION_REGEX = "\\d+(\\.\\d*)?|\\.\\d+\n";
 
-    private String value;
+    public final String value;
 
     /**
      * Constructs an {@code Amount}.
@@ -40,6 +42,13 @@ public class Amount {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this // short circuit if same object
+                || (other instanceof Address // instanceof handles nulls
+                && this.value.equals(((Address) other).value)); // state check
     }
 
     @Override
