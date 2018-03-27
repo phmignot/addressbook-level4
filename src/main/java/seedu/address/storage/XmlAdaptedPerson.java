@@ -119,13 +119,16 @@ public class XmlAdaptedPerson {
         }
         final Address address = new Address(this.address);
 
+        //@@author steven-jia
         if (this.balance == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Balance.class.getSimpleName()));
+            // Retroactively apply a balance of 0.00 to saved Persons without a balance
+            this.balance = "0.00";
         }
         if (!Balance.isValidBalance(this.balance)) {
             throw new IllegalValueException(Balance.MESSAGE_BALANCE_CONSTRAINTS);
         }
         final Balance balance = new Balance(this.balance);
+        //@@author
 
         final Set<Tag> tags = new HashSet<>(personTags);
         return new Person(name, phone, email, address, balance, tags);

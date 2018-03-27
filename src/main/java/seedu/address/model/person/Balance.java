@@ -3,6 +3,7 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+//@@author steven-jia
 /**
  * Represents a Person's balance in SmartSplit.
  * Guarantees: immutable; is valid as declared in {@link #isValidBalance(String)}
@@ -47,8 +48,8 @@ public class Balance {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof Name // instanceof handles nulls
-                && this.value.equals(((Name) other).fullName)); // state check
+                || (other instanceof Balance // instanceof handles nulls
+                && this.value.equals(((Balance) other).value)); // state check
     }
 
     @Override
