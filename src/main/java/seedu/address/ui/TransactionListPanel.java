@@ -47,11 +47,12 @@ public class TransactionListPanel extends UiPart<Region> {
     private void scrollTo(int index) {
     }
 
+    /* Method could be used for selection in the transactionList
     @Subscribe
     private void handleJumpToListRequestEvent(JumpToListRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         //scrollTo(event.targetIndex);
-    }
+    }*/
 
     /**
      * Custom {@code ListCell} that displays the graphics of a {@code TransactionCard}.
