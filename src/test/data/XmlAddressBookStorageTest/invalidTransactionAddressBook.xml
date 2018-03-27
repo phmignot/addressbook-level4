@@ -6,7 +6,6 @@
             <name>Hans Mu@ster</name>
             <phone>98765432</phone>
             <email>hansmuster@example.com</email>
-            <address>311, Clementi Ave 2, #02-25</address>
             <balance>0.00</balance>
         </payer>
         <amount isPrivate="false">9482424.3</amount>
@@ -15,7 +14,6 @@
             <name>Kobe Bryant</name>
             <phone>123498732</phone>
             <email>kobebryant@example.com</email>
-            <address>098 Los Angeles Avenue</address>
             <balance>0.00</balance>
         </payees>
     </persons>

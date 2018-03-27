@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import seedu.address.model.person.Address;
-//@authoer ongkc
+//@@author ongkc
 /**
  * Represents the amount that a Payer paid in a SmartSplit transaction.
  */

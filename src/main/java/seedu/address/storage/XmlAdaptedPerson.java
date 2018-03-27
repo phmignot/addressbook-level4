@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -31,8 +30,6 @@ public class XmlAdaptedPerson {
     @XmlElement(required = true)
     private String email;
     @XmlElement(required = true)
-    private String address;
-    @XmlElement(required = true)
     private String balance;
 
     @XmlElement
@@ -47,12 +44,11 @@ public class XmlAdaptedPerson {
     /**
      * Constructs an {@code XmlAdaptedPerson} with the given person details.
      */
-    public XmlAdaptedPerson(String name, String phone, String email, String address,
-                            String balance, List<XmlAdaptedTag> tagged) {
+    public XmlAdaptedPerson(String name, String phone, String email, String balance,
+                            List<XmlAdaptedTag> tagged) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
         this.balance = balance;
         if (tagged != null) {
             this.tagged = new ArrayList<>(tagged);
@@ -68,7 +64,6 @@ public class XmlAdaptedPerson {
         name = source.getName().fullName;
         phone = source.getPhone().value;
         email = source.getEmail().value;
-        address = source.getAddress().value;
         balance = source.getBalance().value;
         tagged = new ArrayList<>();
         for (Tag tag : source.getTags()) {
@@ -111,14 +106,6 @@ public class XmlAdaptedPerson {
         }
         final Email email = new Email(this.email);
 
-        if (this.address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
-        }
-        if (!Address.isValidAddress(this.address)) {
-            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
-        }
-        final Address address = new Address(this.address);
-
         //@@author steven-jia
         if (this.balance == null) {
             // Retroactively apply a balance of 0.00 to saved Persons without a balance
@@ -131,7 +118,7 @@ public class XmlAdaptedPerson {
         //@@author
 
         final Set<Tag> tags = new HashSet<>(personTags);
-        return new Person(name, phone, email, address, balance, tags);
+        return new Person(name, phone, email, balance, tags);
     }
 
     @Override
@@ -148,7 +135,6 @@ public class XmlAdaptedPerson {
         return Objects.equals(name, otherPerson.name)
                 && Objects.equals(phone, otherPerson.phone)
                 && Objects.equals(email, otherPerson.email)
-                && Objects.equals(address, otherPerson.address)
                 && Objects.equals(balance, otherPerson.balance)
                 && tagged.equals(otherPerson.tagged);
     }

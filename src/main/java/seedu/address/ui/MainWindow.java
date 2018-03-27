@@ -16,6 +16,8 @@ import seedu.address.commons.core.Config;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.ExitAppRequestEvent;
+import seedu.address.commons.events.ui.PersonPanelNoSelectionEvent;
+import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.commons.events.ui.ShowHelpRequestEvent;
 import seedu.address.logic.Logic;
 import seedu.address.model.UserPrefs;
@@ -36,13 +38,8 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
-    private BrowserPanel browserPanel;
     private Config config;
     private UserPrefs prefs;
-
-
-    @FXML
-    private StackPane browserPanelPlaceholder;
 
     @FXML
     private StackPane transactionListPanelPlaceholder;
@@ -128,9 +125,6 @@ public class MainWindow extends UiPart<Stage> {
         transactionListPanel = new TransactionListPanel(logic.getFilteredTransactionList());
         transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
 
-        browserPanel = new BrowserPanel();
-        browserPanelPlaceholder.getChildren().add(browserPanel.getRoot());
-
         ResultDisplay resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
 
@@ -194,13 +188,21 @@ public class MainWindow extends UiPart<Stage> {
         return this.personListPanel;
     }
 
-    void releaseResources() {
-        browserPanel.freeResources();
-    }
-
     @Subscribe
     private void handleShowHelpEvent(ShowHelpRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         handleHelp();
+    }
+
+    @Subscribe
+    private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+        logic.updateFilteredTransactionList(event.getNewSelection().person);
+    }
+
+    @Subscribe
+    private void handlePersonPanelNoSelectionEvent(PersonPanelNoSelectionEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+        logic.updateFilteredTransactionList();
     }
 }

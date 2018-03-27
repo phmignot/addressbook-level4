@@ -1,9 +1,6 @@
 //@@author steven-jia
 package seedu.address.model.transaction;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -27,8 +24,8 @@ public class Transaction {
     private final Description description;
     private final UniquePersonList payees;
 
-    public Transaction(Person payer, Amount amount, Description description, UniquePersonList payees) {
-        this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+    public Transaction(Person payer, Amount amount, Description description, Date dateTime, UniquePersonList payees) {
+        this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
@@ -36,7 +33,7 @@ public class Transaction {
         this.payees = payees;
     }
 
-    public Transaction(Person payer, Amount amount, Description description, Set<Person> payeesToAdd) {
+    public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {
@@ -46,7 +43,7 @@ public class Transaction {
             }
         }
 
-        this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
@@ -115,4 +112,13 @@ public class Transaction {
         return builder.toString();
     }
 
+    /**
+     * Tests if a person is implied in this transaction.
+     * @param person to check his implication.
+     * @return true if the person is the payer or one of the payee;
+     * false otherwise.
+     */
+    public boolean isImplied(Person person) {
+        return (payer.equals(person) || payees.contains(person));
+    }
 }

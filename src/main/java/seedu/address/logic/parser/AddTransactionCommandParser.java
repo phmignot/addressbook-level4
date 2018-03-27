@@ -1,18 +1,26 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.Model;
+import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -29,7 +37,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      * and returns an AddTransactionCommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
-    public AddTransactionCommand parse(String args, Model model) throws ParseException {
+    public AddTransactionCommand parse(String args, Model model) throws ParseException, CommandException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE);
 
@@ -44,14 +52,38 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
+            Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+            Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
 
-            Transaction transaction = new Transaction(payer, amount, description, payees);
+            updatePayerBalance(amount, payer, payees);
+            updatePayeesBalance(amount, payees);
+
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
-            throw new ParseException(pnfe.getMessage(), pnfe);
+            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
+    }
+
+    /**
+     * Decreases the balances of each payee by the amount they owe
+     */
+    private void updatePayeesBalance(Amount amount, UniquePersonList payees) {
+        Double amountToSubtract = Double.valueOf(amount.value)
+                / BalanceCalculationUtil.numberOfInvolvedPersons(payees);
+        for (Person payee: payees) {
+            Balance updatedBalance = BalanceCalculationUtil.calculatePayeeBalance(payee, amountToSubtract);
+            payee.setBalance(updatedBalance);
+        }
+    }
+
+    /**
+     * Increases the balance of the payer by the amount that they are owed
+     */
+    private void updatePayerBalance(Amount amount, Person payer, UniquePersonList payees) {
+        Balance updatedBalance = BalanceCalculationUtil.calculatePayerBalance(amount, payer, payees);
+        payer.setBalance(updatedBalance);
     }
 
     //@@author steven-jia

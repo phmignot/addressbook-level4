@@ -15,7 +15,6 @@
             <name>Kobe Bryant</name>
             <phone>123498732</phone>
             <email>kobebryant@example.com</email>
-            <address>098 Los Angeles Avenue</address>
             <balance>0.00</balance>
         </payees>
     </persons>

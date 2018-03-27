@@ -15,6 +15,7 @@ import seedu.address.model.transaction.Transaction;
 public class TransactionCard extends UiPart<Region> {
 
     private static final String FXML = "TransactionListCard.fxml";
+
     public final Transaction transaction;
 
     @FXML
@@ -29,9 +30,11 @@ public class TransactionCard extends UiPart<Region> {
     private Label description;
     @FXML
     private FlowPane payees;
+    @FXML
+    private Label date;
 
     public TransactionCard(Transaction transaction, int displayedIndex) {
-        super(FXML);
+       super(FXML);
         this.transaction = transaction;
         idDisplay.setText(displayedIndex + ". ");
         payerName.setText(transaction.getPayer().getName().fullName);
@@ -41,6 +44,7 @@ public class TransactionCard extends UiPart<Region> {
             payees.getChildren().add(new Label(payee.getName().fullName));
             payees.getChildren().add(new Label(", "));
         }
+        date.setText(String.valueOf(transaction.getDateTime()));
     }
 
     @Override
