@@ -51,6 +51,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+            updatePayerBalance(Double.parseDouble(amount.toString()), payer);
+            updatePayeesBalance(Double.parseDouble(amount.toString()), payees);
 
             Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
             return new AddTransactionCommand(transaction);
@@ -61,6 +63,15 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         }
     }
 
+    private void updatePayeesBalance(double amount, UniquePersonList payees) {
+        for (Person p: payees) {
+            p.setBalance((amount) / payees.asObservableList().size());
+        }
+    }
+
+    private void updatePayerBalance(double amount, Person payer) {
+        payer.setBalance(amount);
+    }
 
     //@@author steven-jia
     private UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
