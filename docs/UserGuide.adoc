@@ -38,7 +38,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 .  Some example commands you can try:
 
 * *`list`* : lists all contacts
-* **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to SmartSplit.
+* **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com : adds a contact named `John Doe` to SmartSplit.
 * **`delete`**`3` : deletes the 3rd contact shown in the current list
 * **`addTransaction`**`r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle` : adds a transaction payed by John Doe costing 3456.78$ for a dinner meal with Tom Riddle.
 * *`exit`* : exits the app
@@ -71,8 +71,8 @@ A person can have any number of tags (including 0)
 
 Examples:
 
-* `addPerson n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `addPerson n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `addPerson n/John Doe p/98765432 e/johnd@example.com`
+* `addPerson n/Betsy Crowe t/friend e/betsycrowe@example.com p/1234567 t/criminal`
 
 === Listing all persons : `list`
 
@@ -303,7 +303,7 @@ _{explain how the user can enable/disable data encryption}_
 == Command Summary
 
 * *AddPerson* `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...` +
-e.g. `addPerson n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+e.g. `addPerson n/James Ho p/22224444 e/jamesho@example.com t/friend t/colleague`
 * *AddTransaction* `r/PAYER NAME a/AMOUNT d/DESCRIPTION [e/PAYEE NAME]...` +
 e.g. `addTransaction r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle e/Becky Simmons`
 * *Clear* : `clear`
