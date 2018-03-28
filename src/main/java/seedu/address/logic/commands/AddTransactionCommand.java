@@ -1,7 +1,6 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
@@ -49,6 +48,7 @@ public class AddTransactionCommand extends UndoableCommand {
         requireNonNull(model);
         try {
             model.addTransaction(toAdd);
+
             return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
