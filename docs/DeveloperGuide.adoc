@@ -538,7 +538,7 @@ The FilteredTransactionList will be updated, the UI will display the new list.
 
 ==== Why it is implemented that way
 
-This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed. 
+This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed.
 That implementation saves the application from wasting of resource by un.
 
 === [Proposed] Pay Debt feature
