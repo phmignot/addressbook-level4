@@ -376,12 +376,16 @@ The UI will also handle this event by adding the new transaction to the Transact
 
 Instead of only saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
 
-// tag::dataencryption[]
-=== [Proposed] Data Encryption
+=== [Proposed] Pay Debt feature
+==== Pay Debt Command Implementation
+When users enter the command payDebt c/ Creditor d/ Debtor /a Amount to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
+Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a payDebt() method will be called.
 
-_{Explain here how the data encryption feature will be implemented}_
-
-// end::dataencryption[]
+==== Pay Debt Event process
+After the payDebt method is executed, the PayDebtCommandParser, as part of the Logic component, will subtract the amount from the balance of the debtor and record
+the event as a transaction.
+An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
 
 === Logging
 
