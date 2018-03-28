@@ -31,6 +31,9 @@ public class Transaction {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+
+        updatePayerBalance(Double.parseDouble(amount.toString()), payer);
+        updatePayeesBalance(Double.parseDouble(amount.toString()), payees);
     }
 
     public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
@@ -74,6 +77,18 @@ public class Transaction {
     public UniquePersonList getPayees() {
         return payees;
     }
+
+
+    private void updatePayeesBalance(double amount, UniquePersonList payees) {
+        for (Person p: payees) {
+            p.setBalance((amount) / payees.asObservableList().size());
+        }
+    }
+
+    private void updatePayerBalance(double amount, Person payer) {
+        payer.setBalance(amount);
+    }
+
 
     @Override
     public boolean equals(Object other) {

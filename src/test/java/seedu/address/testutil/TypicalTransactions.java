@@ -32,16 +32,16 @@ public class TypicalTransactions {
     private static UniquePersonList payee2 = new UniquePersonList();
     private static UniquePersonList payee4 = new UniquePersonList();
     private static UniquePersonList payee6 = new UniquePersonList();
-    private static UniquePersonList payeeAlice = new UniquePersonList();
-    private static UniquePersonList payeeBenson = new UniquePersonList();
+    private static UniquePersonList payeeGeorge= new UniquePersonList();
+    private static UniquePersonList payeeFiona = new UniquePersonList();
 
     static {
         try {
             payee2.add(person2);
             payee4.add(person4);
             payee6.add(person6);
-            payeeAlice.add(TypicalPersons.ALICE);
-            payeeBenson.add(TypicalPersons.BENSON);
+            payeeGeorge.add(TypicalPersons.GEORGE);
+            payeeFiona.add(TypicalPersons.FIONA);
 
             t1 = new TransactionBuilder().withPayer(person1).withAmount("5.62")
                     .withDescription("Boat trip").withPayees(payee2).build();
@@ -49,12 +49,12 @@ public class TypicalTransactions {
                     .withDescription("Food for barbecue").withPayees(payee4).build();
             t3 = new TransactionBuilder().withPayer(person5).withAmount("10.00")
                     .withDescription("Open air concert").withPayees(payee6).build();
-            t4 = new TransactionBuilder().withPayer(TypicalPersons.ALICE).withAmount("9999")
+            t4 = new TransactionBuilder().withPayer(TypicalPersons.GEORGE).withAmount("9999")
                     .withDescription("Transport")
-                    .withPayees(payeeBenson).build();
-            t5 = new TransactionBuilder().withPayer(TypicalPersons.ALICE)
+                    .withPayees(payeeFiona).build();
+            t5 = new TransactionBuilder().withPayer(TypicalPersons.FIONA)
                     .withAmount("9999").withDescription("Dinner")
-                    .withPayees(payeeBenson).build();
+                    .withPayees(payeeFiona).build();
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         }
@@ -78,6 +78,6 @@ public class TypicalTransactions {
     }
 
     public static List<UniquePersonList> getTypicalPayees() {
-        return new ArrayList<>(Arrays.asList(payee2, payee4, payee6, payeeAlice, payeeBenson));
+        return new ArrayList<>(Arrays.asList(payee2, payee4, payee6, payeeGeorge, payeeFiona));
     }
 }

@@ -93,6 +93,7 @@ public class Person {
                 .append(getPhone())
                 .append(" Email: ")
                 .append(getEmail())
+                .append(" Balance: ")
                 .append(getBalance())
                 .append(" Tags: ");
         getTags().forEach(builder::append);
