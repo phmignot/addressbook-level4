@@ -1,6 +1,5 @@
 package seedu.address.testutil;
 
-
 import static seedu.address.logic.commands.CommandTestUtil.VALID_BALANCE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_BALANCE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
@@ -25,6 +24,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  */
 public class TypicalPersons {
 
+    private TypicalPersons() {} // prevents instantiation
     public static AddressBook getTypicalAddressBook() throws DuplicatePersonException {
         AddressBook ab = new AddressBook();
         for (Person person : getTypicalPersons()) {
@@ -32,7 +32,6 @@ public class TypicalPersons {
         }
         return ab;
     }
-
     public static final Person ALICE = new PersonBuilder().withName("Alice Pauline")
             .withEmail("alice@example.com")
             .withPhone("85355255").withBalance("0.00")
@@ -67,9 +66,6 @@ public class TypicalPersons {
 
 
     public static final String KEYWORD_MATCHING_MEIER = "Meier"; // A keyword that matches MEIER
-
-    private TypicalPersons() {} // prevents instantiation
-
     public static List<Person> getTypicalPersons() {
         return new ArrayList<>(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE));
     }

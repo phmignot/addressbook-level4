@@ -34,7 +34,8 @@ public class BalanceCalculationUtil {
     /**
      * Returns an updated balance for {@code payee}
      */
-    public static Balance calculatePayeeBalance(Amount amount, Person payer, UniquePersonList payees, Person currentPayee) {
+    public static Balance calculatePayeeBalance(Amount amount, Person payer, UniquePersonList payees,
+                                                Person currentPayee) {
         int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
         Double amountToSubtract = Double.valueOf(amount.value) / numberOfInvolvedPersons;
         Double updatedBalanceValue = Double.valueOf(currentPayee.getBalance().value) - amountToSubtract;

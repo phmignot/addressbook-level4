@@ -1,4 +1,4 @@
-= SmartSplit - User Guide
+﻿= SmartSplit - User Guide
 :toc:
 :toc-title:
 :toc-placement: preamble
@@ -71,7 +71,7 @@ A person can have any number of tags (including 0)
 
 Examples:
 
-* `addPerson n/John Doe p/98765432 e/johnd@example.com
+* `addPerson n/John Doe p/98765432 e/johnd@example.com`
 * `addPerson n/Betsy Crowe t/friend e/betsycrowe@example.com p/1234567 t/criminal`
 
 === Listing all persons : `list`
@@ -307,7 +307,6 @@ _{explain how the user can enable/disable data encryption}_
 == Command Summary
 
 * *AddPerson* `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...` +
-
 e.g. `addPerson n/James Ho p/22224444 e/jamesho@example.com t/friend t/colleague`
 * *AddTransaction* `r/PAYER NAME a/AMOUNT d/DESCRIPTION [e/PAYEE NAME]...` +
 e.g. `addTransaction r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle e/Becky Simmons`

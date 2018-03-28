@@ -32,7 +32,7 @@ public class TypicalTransactions {
     private static UniquePersonList payee2 = new UniquePersonList();
     private static UniquePersonList payee4 = new UniquePersonList();
     private static UniquePersonList payee6 = new UniquePersonList();
-    private static UniquePersonList payeeGeorge= new UniquePersonList();
+    private static UniquePersonList payeeGeorge = new UniquePersonList();
     private static UniquePersonList payeeFiona = new UniquePersonList();
 
     static {

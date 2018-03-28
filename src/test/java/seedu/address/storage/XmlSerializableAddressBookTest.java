@@ -34,14 +34,14 @@ public class XmlSerializableAddressBookTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-//    @Test
-//    public void toModelType_typicalPersonsFile_success() throws Exception {
-//        XmlSerializableAddressBook dataFromFile = XmlUtil.getDataFromFile(TYPICAL_PERSONS_FILE,
-//                XmlSerializableAddressBook.class);
-//        AddressBook addressBookFromFile = dataFromFile.toModelType();
-//        AddressBook typicalPersonsAddressBook = TypicalPersons.getTypicalAddressBook();
-//        assertEquals(addressBookFromFile, typicalPersonsAddressBook);
-//    }
+    //    @Test
+    //    public void toModelType_typicalPersonsFile_success() throws Exception {
+    //        XmlSerializableAddressBook dataFromFile = XmlUtil.getDataFromFile(TYPICAL_PERSONS_FILE,
+    //                XmlSerializableAddressBook.class);
+    //        AddressBook addressBookFromFile = dataFromFile.toModelType();
+    //        AddressBook typicalPersonsAddressBook = TypicalPersons.getTypicalAddressBook();
+    //        assertEquals(addressBookFromFile, typicalPersonsAddressBook);
+    //  }
 
     @Test
     public void toModelType_invalidPersonFile_throwsIllegalValueException() throws Exception {

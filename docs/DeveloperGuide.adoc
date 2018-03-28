@@ -12,7 +12,7 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/se-edu/addressbook-level4/tree/master
 
-By: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
+By: `Kok Cong, Wen Qin, Paul Henri`      Since: `March 2018`      Licence: `MIT`
 
 == Setting up
 
@@ -371,8 +371,9 @@ image::AddTransactionSequenceDiagram.png[width="800"]
 ==== Add Transaction Event process
 .Component interactions for `addTransaction` command (part 2)
 image::SDforDeletePersonEventHandling.png[width="800"]
-With reference to the diagram above, after addTransaction method is executed, it will post an AddressBookChangeEvent and allow the storage to handle this event and save the new transaction into the hard disk. The UI will also handle this event and
-status bar of the UI will be updated and reflect the new transaction in the TransactionList Panel.
+With reference to the diagram above, after addTransaction method is executed, the AddTransactionCommandParser, as part of the Logic component, will calculate a new balance for the payer and each payee.
+An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
 
 ==== Design Considerations
 Why it is implemented that way
@@ -506,10 +507,51 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Cons: Requires dealing with commands that have already be
 // tag::dataencryption[]
 === [Proposed] Data Encryption
+=======
+===  Select feature
+==== Select Command Implementation
+.Component interactions for `select` command 
+image::SelectCommandDiagram.png[width="800"]
+From the diagram above, when users enter the command select INDEX to select the first person in the persons list, SelectCommandParser will parse the argument, and return SelectCommand.
+Next, SelectCommand will call its method execute(). After select command is executed, an JumpToListRequestEvent is raised.
 
-_{Explain here how the data encryption feature will be implemented}_
 
-// end::dataencryption[]
+==== JumpToListRequest Event process
+.Component interactions for `JumpToListRequest` event 
+image::JumpToListRequestEventDiagram.png[width="800"]
+With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
+
+==== PersonPanelSelectionChanged Event process
+There are two ways to raise this event. The first one is by using this select command, the second one is by directly clicking on the PersonCard in the Addressbook.
+
+.Component interactions for `PersonPanelSelectionChanged` event 
+image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
+With reference to the diagram above, the PersonPanelSelectionChanged event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep only transactions related with the person selected.
+The FilteredTransactionList will be updated, the UI will display the new list.
+
+==== PersonPanelNoSelection Event process
+In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type another command that will clear the selection, such as the `find` command, or by directly deselecting a selected PersonCard using "Ctrl + Clic".
+
+.Component interactions for `PersonPanelSelectionChanged` event 
+image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
+With reference to the diagram above, the PersonPanelNoSelection event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep every transactions.
+The FilteredTransactionList will be updated, the UI will display the new list.
+
+==== Why it is implemented that way
+
+This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed. 
+That implementation saves the application from wasting of resource by un.
+
+=== [Proposed] Pay Debt feature
+==== Pay Debt Command Implementation
+When users enter the command payDebt c/ Creditor d/ Debtor /a Amount to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
+Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a payDebt() method will be called.
+
+==== Pay Debt Event process
+After the payDebt method is executed, the PayDebtCommandParser, as part of the Logic component, will subtract the amount from the balance of the debtor and record
+the event as a transaction.
+An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
 
 === Logging
 
@@ -943,10 +985,10 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 * Major feature: Allow user to categorise their spending into different categories, so as to allow the ease of tracking what they spent most on
 * Minor feature: Allow user to edit their added transaction
 
-*Paul Mignot*
+*Paul Henri Mignot*
 
-* Major feature:
-* Minor feature:
+* Major feature: Update the User Interface to display the list of transactions.
+* Minor feature: Allow user to delete their transactions
 
 *Wen Qin Jia*
 
