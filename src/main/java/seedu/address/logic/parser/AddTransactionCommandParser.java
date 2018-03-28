@@ -18,7 +18,9 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.Model;
+import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -52,8 +54,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             UniquePersonList payees = getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
 
-
             Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
+
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);

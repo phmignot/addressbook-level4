@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -13,7 +14,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  * Represents a Transaction in SmartSplit.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
-public class Transaction {
+public class Transaction extends BalanceCalculationUtil{
 
     private static Integer lastTransactionId = 0;
 
@@ -32,8 +33,7 @@ public class Transaction {
         this.description = description;
         this.payees = payees;
 
-        updatePayerBalance(Double.parseDouble(amount.toString()), payer);
-        updatePayeesBalance(Double.parseDouble(amount.toString()), payees);
+        updatePayerAndPayeesBalance(amount, payer, payees);
     }
 
     public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
@@ -79,15 +79,13 @@ public class Transaction {
     }
 
 
-    private void updatePayeesBalance(double amount, UniquePersonList payees) {
-        for (Person p: payees) {
-            p.setBalance((amount) / payees.asObservableList().size());
+    private void updatePayerAndPayeesBalance(Amount amount, Person payer, UniquePersonList payees) {
+        payer.setBalance(calculatePayerBalance(amount, payer, payees));
+        for(Person p: payees){
+            p.setBalance(calculatePayeeBalance(amount, payer, payees, p));
         }
     }
 
-    private void updatePayerBalance(double amount, Person payer) {
-        payer.setBalance(amount);
-    }
 
 
     @Override

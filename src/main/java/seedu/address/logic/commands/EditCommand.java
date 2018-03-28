@@ -18,6 +18,7 @@ import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.person.Balance;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -25,7 +26,6 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.transaction.Amount;
 
 /**
  * Edits the details of an existing person in the address book.
@@ -103,10 +103,10 @@ public class EditCommand extends UndoableCommand {
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
-        Amount updatedAmount = personToEdit.getBalance();
+        Balance unchangedBalance = personToEdit.getBalance();
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedAmount, updatedTags);
+        return new Person(updatedName, updatedPhone, updatedEmail, unchangedBalance, updatedTags);
     }
 
     @Override
@@ -136,7 +136,6 @@ public class EditCommand extends UndoableCommand {
         private Name name;
         private Phone phone;
         private Email email;
-        private Amount balance;
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
@@ -183,10 +182,6 @@ public class EditCommand extends UndoableCommand {
             return Optional.ofNullable(email);
         }
 
-        public Optional<Amount> getBalance() {
-            return Optional.ofNullable(balance);
-        }
-
         /**
          * Sets {@code tags} to this object's {@code tags}.
          * A defensive copy of {@code tags} is used internally.
@@ -222,7 +217,6 @@ public class EditCommand extends UndoableCommand {
             return getName().equals(e.getName())
                     && getPhone().equals(e.getPhone())
                     && getEmail().equals(e.getEmail())
-                    && getBalance().equals(e.getBalance())
                     && getTags().equals(e.getTags());
         }
 
