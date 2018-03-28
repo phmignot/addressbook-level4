@@ -18,9 +18,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.Model;
-import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -53,10 +51,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
-            Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
 
-            updatePayerBalance(amount, payer, payees);
-            updatePayeesBalance(amount, payees);
+            Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
 
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
@@ -64,26 +60,6 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
-    }
-
-    /**
-     * Decreases the balances of each payee by the amount they owe
-     */
-    private void updatePayeesBalance(Amount amount, UniquePersonList payees) {
-        Double amountToSubtract = Double.valueOf(amount.value)
-                / BalanceCalculationUtil.numberOfInvolvedPersons(payees);
-        for (Person payee: payees) {
-            Balance updatedBalance = BalanceCalculationUtil.calculatePayeeBalance(payee, amountToSubtract);
-            payee.setBalance(updatedBalance);
-        }
-    }
-
-    /**
-     * Increases the balance of the payer by the amount that they are owed
-     */
-    private void updatePayerBalance(Amount amount, Person payer, UniquePersonList payees) {
-        Balance updatedBalance = BalanceCalculationUtil.calculatePayerBalance(amount, payer, payees);
-        payer.setBalance(updatedBalance);
     }
 
     //@@author steven-jia

@@ -34,8 +34,11 @@ public class BalanceCalculationUtil {
     /**
      * Returns an updated balance for {@code payee}
      */
-    public static Balance calculatePayeeBalance(Person payee, Double amountToSubtract) {
-        Double updatedBalanceValue = Double.valueOf(payee.getBalance().value) - amountToSubtract;
+    public static Balance calculatePayeeBalance(Amount amount, Person payer, UniquePersonList payees,
+                                                Person currentPayee) {
+        int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
+        Double amountToSubtract = Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        Double updatedBalanceValue = Double.valueOf(currentPayee.getBalance().value) - amountToSubtract;
         updatedBalanceValue = round(updatedBalanceValue, NUMBER_OF_DECIMAL_PLACES);
 
         DecimalFormat formatter = new DecimalFormat("#.00");
