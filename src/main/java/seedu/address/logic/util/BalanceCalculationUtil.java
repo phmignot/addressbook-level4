@@ -21,10 +21,10 @@ public class BalanceCalculationUtil {
      */
     public static Balance calculatePayerBalance(Amount amount, Person payer, UniquePersonList payees) {
         int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
-        Double amountToAdd = Double.valueOf(amount.value)
+        Double amountToAdd = amount.getDoubleValue()
                 * (numberOfInvolvedPersons - 1)
                 / numberOfInvolvedPersons;
-        Double updatedBalanceValue = Double.valueOf(payer.getBalance().value) + amountToAdd;
+        Double updatedBalanceValue = payer.getBalance().getDoubleValue() + amountToAdd;
         updatedBalanceValue = round(updatedBalanceValue, NUMBER_OF_DECIMAL_PLACES);
 
         DecimalFormat formatter = new DecimalFormat("#.00");

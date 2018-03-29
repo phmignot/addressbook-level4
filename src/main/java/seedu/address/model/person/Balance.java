@@ -1,5 +1,7 @@
 package seedu.address.model.person;
 
+import seedu.address.model.transaction.Amount;
+
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
@@ -40,6 +42,16 @@ public class Balance {
     }
 
 
+    public double getDoubleValue() {
+        return Double.valueOf(value);
+    }
+
+    public static Balance 
+
+    public Balance add(Amount amount) {
+        double addition = this.getDoubleValue() + amount.getDoubleValue();
+        return new Balance(String.valueOf(addition));
+    }
     @Override
     public String toString() {
         return value;
