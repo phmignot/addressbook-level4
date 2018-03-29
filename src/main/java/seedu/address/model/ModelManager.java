@@ -138,7 +138,6 @@ public class ModelManager extends ComponentManager implements Model {
      */
     @Override
     public ObservableList<Transaction> getFilteredTransactionList() {
-        //TO DO: properly match the work from here
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 

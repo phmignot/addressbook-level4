@@ -50,6 +50,8 @@ public class Transaction extends BalanceCalculationUtil {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+
+        updatePayerAndPayeesBalance(amount, payer, payees);
     }
 
     public Integer getId() {
