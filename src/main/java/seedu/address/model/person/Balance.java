@@ -2,6 +2,8 @@ package seedu.address.model.person;
 
 import seedu.address.model.transaction.Amount;
 
+import java.text.DecimalFormat;
+
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
@@ -30,6 +32,7 @@ public class Balance {
      */
     public Balance(String balance) {
         requireNonNull(balance);
+        System.out.println(balance);
         checkArgument(isValidBalance(balance), MESSAGE_BALANCE_CONSTRAINTS);
         this.value = balance;
     }
@@ -46,8 +49,11 @@ public class Balance {
         return Double.valueOf(value);
     }
 
-    public Balance getOppos() {
-        return new Balance("-" + balance.value);
+    public Balance getInverse() {
+        if (this.value.contains("-")) {
+            return new Balance(this.value.substring(1));
+        }
+        return new Balance("-" + this.value);
     }
 
     /**
@@ -57,7 +63,8 @@ public class Balance {
      */
     public Balance add(Balance balance) {
         double addition = this.getDoubleValue() + balance.getDoubleValue();
-        return new Balance(String.valueOf(addition));
+        DecimalFormat formatter = new DecimalFormat("#.00");
+        return new Balance(String.valueOf(formatter.format(addition)));
     }
 
     @Override

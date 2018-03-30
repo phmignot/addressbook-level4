@@ -3,7 +3,6 @@ package seedu.address.model;
 import java.util.HashMap;
 
 import seedu.address.model.person.Balance;
-import seedu.address.model.transaction.Amount;
 import seedu.address.model.person.Person;
 
 /**
@@ -14,12 +13,11 @@ public class DebtsList extends HashMap<Person,Balance> {
         super();
     }
     
-    public addDept(Person person, Amount amount) {
+    public void updateDept(Person person, Balance dept) {
         if (!this.containsKey(person)) {
-            this.put(person, Balance.amount);
+            this.put(person, dept);
         }
         Balance oldDebts = this.get(person);
-        this.replace(person, oldDebts.add(amount));
+        this.replace(person, oldDebts.add(dept));
     }
-    
 }
