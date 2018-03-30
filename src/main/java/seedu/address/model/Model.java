@@ -20,7 +20,7 @@ public interface Model {
 
     /** {@code Predicate} that always evaluate to false */
     Predicate<Person> PREDICATE_SHOW_NO_PERSON =  unused -> false;
-    
+
     /** {@code Predicate} that always evaluate to true */
     Predicate<Transaction> PREDICATE_SHOW_ALL_TRANSACTIONS = unused -> true;
 
