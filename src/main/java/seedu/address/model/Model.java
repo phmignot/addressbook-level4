@@ -19,7 +19,17 @@ public interface Model {
     Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = new Predicate<Person>() {
         @Override
         public boolean test(Person person) {
+            if (person.getBalance().getDoubleValue() > 0) {
+                return true;
+            }
             return true;
+        }
+    };
+
+    Predicate<Person> PREDICATE_SHOW_NO_PERSON = new Predicate<Person>() {
+        @Override
+        public boolean test(Person person) {
+            return false;
         }
     };
 
