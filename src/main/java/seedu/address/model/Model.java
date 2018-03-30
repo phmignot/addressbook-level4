@@ -16,22 +16,10 @@ import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
  */
 public interface Model {
     /** {@code Predicate} that always evaluate to true */
-    Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = new Predicate<Person>() {
-        @Override
-        public boolean test(Person person) {
-            if (person.getBalance().getDoubleValue() > 0) {
-                return true;
-            }
-            return true;
-        }
-    };
+    Predicate<Person> PREDICATE_SHOW_ALL_PERSONS =  unused -> true;
 
-    Predicate<Person> PREDICATE_SHOW_NO_PERSON = new Predicate<Person>() {
-        @Override
-        public boolean test(Person person) {
-            return false;
-        }
-    };
+    /** {@code Predicate} that always evaluate to false */
+    Predicate<Person> PREDICATE_SHOW_NO_PERSON =  unused -> false;
 
     /** {@code Predicate} that always evaluate to true */
     Predicate<Transaction> PREDICATE_SHOW_ALL_TRANSACTIONS = unused -> true;

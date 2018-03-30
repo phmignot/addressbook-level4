@@ -146,7 +146,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void addTransaction(Transaction transaction) {
         addressBook.addTransaction(transaction);
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
-        //updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
