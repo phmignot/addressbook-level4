@@ -17,32 +17,26 @@ public class BalanceCalculationUtil {
     private static final int NUMBER_OF_DECIMAL_PLACES = 2;
 
     /**
-     * Returns an updated balance for {@code payer}
+     * Returns the dept that a {@code payee} owes to the payer.
      */
-    public static Balance calculatePayerBalance(Amount amount, Person payer, UniquePersonList payees) {
+    public static Balance calculatePayeeDept(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
-        Double amountToAdd = amount.getDoubleValue()
-                * (numberOfInvolvedPersons - 1)
-                / numberOfInvolvedPersons;
-        Double updatedBalanceValue = payer.getBalance().getDoubleValue() + amountToAdd;
-        updatedBalanceValue = round(updatedBalanceValue, NUMBER_OF_DECIMAL_PLACES);
-
+        Double dept = - Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        dept = round(dept, NUMBER_OF_DECIMAL_PLACES);
         DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(updatedBalanceValue)));
+        return new Balance(String.valueOf(formatter.format(dept)));
     }
 
     /**
-     * Returns an updated balance for {@code payee}
+     * Returns the dept that a {@code payer} is owed from the payees.
      */
-    public static Balance calculatePayeeBalance(Amount amount, Person payer, UniquePersonList payees,
-                                                Person currentPayee) {
+    public static Balance calculatePayerDept(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
-        Double amountToSubtract = Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        Double updatedBalanceValue = Double.valueOf(currentPayee.getBalance().value) - amountToSubtract;
-        updatedBalanceValue = round(updatedBalanceValue, NUMBER_OF_DECIMAL_PLACES);
-
+        Double dept = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
+                / numberOfInvolvedPersons;
+        dept = round(dept, NUMBER_OF_DECIMAL_PLACES);
         DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(updatedBalanceValue)));
+        return new Balance(String.valueOf(formatter.format(dept)));
     }
 
     private static double round(double value, int places) {

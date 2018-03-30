@@ -46,12 +46,20 @@ public class Balance {
         return Double.valueOf(value);
     }
 
-    public static Balance 
+    public Balance getOppos() {
+        return new Balance("-" + balance.value);
+    }
 
-    public Balance add(Amount amount) {
-        double addition = this.getDoubleValue() + amount.getDoubleValue();
+    /**
+     * Adds the value of two balance
+     * @param balance to add.
+     * @return Balance with the value of the sum.
+     */
+    public Balance add(Balance balance) {
+        double addition = this.getDoubleValue() + balance.getDoubleValue();
         return new Balance(String.valueOf(addition));
     }
+
     @Override
     public String toString() {
         return value;

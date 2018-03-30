@@ -83,9 +83,9 @@ public class Transaction extends BalanceCalculationUtil {
      * Guarantees: details are present and not null, field values are validated, immutable.
      */
     private void updatePayerAndPayeesBalance(Amount amount, Person payer, UniquePersonList payees) {
-        payer.setBalance(calculatePayerBalance(amount, payer, payees));
+        payer.addToBalance(calculatePayerDept(amount, payees));
         for (Person p: payees) {
-            p.setBalance(calculatePayeeBalance(amount, payer, payees, p)); }
+            p.addToBalance(calculatePayeeDept(amount, payees)); }
     }
     @Override
     public boolean equals(Object other) {
