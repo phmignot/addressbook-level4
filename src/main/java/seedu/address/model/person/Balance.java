@@ -1,11 +1,9 @@
 package seedu.address.model.person;
 
-import seedu.address.model.transaction.Amount;
-
-import java.text.DecimalFormat;
-
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
+
+import java.text.DecimalFormat;
 
 //@@author steven-jia
 /**
@@ -32,7 +30,6 @@ public class Balance {
      */
     public Balance(String balance) {
         requireNonNull(balance);
-        System.out.println(balance);
         checkArgument(isValidBalance(balance), MESSAGE_BALANCE_CONSTRAINTS);
         this.value = balance;
     }

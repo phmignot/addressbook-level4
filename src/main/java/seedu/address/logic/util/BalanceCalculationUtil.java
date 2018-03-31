@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import seedu.address.model.person.Balance;
-import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.Amount;
 
@@ -21,7 +20,7 @@ public class BalanceCalculationUtil {
      */
     public static Balance calculatePayeeDept(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
-        Double dept = - Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        Double dept = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
         dept = round(dept, NUMBER_OF_DECIMAL_PLACES);
         DecimalFormat formatter = new DecimalFormat("#.00");
         return new Balance(String.valueOf(formatter.format(dept)));

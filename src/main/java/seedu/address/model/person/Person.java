@@ -72,8 +72,7 @@ public class Person {
         Person otherPerson = (Person) other;
         return otherPerson.getName().equals(this.getName())
                 && otherPerson.getPhone().equals(this.getPhone())
-                && otherPerson.getEmail().equals(this.getEmail())
-                && otherPerson.getBalance().equals(this.getBalance());
+                && otherPerson.getEmail().equals(this.getEmail());
     }
 
     public void setBalance(Balance newBalance) {
@@ -87,7 +86,7 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, balance, tags);
+        return Objects.hash(name, phone, email, tags);
     }
 
     @Override

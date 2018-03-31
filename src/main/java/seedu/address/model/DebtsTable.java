@@ -1,25 +1,42 @@
 package seedu.address.model;
 
-import seedu.address.model.person.Balance;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.UniquePersonList;
-import seedu.address.model.transaction.Amount;
+import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDept;
 
 import java.util.HashMap;
+
+import seedu.address.model.person.Balance;
+import seedu.address.model.person.Person;
+import seedu.address.model.transaction.Transaction;
 
 /**
  * Stores all the debts between the persons from the addressBook.
  */
 public class DebtsTable extends HashMap<Person, DebtsList> {
-    
+
     public DebtsTable() {
         super();
     }
-    
-    public void updateDebts(Balance payeeDebt, Person payer, UniquePersonList payees) {
+
+    /**
+     * Updates the DebtsTable due to a transaction
+     * payeeDept is a negative {@Code Balance} value, because the payee owes money.
+     * payerDept is a positive {@Code Balance} value, because the payer is owed.
+     * @param transaction to register the table.
+     */
+    public void updateDebts(Transaction transaction) {
+        Person payer = transaction.getPayer();
+        if (!this.containsKey(payer)) {
+            this.add(payer);
+            System.out.println("Addinf payer " + payer.getName().fullName);
+        }
         DebtsList payerDebtsLit = this.get(payer);
+        Balance payeeDebt = calculatePayeeDept(transaction.getAmount(), transaction.getPayees());
         Balance payerDept = payeeDebt.getInverse();
-        for (Person payee: payees) {
+        for (Person payee: transaction.getPayees()) {
+            if (!this.containsKey(payee)) {
+                this.add(payee);
+                System.out.println("Adding payeeee " + payee.getName().fullName);
+            }
             DebtsList payeeDebtsLit = this.get(payee);
             payerDebtsLit.updateDept(payee, payeeDebt);
             payeeDebtsLit.updateDept(payer, payerDept);
@@ -28,6 +45,18 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
 
     public void add(Person personToAdd) {
         this.putIfAbsent(personToAdd, new DebtsList());
+    }
+
+    /**
+     * Displays the content of the Debts Table in the terminal.
+     */
+    public void display() {
+        System.out.println("DEBTS TABLE : ");
+        this.forEach(((person, debtsList) -> {
+            System.out.println(person.getName().fullName + " : ");
+            debtsList.display();
+            System.out.println();
+        }));
     }
 }
 

@@ -30,8 +30,6 @@ public class Transaction extends BalanceCalculationUtil {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
-
-        updatePayerAndPayeesBalance(amount, payer, payees);
     }
 
     public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
@@ -50,8 +48,6 @@ public class Transaction extends BalanceCalculationUtil {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
-
-        updatePayerAndPayeesBalance(amount, payer, payees);
     }
 
     public Integer getId() {
@@ -82,7 +78,7 @@ public class Transaction extends BalanceCalculationUtil {
      * Represents a Transaction in SmartSplit.
      * Guarantees: details are present and not null, field values are validated, immutable.
      */
-    private void updatePayerAndPayeesBalance(Amount amount, Person payer, UniquePersonList payees) {
+    public void updatePayerAndPayeesBalance() {
         payer.addToBalance(calculatePayerDept(amount, payees));
         for (Person p: payees) {
             p.addToBalance(calculatePayeeDept(amount, payees)); }
