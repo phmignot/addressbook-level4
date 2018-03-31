@@ -30,6 +30,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons;
     private final UniqueTagList tags;
     private final TransactionList transactions;
+    private final DebtsTable debtsTable;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -42,6 +43,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons = new UniquePersonList();
         tags = new UniqueTagList();
         transactions = new TransactionList();
+        debtsTable = new DebtsTable();
     }
 
     public AddressBook() {}
@@ -103,6 +105,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         // This can cause the tags master list to have additional tags that are not tagged to any person
         // in the person list.
         persons.add(person);
+        debtsTable.add(person);
     }
 
     /**
@@ -205,8 +208,16 @@ public class AddressBook implements ReadOnlyAddressBook {
         return Objects.hash(persons, tags);
     }
 
+    /**
+     * Adds {@code transaction} to the addressbook.
+     * Updates the balances of the person implied.
+     * @param transaction to add.
+     */
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
+        transaction.updatePayerAndPayeesBalance();
+        debtsTable.updateDebts(transaction);
+        debtsTable.display();
     }
 
     /**

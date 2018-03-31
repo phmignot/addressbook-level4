@@ -3,6 +3,8 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.text.DecimalFormat;
+
 //@@author steven-jia
 /**
  * Represents a Person's balance in SmartSplit.
@@ -39,6 +41,28 @@ public class Balance {
         return test.matches(BALANCE_VALIDATION_REGEX);
     }
 
+
+    public double getDoubleValue() {
+        return Double.valueOf(value);
+    }
+
+    public Balance getInverse() {
+        if (this.value.contains("-")) {
+            return new Balance(this.value.substring(1));
+        }
+        return new Balance("-" + this.value);
+    }
+
+    /**
+     * Adds the value of two balance
+     * @param balance to add.
+     * @return Balance with the value of the sum.
+     */
+    public Balance add(Balance balance) {
+        double addition = this.getDoubleValue() + balance.getDoubleValue();
+        DecimalFormat formatter = new DecimalFormat("#.00");
+        return new Balance(String.valueOf(formatter.format(addition)));
+    }
 
     @Override
     public String toString() {
