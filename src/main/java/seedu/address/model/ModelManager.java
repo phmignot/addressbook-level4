@@ -14,6 +14,8 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.logic.commands.AddTransactionCommand;
+import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -31,6 +33,7 @@ public class ModelManager extends ComponentManager implements Model {
     private final AddressBook addressBook;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Transaction> filteredTransactions;
+
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -103,6 +106,17 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonNotFoundException();
         }
     }
+    //@@author steven-jia
+    @Override
+    public void findPersonInTransaction(Name name) throws PersonNotFoundException {
+        Set<Person> matchingPersons = addressBook.getPersonList()
+                .stream()
+                .filter(person -> person.getName().equals(name))
+                .collect(Collectors.toSet());
+        if (matchingPersons.isEmpty()) {
+            throw new PersonNotFoundException();
+        }
+    }
 
     @Override
     public Set<Transaction> findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
@@ -144,8 +158,9 @@ public class ModelManager extends ComponentManager implements Model {
     //@@author ongkc
     @Override
     public void addTransaction(Transaction transaction) {
+        String transactionType = AddTransactionCommand.COMMAND_WORD;
         addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesBalance(transaction.getAmount(),
+        addressBook.updatePayerAndPayeesBalance(transactionType , transaction.getAmount(),
                 transaction.getPayer(), transaction.getPayees());
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
@@ -156,7 +171,12 @@ public class ModelManager extends ComponentManager implements Model {
     //@@author phmignot
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
+        String transactionType = DeleteTransactionCommand.COMMAND_WORD;
+        addressBook.updatePayerAndPayeesBalance(transactionType , target.getAmount(),
+                target.getPayer(), target.getPayees());
         addressBook.removeTransaction(target);
+        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
     //=========== Filtered Person List Accessors =============================================================

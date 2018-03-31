@@ -8,6 +8,8 @@ import java.util.Objects;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
@@ -25,6 +27,8 @@ public class DeleteTransactionCommand extends UndoableCommand {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_TRANSACTION_SUCCESS = "Deleted Transaction: %1$s";
+    public static final String MESSAGE_NONEXISTENT_PAYER_PAYEES =
+            "The payer or payee(s) in the transaction do not exist";
 
     private final Index targetIndex;
 
@@ -36,17 +40,26 @@ public class DeleteTransactionCommand extends UndoableCommand {
 
 
     @Override
-    public CommandResult executeUndoableCommand() {
+    public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(transactionToDelete);
         try {
+            checkPayerAndPayeesExist(transactionToDelete);
             model.deleteTransaction(transactionToDelete);
         } catch (TransactionNotFoundException tnfe) {
             throw new AssertionError("The target transaction cannot be missing");
+        } catch (PersonNotFoundException e) {
+            throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
         }
-
         return new CommandResult(String.format(MESSAGE_DELETE_TRANSACTION_SUCCESS, transactionToDelete));
     }
-
+    /**
+     * check if the payer and payees still exist in the transaction to be deleted
+     */
+    public void checkPayerAndPayeesExist(Transaction transactionToDelete) throws PersonNotFoundException {
+        model.findPersonInTransaction(transactionToDelete.getPayer().getName());
+        for (Person payee: transactionToDelete.getPayees()) {
+            model.findPersonInTransaction(payee.getName()); }
+    }
     @Override
     protected void preprocessUndoableCommand() throws CommandException {
         List<Transaction> lastShownList = model.getFilteredTransactionList();

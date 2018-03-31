@@ -219,23 +219,24 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Update each payer and payee(s) balance whenever each new transaction is added
      */
-    public void updatePayerAndPayeesBalance(Amount amount, Person payer, UniquePersonList payees) {
+    public void updatePayerAndPayeesBalance(String transactionType, Amount amount, Person payer,
+                                            UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        updatePayerBalance(amount, payer, numberOfInvolvedPersons);
+        updatePayerBalance(transactionType, amount, payer, numberOfInvolvedPersons);
         for (Person payee: payees) {
-            updatePayeeBalance(amount, payee, numberOfInvolvedPersons); }
+            updatePayeeBalance(transactionType, amount, payee, numberOfInvolvedPersons); }
     }
     /**
      * Update payer balance whenever each new transaction is added
      */
-    private void updatePayerBalance(Amount amount, Person payer, int numberOfInvolvedPersons) {
-        payer.setBalance(calculatePayerBalance(amount, payer, numberOfInvolvedPersons));
+    private void updatePayerBalance(String transactionType, Amount amount, Person payer, int numberOfInvolvedPersons) {
+        payer.setBalance(calculatePayerBalance(transactionType, amount, payer, numberOfInvolvedPersons));
     }
     /**
      * Update payee balance whenever each new transaction is added
      */
-    private void updatePayeeBalance(Amount amount, Person payee, int numberOfInvolvedPersons) {
-        payee.setBalance(calculatePayeeBalance(amount, payee, numberOfInvolvedPersons));
+    private void updatePayeeBalance(String transactionType, Amount amount, Person payee, int numberOfInvolvedPersons) {
+        payee.setBalance(calculatePayeeBalance(transactionType, amount, payee, numberOfInvolvedPersons));
     }
     /**
      * Calculate the number of persons balance involved in the transaction
