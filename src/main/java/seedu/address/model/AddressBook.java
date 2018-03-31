@@ -1,6 +1,8 @@
 package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeBalance;
+import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayerBalance;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
@@ -204,10 +207,43 @@ public class AddressBook implements ReadOnlyAddressBook {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
     }
-
+    /**
+     * Represents a Transaction in SmartSplit.
+     * Guarantees: details are present and not null, field values are validated, immutable.
+     */
     public void addTransaction(Transaction transaction) {
+
         transactions.add(transaction);
     }
+
+    /**
+     * Update each payer and payee(s) balance whenever each new transaction is added
+     */
+    public void updatePayerAndPayeesBalance(Amount amount, Person payer, UniquePersonList payees) {
+        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
+        updatePayerBalance(amount, payer, numberOfInvolvedPersons);
+        for (Person payee: payees) {
+            updatePayeeBalance(amount, payee, numberOfInvolvedPersons); }
+    }
+    /**
+     * Update payer balance whenever each new transaction is added
+     */
+    private void updatePayerBalance(Amount amount, Person payer, int numberOfInvolvedPersons) {
+        payer.setBalance(calculatePayerBalance(amount, payer, numberOfInvolvedPersons));
+    }
+    /**
+     * Update payee balance whenever each new transaction is added
+     */
+    private void updatePayeeBalance(Amount amount, Person payee, int numberOfInvolvedPersons) {
+        payee.setBalance(calculatePayeeBalance(amount, payee, numberOfInvolvedPersons));
+    }
+    /**
+     * Calculate the number of persons balance involved in the transaction
+     */
+    public static int calculateNumberOfInvolvedPersons(UniquePersonList payees) {
+        return payees.asObservableList().size() + 1;
+    }
+
 
     /**
      * Removes {@code target} from the list of transactions.

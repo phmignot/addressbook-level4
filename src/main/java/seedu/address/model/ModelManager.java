@@ -145,6 +145,8 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void addTransaction(Transaction transaction) {
         addressBook.addTransaction(transaction);
+        addressBook.updatePayerAndPayeesBalance(transaction.getAmount(),
+                transaction.getPayer(), transaction.getPayees());
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);

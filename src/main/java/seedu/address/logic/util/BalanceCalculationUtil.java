@@ -6,7 +6,6 @@ import java.text.DecimalFormat;
 
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.Amount;
 
 /**
@@ -19,8 +18,7 @@ public class BalanceCalculationUtil {
     /**
      * Returns an updated balance for {@code payer}
      */
-    public static Balance calculatePayerBalance(Amount amount, Person payer, UniquePersonList payees) {
-        int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
+    public static Balance calculatePayerBalance(Amount amount, Person payer, int numberOfInvolvedPersons) {
         Double amountToAdd = Double.valueOf(amount.value)
                 * (numberOfInvolvedPersons - 1)
                 / numberOfInvolvedPersons;
@@ -34,11 +32,9 @@ public class BalanceCalculationUtil {
     /**
      * Returns an updated balance for {@code payee}
      */
-    public static Balance calculatePayeeBalance(Amount amount, Person payer, UniquePersonList payees,
-                                                Person currentPayee) {
-        int numberOfInvolvedPersons = numberOfInvolvedPersons(payees);
+    public static Balance calculatePayeeBalance(Amount amount, Person payee, int numberOfInvolvedPersons) {
         Double amountToSubtract = Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        Double updatedBalanceValue = Double.valueOf(currentPayee.getBalance().value) - amountToSubtract;
+        Double updatedBalanceValue = Double.valueOf(payee.getBalance().value) - amountToSubtract;
         updatedBalanceValue = round(updatedBalanceValue, NUMBER_OF_DECIMAL_PLACES);
 
         DecimalFormat formatter = new DecimalFormat("#.00");
@@ -51,8 +47,6 @@ public class BalanceCalculationUtil {
         return amount.doubleValue();
     }
 
-    public static int numberOfInvolvedPersons(UniquePersonList payees) {
-        return payees.asObservableList().size() + 1;
-    }
-
 }
+
+
