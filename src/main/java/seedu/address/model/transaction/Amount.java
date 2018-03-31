@@ -30,12 +30,15 @@ public class Amount {
         checkArgument(isValidAmount(amount), MESSAGE_AMOUNT_CONSTRAINTS);
         this.value = amount;
     }
-
     /**
      * Returns true if a given string is a valid amount.
      */
     public static boolean isValidAmount(String test) {
         return test.matches(AMOUNT_VALIDATION_REGEX);
+    }
+
+    public double getDoubleValue() {
+        return Double.valueOf(value);
     }
 
     @Override

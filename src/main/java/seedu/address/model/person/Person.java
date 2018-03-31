@@ -79,10 +79,14 @@ public class Person {
         this.balance = newBalance;
     }
 
+    public void addToBalance(Balance balanceToAdd) {
+        setBalance(this.balance.add(balanceToAdd));
+    }
+
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, balance, tags);
+        return Objects.hash(name, phone, email, tags);
     }
 
     @Override

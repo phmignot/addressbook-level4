@@ -160,7 +160,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void addTransaction(Transaction transaction) {
         String transactionType = AddTransactionCommand.COMMAND_WORD;
         addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesBalance(transactionType , transaction.getAmount(),
+        addressBook.updatePayerAndPayeesDebt(transactionType , transaction.getAmount(),
                 transaction.getPayer(), transaction.getPayees());
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
@@ -172,7 +172,7 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
         String transactionType = DeleteTransactionCommand.COMMAND_WORD;
-        addressBook.updatePayerAndPayeesBalance(transactionType , target.getAmount(),
+        addressBook.updatePayerAndPayeesDebt(transactionType , target.getAmount(),
                 target.getPayer(), target.getPayees());
         addressBook.removeTransaction(target);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);

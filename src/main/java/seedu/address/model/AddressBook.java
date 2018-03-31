@@ -1,8 +1,9 @@
 package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeBalance;
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayerBalance;
+
+import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDebt;
+import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayerDebt;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
+import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -33,6 +35,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons;
     private final UniqueTagList tags;
     private final TransactionList transactions;
+    private final DebtsTable debtsTable;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -45,6 +48,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons = new UniquePersonList();
         tags = new UniqueTagList();
         transactions = new TransactionList();
+        debtsTable = new DebtsTable();
     }
 
     public AddressBook() {}
@@ -106,6 +110,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         // This can cause the tags master list to have additional tags that are not tagged to any person
         // in the person list.
         persons.add(person);
+        debtsTable.add(person);
     }
 
     /**
@@ -207,43 +212,40 @@ public class AddressBook implements ReadOnlyAddressBook {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
     }
-    /**
-     * Represents a Transaction in SmartSplit.
-     * Guarantees: details are present and not null, field values are validated, immutable.
-     */
-    public void addTransaction(Transaction transaction) {
 
+
+    public void addTransaction(Transaction transaction) {
+        String typeOfTransaction = AddTransactionCommand.COMMAND_WORD;
         transactions.add(transaction);
+        debtsTable.updateDebts(typeOfTransaction, transaction);
+        debtsTable.display();
     }
 
     /**
      * Update each payer and payee(s) balance whenever each new transaction is added
      */
-    public void updatePayerAndPayeesBalance(String transactionType, Amount amount, Person payer,
+    public void updatePayerAndPayeesDebt(String transactionType, Amount amount, Person payer,
                                             UniquePersonList payees) {
-        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        updatePayerBalance(transactionType, amount, payer, numberOfInvolvedPersons);
+        updatePayerDebt(transactionType, amount, payer, payees);
         for (Person payee: payees) {
-            updatePayeeBalance(transactionType, amount, payee, numberOfInvolvedPersons); }
+            updatePayeeDebt(transactionType, amount, payee, payees); }
     }
     /**
      * Update payer balance whenever each new transaction is added
      */
-    private void updatePayerBalance(String transactionType, Amount amount, Person payer, int numberOfInvolvedPersons) {
-        payer.setBalance(calculatePayerBalance(transactionType, amount, payer, numberOfInvolvedPersons));
+    private void updatePayerDebt(String transactionType, Amount amount, Person payer, UniquePersonList payees) {
+        payer.addToBalance(calculatePayerDebt(transactionType, amount, payees));
     }
     /**
      * Update payee balance whenever each new transaction is added
      */
-    private void updatePayeeBalance(String transactionType, Amount amount, Person payee, int numberOfInvolvedPersons) {
-        payee.setBalance(calculatePayeeBalance(transactionType, amount, payee, numberOfInvolvedPersons));
+    private void updatePayeeDebt(String transactionType, Amount amount, Person payee, UniquePersonList payees) {
+        payee.addToBalance(calculatePayeeDebt(transactionType, amount, payees));
     }
     /**
      * Calculate the number of persons balance involved in the transaction
      */
-    public static int calculateNumberOfInvolvedPersons(UniquePersonList payees) {
-        return payees.asObservableList().size() + 1;
-    }
+
 
 
     /**
