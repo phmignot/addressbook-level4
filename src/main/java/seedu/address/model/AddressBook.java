@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
 import seedu.address.logic.commands.AddTransactionCommand;
+import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -249,6 +250,9 @@ public class AddressBook implements ReadOnlyAddressBook {
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
      */
     public boolean removeTransaction(Transaction target) throws TransactionNotFoundException {
+        String typeOfTransaction = DeleteTransactionCommand.COMMAND_WORD;
+        debtsTable.updateDebts(typeOfTransaction, target);
+        debtsTable.display();
         if (transactions.remove(target)) {
             return true;
         } else {
