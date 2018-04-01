@@ -213,7 +213,9 @@ public class AddressBook implements ReadOnlyAddressBook {
         return Objects.hash(persons, tags);
     }
 
-
+    /**
+     * add a new transaction
+     */
     public void addTransaction(Transaction transaction) {
         String typeOfTransaction = AddTransactionCommand.COMMAND_WORD;
         transactions.add(transaction);
@@ -242,12 +244,6 @@ public class AddressBook implements ReadOnlyAddressBook {
     private void updatePayeeDebt(String transactionType, Amount amount, Person payee, UniquePersonList payees) {
         payee.addToBalance(calculatePayeeDebt(transactionType, amount, payees));
     }
-    /**
-     * Calculate the number of persons balance involved in the transaction
-     */
-
-
-
     /**
      * Removes {@code target} from the list of transactions.
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.

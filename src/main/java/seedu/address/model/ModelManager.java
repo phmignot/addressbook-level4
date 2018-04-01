@@ -2,7 +2,10 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+import static seedu.address.logic.commands.DeleteTransactionCommand.MESSAGE_NONEXISTENT_PAYER_PAYEES;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -14,11 +17,17 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
+import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.ArgumentMultimap;
+import seedu.address.logic.parser.ParserUtil;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.PersonFoundException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
@@ -78,8 +87,10 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public synchronized void addPerson(Person person) throws DuplicatePersonException {
-        addressBook.addPerson(person);
+    public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
+        if (findTransactionsWithPayer(person) & findTransactionsWithPayee(person)) {
+            addressBook.addPerson(person);
+        }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
@@ -106,7 +117,37 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonNotFoundException();
         }
     }
+
     //@@author steven-jia
+    public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
+            throws PersonNotFoundException, IllegalValueException {
+        UniquePersonList payees = new UniquePersonList();
+        List<String> payeeNamesToAdd = argMultimap.getAllValues(PREFIX_PAYEE);
+
+        if (!payeeNamesToAdd.isEmpty()) {
+            for (String payeeName: payeeNamesToAdd) {
+                payees.add(model.findPersonByName(ParserUtil.parseName(payeeName)));
+            }
+        }
+        return payees;
+    }
+    public UniquePersonList getPayeesList(UniquePersonList transactionPayees)
+            throws PersonNotFoundException {
+        UniquePersonList payees = new UniquePersonList();
+
+        for (Person payee: transactionPayees) {
+            try {
+                payees.add(findPersonByName(payee.getName()));
+            } catch (PersonNotFoundException pnfe) {
+                throw new PersonNotFoundException();
+            } catch (DuplicatePersonException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return payees;
+    }
+
     @Override
     public void findPersonInTransaction(Name name) throws PersonNotFoundException {
         Set<Person> matchingPersons = addressBook.getPersonList()
@@ -119,30 +160,30 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public Set<Transaction> findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
+    public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
                 .collect(Collectors.toSet());
 
-        if (!matchingTransactions.isEmpty()) {
-            return matchingTransactions;
+        if (matchingTransactions.isEmpty()) {
+            return true;
         } else {
-            throw new TransactionNotFoundException();
+            throw new PersonFoundException();
         }
     }
 
     @Override
-    public Set<Transaction> findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
+    public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))
                 .collect(Collectors.toSet());
 
-        if (!matchingTransactions.isEmpty()) {
-            return matchingTransactions;
+        if (matchingTransactions.isEmpty()) {
+            return true;
         } else {
-            throw new TransactionNotFoundException();
+            throw new PersonFoundException();
         }
     }
 
@@ -170,10 +211,14 @@ public class ModelManager extends ComponentManager implements Model {
 
     //@@author phmignot
     @Override
-    public void deleteTransaction(Transaction target) throws TransactionNotFoundException {
+    public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
         String transactionType = DeleteTransactionCommand.COMMAND_WORD;
-        addressBook.updatePayerAndPayeesDebt(transactionType , target.getAmount(),
-                target.getPayer(), target.getPayees());
+        try {
+            addressBook.updatePayerAndPayeesDebt(transactionType , target.getAmount(),
+                    findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
+        }   catch (PersonNotFoundException e) {
+            throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
+        }
         addressBook.removeTransaction(target);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);

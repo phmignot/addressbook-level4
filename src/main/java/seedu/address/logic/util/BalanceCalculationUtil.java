@@ -48,9 +48,8 @@ public class BalanceCalculationUtil {
         }
     }
     /**
-     * Calculate new payer balance after a new transaction is added
+     * Calculate new payee(s) balance after a new transaction is added
      */
-
     public static Balance calculateAddTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
         Double dept = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
@@ -58,7 +57,9 @@ public class BalanceCalculationUtil {
         DecimalFormat formatter = new DecimalFormat("#.00");
         return new Balance(String.valueOf(formatter.format(dept)));
     }
-
+    /**
+     * Calculate new payer balance a transaction is deleted
+     */
     public static Balance calculateDeleteTransactionPayerDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
         Double dept = -Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
@@ -66,6 +67,9 @@ public class BalanceCalculationUtil {
         DecimalFormat formatter = new DecimalFormat("#.00");
         return new Balance(String.valueOf(formatter.format(dept)));
     }
+    /**
+     * Calculate new payer balance after a new transaction is added
+     */
     public static Balance calculateAddTransactionPayerDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
         Double dept = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
@@ -74,6 +78,9 @@ public class BalanceCalculationUtil {
         DecimalFormat formatter = new DecimalFormat("#.00");
         return new Balance(String.valueOf(formatter.format(dept)));
     }
+    /**
+     * Calculate new payee(s) balance after a transaction is deleted
+     */
     public static Balance calculateDeleteTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
         Double dept = Double.valueOf(amount.value) / numberOfInvolvedPersons;
@@ -81,7 +88,9 @@ public class BalanceCalculationUtil {
         DecimalFormat formatter = new DecimalFormat("#.00");
         return new Balance(String.valueOf(formatter.format(dept)));
     }
-
+    /**
+     * Calculate the number of people involved in a transaction
+     */
     public static int calculateNumberOfInvolvedPersons(UniquePersonList payees) {
         return payees.asObservableList().size() + 1;
     }
