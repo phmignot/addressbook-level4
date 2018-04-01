@@ -72,5 +72,5 @@ public class LogicManager extends ComponentManager implements Logic {
         TransactionContainsPersonPredicate predicate = new TransactionContainsPersonPredicate(person);
         model.updateFilteredTransactionList(predicate);
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
-
+import static seedu.address.logic.commands.DeletePersonCommand.MESSAGE_DEBT_NOT_PAID;
 import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDebt;
 import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayerDebt;
 
@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import javafx.collections.ObservableList;
 import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
+import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -36,7 +38,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons;
     private final UniqueTagList tags;
     private final TransactionList transactions;
-    private final DebtsTable debtsTable;
+    private DebtsTable debtsTable;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -59,6 +61,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public AddressBook(ReadOnlyAddressBook toBeCopied) {
         this();
+        this.debtsTable = toBeCopied.getDebtsTable();
         resetData(toBeCopied);
     }
 
@@ -76,7 +79,9 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.tags.setTags(tags);
     }
 
-
+    public void setDebtsTable(DebtsTable debtsTable) {
+        this.debtsTable.setDebtsTable(debtsTable);
+    }
     /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
      */
@@ -87,10 +92,11 @@ public class AddressBook implements ReadOnlyAddressBook {
                 .map(this::syncWithMasterTagList)
                 .collect(Collectors.toList());
         List<Transaction> syncedTransactionList = newData.getTransactionList();
-
+        DebtsTable syncedDebtsTable = newData.getDebtsTable();
         try {
             setPersons(syncedPersonList);
             setTransactions(syncedTransactionList);
+            setDebtsTable(syncedDebtsTable);
         } catch (DuplicatePersonException e) {
             throw new AssertionError("AddressBooks should not have duplicate persons");
         }
@@ -161,12 +167,29 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Removes {@code key} from this {@code AddressBook}.
      * @throws PersonNotFoundException if the {@code key} is not in this {@code AddressBook}.
      */
-    public boolean removePerson(Person key) throws PersonNotFoundException {
+    public boolean removePerson(Person key) throws PersonNotFoundException, CommandException {
+        if (checkDebt(key)) {
+            throw new CommandException(MESSAGE_DEBT_NOT_PAID);
+        }
         if (persons.remove(key)) {
             return true;
         } else {
             throw new PersonNotFoundException();
         }
+    }
+    /**
+     * check if the person to be deleted still owed any unpaid debt
+     */
+    private boolean checkDebt(Person key) {
+        DebtsList debtsList = debtsTable.get(key);
+        if (debtsList != null) {
+            for (Balance value : debtsList.values()) {
+                if (value.getDoubleValue() != 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //// tag-level operations
@@ -193,6 +216,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public ObservableList<Tag> getTagList() {
         return tags.asObservableList();
+    }
+
+    @Override
+    public DebtsTable getDebtsTable() {
+        return debtsTable;
     }
 
     @Override

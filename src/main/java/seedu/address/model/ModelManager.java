@@ -55,9 +55,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
-        //@@author ongkc
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
-        //@@author
     }
 
     public ModelManager() {
@@ -81,7 +79,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public synchronized void deletePerson(Person target) throws PersonNotFoundException {
+    public synchronized void deletePerson(Person target) throws PersonNotFoundException, CommandException {
         addressBook.removePerson(target);
         indicateAddressBookChanged();
     }

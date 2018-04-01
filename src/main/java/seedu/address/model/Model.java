@@ -35,8 +35,7 @@ public interface Model {
     ReadOnlyAddressBook getAddressBook();
 
     /** Deletes the given person. */
-    void deletePerson(Person target) throws PersonNotFoundException;
-
+    void deletePerson(Person target) throws PersonNotFoundException, CommandException;
     /** Adds the given person */
     void addPerson(Person person) throws DuplicatePersonException, PersonFoundException;
 
