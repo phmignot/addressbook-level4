@@ -14,17 +14,17 @@ public class DebtsList extends HashMap<Person, Balance> {
     }
 
     /**
-     * Updates the debt with a person. If the person haven't debt before, the person
+     * Updates the debt with a person. If the person has no previous debt, then the person
      * is added to the HashMap.
      * @param person that owes or is owed money.
-     * @param dept to add to the old dept.
+     * @param debt to add to the old debt.
      */
-    public void updateDept(Person person, Balance dept) {
+    public void updateDebt(Person person, Balance debt) {
         if (!this.containsKey(person)) {
             this.put(person, new Balance("0.00"));
         }
         Balance oldDebts = this.get(person);
-        this.replace(person, oldDebts.add(dept));
+        this.replace(person, oldDebts.add(debt));
     }
 
     /**

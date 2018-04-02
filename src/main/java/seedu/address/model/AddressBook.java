@@ -169,7 +169,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public boolean removePerson(Person key) throws PersonNotFoundException, CommandException {
         if (checkDebt(key)) {
-            throw new CommandException(MESSAGE_DEBT_NOT_PAID);
+            throw new CommandException(String.format(MESSAGE_DEBT_NOT_PAID, key));
         }
         if (persons.remove(key)) {
             return true;
