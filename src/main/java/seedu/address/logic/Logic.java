@@ -40,4 +40,6 @@ public interface Logic {
      */
     void updateFilteredTransactionList(Person person);
 
+    void updateFilteredPersonList(Person person);
+    void updateFilteredPersonList();
 }

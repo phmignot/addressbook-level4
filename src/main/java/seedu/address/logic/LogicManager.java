@@ -1,5 +1,8 @@
 package seedu.address.logic;
 
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_NO_PERSON;
+
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
@@ -10,7 +13,10 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.AddressBookParser;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.DebtsList;
+import seedu.address.model.DebtsTable;
 import seedu.address.model.Model;
+import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionContainsPersonPredicate;
@@ -73,4 +79,40 @@ public class LogicManager extends ComponentManager implements Logic {
         model.updateFilteredTransactionList(predicate);
     }
 
+    @Override
+    public void updateFilteredPersonList(Person person) {
+        DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
+        DebtsList debtsList = debtsTable.get(person);
+        resetDebt();
+        updateDebt(debtsList);
+        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+
+    }
+    @Override
+    public void updateFilteredPersonList() {
+        resetDebt();
+        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    }
+    /**
+     * Update amount of debt owed to other people
+     */
+    private void updateDebt(DebtsList debtsList) {
+        ObservableList<Person> persons = model.getAddressBook().getPersonList();
+        for (Person person: persons) {
+            if (debtsList.get(person) != null) {
+                person.setDebt(debtsList.get(person));
+            }
+        }
+    }
+    /**
+     * Reset amount of debt owed to other people
+     */
+    private void resetDebt() {
+        ObservableList<Person> persons = model.getAddressBook().getPersonList();
+        for (Person person: persons) {
+            person.setDebt(new Balance("0.00"));
+        }
+    }
 }
