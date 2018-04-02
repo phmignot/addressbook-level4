@@ -39,7 +39,7 @@
    <VBox prefHeight="105.0" prefWidth="105.0">
       <children>
          <Label text="Balance" />
-         <HBox prefHeight="100.0" prefWidth="200.0">
+         <HBox prefHeight="22.0" prefWidth="105.0">
             <children>
                <Label fx:id="balance" prefHeight="20.0" prefWidth="105.0" text="\$balance">
                   <graphic>
@@ -48,9 +48,19 @@
                </Label>
             </children>
          </HBox>
+         <Label text="Debt" />
+         <HBox prefHeight="22.0" prefWidth="105.0">
+            <children>
+               <Label fx:id="debt" prefHeight="20.0" prefWidth="105.0" text="\$debt">
+                  <graphic>
+                     <Label text="\$" />
+                  </graphic>
+               </Label>
+            </children>
+         </HBox>
       </children>
       <padding>
-         <Insets top="25.0" />
+         <Insets top="10.0" />
       </padding>
    </VBox>
 </HBox>

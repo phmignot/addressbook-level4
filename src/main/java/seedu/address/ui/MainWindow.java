@@ -38,6 +38,7 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
+    private PersonListPanel personListPanel1;
     private Config config;
     private UserPrefs prefs;
 
@@ -198,11 +199,13 @@ public class MainWindow extends UiPart<Stage> {
     private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList(event.getNewSelection().person);
+        logic.updateFilteredPersonList(event.getNewSelection().person);
     }
 
     @Subscribe
     private void handlePersonPanelNoSelectionEvent(PersonPanelNoSelectionEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList();
+        logic.updateFilteredPersonList();
     }
 }
