@@ -18,10 +18,10 @@ public class BalanceCalculationUtil {
 
     private static final int NUMBER_OF_DECIMAL_PLACES = 2;
 
+    //@author steven-jia
     /**
-     * Returns the dept that a {@code payee} owes to the payer.
+     * Returns the debt that a {@code payee} owes to the payer.
      */
-
     public static Balance calculatePayerDebt(String transactionType, Amount amount,
                                              UniquePersonList payees) {
         switch (transactionType) {
@@ -47,47 +47,51 @@ public class BalanceCalculationUtil {
             return null;
         }
     }
+
+    //@author ongkc
     /**
      * Calculate new payee(s) balance after a new transaction is added
      */
     public static Balance calculateAddTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double dept = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        dept = round(dept, NUMBER_OF_DECIMAL_PLACES);
+        Double debt = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
         DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(dept)));
+        return new Balance(String.valueOf(formatter.format(debt)));
     }
     /**
      * Calculate new payer balance a transaction is deleted
      */
     public static Balance calculateDeleteTransactionPayerDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double dept = -Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
+        Double debt = -Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
                 / numberOfInvolvedPersons;
         DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(dept)));
+        return new Balance(String.valueOf(formatter.format(debt)));
     }
     /**
      * Calculate new payer balance after a new transaction is added
      */
     public static Balance calculateAddTransactionPayerDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double dept = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
+        Double debt = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
                 / numberOfInvolvedPersons;
-        dept = round(dept, NUMBER_OF_DECIMAL_PLACES);
+        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
         DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(dept)));
+        return new Balance(String.valueOf(formatter.format(debt)));
     }
     /**
      * Calculate new payee(s) balance after a transaction is deleted
      */
     public static Balance calculateDeleteTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double dept = Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        dept = round(dept, NUMBER_OF_DECIMAL_PLACES);
+        Double debt = Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
         DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(dept)));
+        return new Balance(String.valueOf(formatter.format(debt)));
     }
+
+    //@@author steven-jia
     /**
      * Calculate the number of people involved in a transaction
      */

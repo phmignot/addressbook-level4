@@ -423,10 +423,6 @@ the event as a transaction.
 An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
 The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
 
-=== [Proposed] Data Encryption
-
-{Explain here how the data encryption feature will be implemented}
-
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
