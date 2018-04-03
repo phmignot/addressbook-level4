@@ -1,3 +1,4 @@
+//@@author phmignot
 package seedu.address.testutil;
 
 import java.time.Clock;
@@ -13,7 +14,6 @@ import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.util.SampleDataUtil;
 
-//@@author phmignot
 /**
  * A utility class to help with building Transaction objects.
  */

@@ -92,6 +92,10 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [t/TAG]...`
 * You can remove all the person's tags by typing `t/` without specifying any tags after it.
 ****
 
+****
+! This feature is not yet properly handled by Transaction command,
+ so the user should avoid to edit a person implied in any transaction. 
+****
 Examples:
 
 * `edit 1 p/91234567 e/johndoe@example.com` +

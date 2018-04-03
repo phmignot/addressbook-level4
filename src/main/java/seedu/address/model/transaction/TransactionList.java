@@ -53,7 +53,7 @@ public class TransactionList implements Iterable<Transaction> {
         return internalList.hashCode();
     }
 
-    //phmignot
+    //@@author phmignot
     /**
      * Removes the equivalent transaction from the list of transactions.
      *
@@ -67,7 +67,6 @@ public class TransactionList implements Iterable<Transaction> {
         }
         return transactionFoundAndDeleted;
     }
-    //@phmignot
     /**
      * Replaces the list of transactions by a input list of transaction.
      * @param transactions that will be the new transactions' list.
