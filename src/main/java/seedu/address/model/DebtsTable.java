@@ -14,6 +14,7 @@ import seedu.address.model.transaction.Transaction;
 /**
  * Stores all the debts between the persons from the addressBook.
  */
+//@author phmignot
 public class DebtsTable extends HashMap<Person, DebtsList> {
 
     private final ObservableList internalList = FXCollections.observableArrayList();
@@ -43,8 +44,8 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
                 System.out.println("Adding payee " + payee.getName().fullName);
             }
             DebtsList payeeDebtsLit = this.get(payee);
-            payerDebtsLit.updateDept(payee, payeeDebt);
-            payeeDebtsLit.updateDept(payer, payerDebt);
+            payerDebtsLit.updateDebt(payee, payeeDebt);
+            payeeDebtsLit.updateDebt(payer, payerDebt);
         }
     }
 

@@ -1,3 +1,4 @@
+//@@author phmignot
 package seedu.address.ui;
 
 import static org.junit.Assert.assertEquals;
@@ -12,7 +13,6 @@ import seedu.address.model.transaction.Transaction;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.testutil.TransactionBuilder;
 
-//@phmignot
 public class TransactionCardTest extends GuiUnitTest {
     @Test
     public void display() {
