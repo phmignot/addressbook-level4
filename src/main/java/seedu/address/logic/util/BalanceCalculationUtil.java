@@ -18,7 +18,7 @@ public class BalanceCalculationUtil {
 
     private static final int NUMBER_OF_DECIMAL_PLACES = 2;
 
-    //@author steven-jia
+    //@@author steven-jia
     /**
      * Returns the debt that a {@code payee} owes to the payer.
      */
@@ -48,7 +48,7 @@ public class BalanceCalculationUtil {
         }
     }
 
-    //@author ongkc
+    //@@author ongkc
     /**
      * Calculate new payee(s) balance after a new transaction is added
      */

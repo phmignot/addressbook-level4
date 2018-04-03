@@ -10,7 +10,7 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.util.SampleDataUtil;
-//@author ongkc
+//@@author ongkc
 /**
  * A utility class containing a list of {@code Transaction} objects to be used in tests.
  */
