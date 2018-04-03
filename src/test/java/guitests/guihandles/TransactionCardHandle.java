@@ -1,3 +1,4 @@
+//@@author phmignot
 package guitests.guihandles;
 
 import java.util.List;
@@ -7,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 
-//@phmignot
 /**
  * Provides a handle to a transaction card in the transaction list panel.
  */

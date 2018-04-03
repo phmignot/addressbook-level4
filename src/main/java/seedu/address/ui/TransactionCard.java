@@ -1,3 +1,4 @@
+//@@author phmignot
 package seedu.address.ui;
 
 import javafx.fxml.FXML;
@@ -8,7 +9,6 @@ import javafx.scene.layout.Region;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 
-//@@author phmignot
 /**
  * An UI component that displays information of a {@code Transaction}.
  */

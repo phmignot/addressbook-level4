@@ -39,7 +39,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 * *`list`* : lists all contacts
 * **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com : adds a contact named `John Doe` to SmartSplit.
-* **`delete`**`3` : deletes the 3rd contact shown in the current list
+* **`deletePerson`**`3` : deletes the 3rd contact shown in the current list
 * **`addTransaction`**`r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle` : adds a transaction payed by John Doe costing 3456.78$ for a dinner meal with Tom Riddle.
 * *`exit`* : exits the app
 
@@ -92,6 +92,10 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [t/TAG]...`
 * You can remove all the person's tags by typing `t/` without specifying any tags after it.
 ****
 
+****
+! This feature is not yet properly handled by Transaction command,
+ so the user should avoid to edit a person implied in any transaction.
+****
 Examples:
 
 * `edit 1 p/91234567 e/johndoe@example.com` +
@@ -119,25 +123,26 @@ Returns `john` and `John Doe`
 * `find Betsy Tim John` +
 Returns any person having names `Betsy`, `Tim`, or `John`
 
-=== Deleting a person : `delete`
+=== Deleting a person : `deletePerson` [since v1.4]
 
-Deletes the specified person from SmartSplit. +
+Deletes the specified person from SmartSplit if the person is cleared from any debts. +
 Format: `delete INDEX`
 
 ****
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
+* The person must have no debt with anyone.
 ****
 
 Examples:
 
 * `list` +
-`delete 2` +
+`deletePerson 2` +
 Deletes the 2nd person in SmartSplit.
 * `find Betsy` +
-`delete 1` +
-Deletes the 1st person in the results of the `find` command.
+`deletePerson 1` +
+Deletes the 1st person in the results of the `find` command, if the person has no debts.
 
 === Selecting a person : `select`
 
@@ -145,7 +150,9 @@ Selects the person identified by the index number used in the last person listin
 Format: `select INDEX`
 
 ****
-* Selects the person and loads the Google search page the person at the specified `INDEX`.
+* Selects the person.
+* Displays the transactions on which this person is implied.
+* Displays the debts he has with everyone.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* `1, 2, 3, ...`
 ****
@@ -159,23 +166,32 @@ Selects the 2nd person in SmartSplit.
 `select 1` +
 Selects the 1st person in the results of the `find` command.
 
+=== Listing all transactions related to the person [since v1.3]
+
+By clicking on the person on the person panel list, the person can be selected.
+ And so, transactions that are relevant to that person
+will be displayed on the transaction panel list.
+In the person panel list, each person debt will be updated to display the debt with
+the person selected.
+
+To de-select the person, press 'control' + a click on the person selected concurrently,
+and all history of transactions will be re-displayed. And the debt display will be reseted.
+
 === Adding a transaction: `addTransaction` `[since v1.2]`
 
-Adds a transaction between one payer to one/mutiple payees
+Adds a transaction between one payer to one/multiple payees
 Format: `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME`
 Format: `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME payee/PAYEE NAME`
 
+****
+* The amount must be a positive number with exactly two decimals.
+* The description must not be empty
+* The names used in the transaction must be in the SmartSplit addressbook.
+****
 Examples:
 
 * `addTransaction payer/John Doe a/3456.78 d/for dinner meal payee/Tom Riddle`
 * `addTransaction payer/Betsy Crowe a/10.00 d/paying bus for the stadium payee/John Doe payee/Bernice Yu`
-=== Listing all transactions related to the person [since v1.3]
-
-By clicking on the person on the person panel list, transactions that are relevant to that person
-will be displayed on the transaction panel list.
-
-To de-select the person, press 'control' + a click on the person selected concurrently,
-and all history of transactions will be re-displayed
 
 === Deleting a transaction : `deleteTransaction`[since v1.2]
 
@@ -186,6 +202,7 @@ Format: `deleteTransaction INDEX`
 * Deletes the transaction at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
+* All the person implied in the transaction, must still all be in the SmartSplit addressbook.
 ****
 
 Examples:
@@ -193,12 +210,12 @@ Examples:
 `deleteTransaction 2` +
 Deletes the 2nd transaction in SmartSplit.
 
-=== Listing all transactions : `listTransactions`[coming v1.4]
+=== Listing all transactions : `listTransactions`[coming v1.5]
 
 Shows a list of all transactions in SmartSplit. +
 Format: `listTransactions`
 
-=== Locating transactions by name: `findTransaction`[coming v1.4]
+=== Locating transactions by name: `findTransaction`[coming v1.5]
 
 Finds transactions whose property values contain any of the given keywords. +
 Format: `findTransaction KEYWORD [MORE_KEYWORDS]`
