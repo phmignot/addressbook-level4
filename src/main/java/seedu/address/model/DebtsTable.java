@@ -14,6 +14,7 @@ import seedu.address.model.transaction.Transaction;
 /**
  * Stores all the debts between the persons from the addressBook.
  */
+//@author phmignot
 public class DebtsTable extends HashMap<Person, DebtsList> {
 
     private final ObservableList internalList = FXCollections.observableArrayList();

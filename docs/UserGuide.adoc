@@ -39,7 +39,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 * *`list`* : lists all contacts
 * **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com : adds a contact named `John Doe` to SmartSplit.
-* **`delete`**`3` : deletes the 3rd contact shown in the current list
+* **`deletePerson`**`3` : deletes the 3rd contact shown in the current list
 * **`addTransaction`**`r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle` : adds a transaction payed by John Doe costing 3456.78$ for a dinner meal with Tom Riddle.
 * *`exit`* : exits the app
 
@@ -119,25 +119,26 @@ Returns `john` and `John Doe`
 * `find Betsy Tim John` +
 Returns any person having names `Betsy`, `Tim`, or `John`
 
-=== Deleting a person : `delete`
+=== Deleting a person : `deletePerson`
 
-Deletes the specified person from SmartSplit. +
+Deletes the specified person from SmartSplit, the person needs to be cleared from any debt. +
 Format: `delete INDEX`
 
 ****
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
+* The person has no debts with anyone.
 ****
 
 Examples:
 
 * `list` +
-`delete 2` +
+`deletePerson 2` +
 Deletes the 2nd person in SmartSplit.
 * `find Betsy` +
 `delete 1` +
-Deletes the 1st person in the results of the `find` command.
+Deletes the 1st person in the results of the `find` command, if the person has no debts.
 
 === Selecting a person : `select`
 
@@ -145,7 +146,9 @@ Selects the person identified by the index number used in the last person listin
 Format: `select INDEX`
 
 ****
-* Selects the person and loads the Google search page the person at the specified `INDEX`.
+* Selects the person.
+* Displays the transactions on which this person is implied.
+* Displays the debts he has with everyone.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* `1, 2, 3, ...`
 ****
