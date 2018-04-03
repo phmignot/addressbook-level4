@@ -24,7 +24,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
-//@auother ongkc
+//@@author ongkc
 /**
  * Parses input arguments and creates a new AddTransactionCommand object
  */
@@ -60,8 +60,6 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             throw new ParseException(ive.getMessage(), ive);
         }
     }
-
-
 
     //@@author
     /**

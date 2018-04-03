@@ -90,6 +90,7 @@ public class XmlAdaptedPersonTest {
         Assert.assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
 
+    //@@author steven-jia
     @Test
     public void toModelType_invalidBalance_throwsIllegalValueException() {
         XmlAdaptedPerson person =
@@ -112,6 +113,7 @@ public class XmlAdaptedPersonTest {
         }
         assertEquals(balance, expectedBalance);
     }
+    //@@author
 
     @Test
     public void toModelType_invalidTags_throwsIllegalValueException() {
