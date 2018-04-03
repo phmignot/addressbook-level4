@@ -85,7 +85,7 @@ public class LogicManager extends ComponentManager implements Logic {
         DebtsList debtsList = debtsTable.get(person);
         resetDebt();
         updateDebt(debtsList);
-        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        //        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
     }
