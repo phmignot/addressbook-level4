@@ -8,6 +8,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 //@author ongkc
@@ -77,4 +78,22 @@ public class TransactionList implements Iterable<Transaction> {
         internalList.setAll(transactions);
     }
 
+    /**
+     * Replaces the person {@code target} in the list with {@code editedPerson}.
+     *
+     */
+    public void setPerson(Person target, Person editedPerson) {
+        /* TO DO 
+        requireNonNull(editedPerson);
+
+        int index = internalList.indexOf(target);
+        if (index == -1) {
+        }
+
+        if (!target.equals(editedPerson) && internalList.contains(editedPerson)) {
+        }
+
+        internalList.set(index, editedPerson);
+        */
+    }
 }

@@ -86,7 +86,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
-        if (findTransactionsWithPayer(person) & findTransactionsWithPayee(person)) {
+        if (isTransactionsWithPayer(person) & isTransactionsWithPayee(person)) {
             addressBook.addPerson(person);
         }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -158,7 +158,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
+    public boolean isTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -172,7 +172,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
+    public boolean isTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))
@@ -183,6 +183,25 @@ public class ModelManager extends ComponentManager implements Model {
         } else {
             throw new PersonFoundException();
         }
+    }
+
+    @Override
+    public List<Transaction> replaceTransactionsWithPayer(Person person, Person editedPerson)
+            throws DuplicatePersonException, PersonNotFoundException  {
+        List<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .stream()
+                .map(transaction -> transaction.setPerson(person, editedPerson))
+                .collect(Collectors.toList());
+        return matchingTransactions;
+    }
+
+    @Override
+    public List<Transaction> listTransactionsWithPayee(Person person) throws PersonFoundException {
+        List<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .stream()
+                .filter(transaction -> transaction.getPayees().contains(person))
+                .collect(Collectors.toList());
+        return matchingTransactions;
     }
 
     //@@author ongkc

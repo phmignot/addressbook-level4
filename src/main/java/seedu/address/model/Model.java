@@ -65,10 +65,10 @@ public interface Model {
 
     //@@author steven-jia
     /** Returns a set of transactions that have {@code person} as the payer */
-    boolean findTransactionsWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
+    boolean isTransactionsWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
 
     /** Returns a set of transactions that have {@code person} as a payee */
-    boolean findTransactionsWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
+    boolean isTransactionsWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
 
     //@@author
     /** Returns an unmodifiable view of the filtered transaction list */

@@ -9,6 +9,7 @@ import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * Represents a Transaction in SmartSplit.
@@ -18,10 +19,10 @@ public class Transaction extends BalanceCalculationUtil {
     private static Integer lastTransactionId = 0;
     private final Integer id;
     private final Date dateTime;
-    private final Person payer;
+    private Person payer;
     private final Amount amount;
     private final Description description;
-    private final UniquePersonList payees;
+    private UniquePersonList payees;
 
     public Transaction(Person payer, Amount amount, Description description, Date dateTime, UniquePersonList payees) {
         this.dateTime = dateTime;
@@ -75,6 +76,24 @@ public class Transaction extends BalanceCalculationUtil {
         return payees;
     }
 
+    public void setPayer(Person payer) {
+        this.payer = payer;
+    }
+
+    public void setPayees(UniquePersonList payees) {
+        this.payees = payees;
+    }
+
+    public Transaction setPerson(Person person, Person editedPerson)
+            throws DuplicatePersonException, PersonNotFoundException {
+        if (this.getPayer().equals(person)) {
+            this.setPayer(editedPerson);
+        } else if (this.getPayees().contains(person)) {
+            UniquePersonList payees = this.getPayees();
+            payees.setPerson(person, editedPerson);
+        }
+        return this;
+    }
     @Override
     public boolean equals(Object other) {
         if (other == this) {
