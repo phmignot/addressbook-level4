@@ -145,7 +145,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         return payees;
     }
-
+    //@auother ongkc
     @Override
     public void findPersonInTransaction(Name name) throws PersonNotFoundException {
         Set<Person> matchingPersons = addressBook.getPersonList()
@@ -156,7 +156,7 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonNotFoundException();
         }
     }
-
+    //@auother ongkc
     @Override
     public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
@@ -170,7 +170,7 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonFoundException();
         }
     }
-
+    //@auother ongkc
     @Override
     public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
