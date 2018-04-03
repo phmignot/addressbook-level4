@@ -168,14 +168,14 @@ Selects the 1st person in the results of the `find` command.
 
 === Listing all transactions related to the person [since v1.3]
 
-By clicking on the person on the person panel list, the person can be selected.
+By [important]double clicking on the person on the person panel list, the person can be selected.
  And so, transactions that are relevant to that person
 will be displayed on the transaction panel list.
 In the person panel list, each person debt will be updated to display the debt with
 the person selected.
 
-To de-select the person, press 'control' + a click on the person selected concurrently,
-and all history of transactions will be re-displayed. And the debt display will be reseted.
+To de-select the person, press 'control' + a click (Mac/Linux: 'command' + click) on the person selected concurrently,
+and all history of transactions will be re-displayed. And the debt display will be reset.
 
 === Adding a transaction: `addTransaction` `[since v1.2]`
 
@@ -326,7 +326,7 @@ _{explain how the user can enable/disable data encryption}_
 * *AddPerson* `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...` +
 e.g. `addPerson n/James Ho p/22224444 e/jamesho@example.com t/friend t/colleague`
 * *AddTransaction* `r/PAYER NAME a/AMOUNT d/DESCRIPTION [e/PAYEE NAME]...` +
-e.g. `addTransaction r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle e/Becky Simmons`
+e.g. `addTransaction r/John Doe a/3456.00 d/for dinner meal e/Tom Riddle e/Becky Simmons`
 * *Clear* : `clear`
 * *Delete* : `delete INDEX` +
 e.g. `delete 3`
