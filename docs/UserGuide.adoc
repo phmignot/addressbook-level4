@@ -94,7 +94,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [t/TAG]...`
 
 ****
 ! This feature is not yet properly handled by Transaction command,
- so the user should avoid to edit a person implied in any transaction. 
+ so the user should avoid to edit a person implied in any transaction.
 ****
 Examples:
 
@@ -171,8 +171,8 @@ Selects the 1st person in the results of the `find` command.
 By clicking on the person on the person panel list, the person can be selected.
  And so, transactions that are relevant to that person
 will be displayed on the transaction panel list.
-In the person panel list, each person debt will be updated to display the debt with 
-the person selected. 
+In the person panel list, each person debt will be updated to display the debt with
+the person selected.
 
 To de-select the person, press 'control' + a click on the person selected concurrently,
 and all history of transactions will be re-displayed. And the debt display will be reseted.
