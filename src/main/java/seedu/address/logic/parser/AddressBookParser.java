@@ -35,7 +35,6 @@ public class AddressBookParser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
 
-    //@@author steven-jia
     private final Model model;
 
     public AddressBookParser(Model model) {
