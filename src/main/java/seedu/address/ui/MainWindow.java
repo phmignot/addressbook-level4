@@ -54,7 +54,7 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane personListPanelPlaceholder;
-    
+
     @FXML
     private StackPane personPositiveListPanelPlaceholder;
 
@@ -132,7 +132,7 @@ public class MainWindow extends UiPart<Stage> {
 
         personPositiveListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personPositiveListPanelPlaceholder.getChildren().add(personPositiveListPanel.getRoot());
-        
+
         personNegativeListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personNegativeListPanelPlaceholder.getChildren().add(personNegativeListPanel.getRoot());
 
