@@ -39,8 +39,9 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 * *`list`* : lists all contacts
 * **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com : adds a contact named `John Doe` to SmartSplit.
-* **`deletePerson`**`3` : deletes the 3rd contact shown in the current list
-* **`addTransaction`**`r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle` : adds a transaction payed by John Doe costing 3456.78$ for a dinner meal with Tom Riddle.
+* **`deletePerson`**`3` : deletes the 3rd contact shown in the current person list
+* **`addTransaction`**`payer/John Doe a/100.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu` : adds a transaction payed by John Doe costing $100.00 for a taxi ride split with Alex Yeoh and Bernice Yu.
+* **`deleteTransaction`**`2` : deletes the 2nd transaction shown in the current transaction list
 * *`exit`* : exits the app
 
 .  Refer to <<Features>> for details of each command.
@@ -210,7 +211,7 @@ Examples:
 `deleteTransaction 2` +
 Deletes the 2nd transaction in SmartSplit.
 
-=== Locating transactions by name: `findTransaction`[Coming in v2.0]
+=== Locating transactions by name: `findTransaction` `[Coming in v2.0]`
 
 Finds transactions whose property values contain any of the given keywords. +
 Format: `findTransaction KEYWORD [MORE_KEYWORDS]`
