@@ -145,7 +145,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         return payees;
     }
-
+    //@@author ongkc
     @Override
     public void findPersonInTransaction(Name name) throws PersonNotFoundException {
         Set<Person> matchingPersons = addressBook.getPersonList()
@@ -156,7 +156,6 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonNotFoundException();
         }
     }
-
     @Override
     public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
@@ -170,7 +169,6 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonFoundException();
         }
     }
-
     @Override
     public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
@@ -185,7 +183,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author ongkc
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */
@@ -194,7 +191,6 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
-    //@@author ongkc
     @Override
     public void addTransaction(Transaction transaction) {
         String transactionType = AddTransactionCommand.COMMAND_WORD;

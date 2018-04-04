@@ -16,6 +16,7 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 
 /**
  * Contains utility methods used for parsing strings in the various *Parser classes.
@@ -187,7 +188,30 @@ public class ParserUtil {
     public static Optional<Description> parseDescription(Optional<String> description) throws IllegalValueException {
         requireNonNull(description);
         return description.isPresent() ? Optional.of(parseDescription(description.get())) : Optional.empty();
+    }
 
+    //@@author steven-jia
+    /**
+     * Parses a {@code String splitMethod} into a {@code SplitMethod}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code splitMethod} is invalid.
+     */
+    public static SplitMethod parseSplitMethod(String splitMethod) throws IllegalValueException {
+        requireNonNull(splitMethod);
+        String trimmedSplitMethod = splitMethod.trim();
+        if (!SplitMethod.isValidSplitMethod(trimmedSplitMethod)) {
+            throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
+        }
+        return new SplitMethod(splitMethod);
+    }
+
+    /**
+     * Parses {@code Collection<String> SplitMethod} into a {@code Set<SplitMethod>}.
+     */
+    public static Optional<SplitMethod> parseSplitMethod(Optional<String> splitMethod) throws IllegalValueException {
+        requireNonNull(splitMethod);
+        return splitMethod.isPresent() ? Optional.of(parseSplitMethod(splitMethod.get())) : Optional.empty();
     }
 
 }
