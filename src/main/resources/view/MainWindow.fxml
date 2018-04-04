@@ -53,14 +53,14 @@
             </padding>
             <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS" />
           </VBox>
-          <VBox>
-            <VBox fx:id="personListPositive" minWidth="340" prefWidth="340" SplitPane.resizableWithParent="false">
+          <VBox id="DebtsTables" minWidth="300" prefWidth="300">
+            <VBox fx:id="personListPositive"  SplitPane.resizableWithParent="false">
               <padding>
                 <Insets top="10" right="10" bottom="10" left="10" />
               </padding>
               <StackPane fx:id="personPositiveListPanelPlaceholder" VBox.vgrow="ALWAYS" />
             </VBox>
-            <VBox fx:id="personListNegative" minWidth="340" prefWidth="340" SplitPane.resizableWithParent="false">
+            <VBox fx:id="personListNegative" SplitPane.resizableWithParent="false">
               <padding>
                 <Insets top="10" right="10" bottom="10" left="10" />
               </padding>

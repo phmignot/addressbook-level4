@@ -38,8 +38,8 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
-    private PersonListPanel personPositiveListPanel;    
-    private PersonListPanel personNegativeListPanel;    
+    private PersonListPanel personPositiveListPanel;
+    private PersonListPanel personNegativeListPanel;
     private Config config;
     private UserPrefs prefs;
 
