@@ -152,11 +152,14 @@ public class ParserUtil {
      */
     public static Amount parseAmount(String amount) throws IllegalValueException {
         requireNonNull(amount);
-        String trimmedAmount = amount.trim();
-        if (!Amount.isValidAmount(trimmedAmount)) {
+        String parsedAmount = amount.trim();
+        if (!parsedAmount.contains(".")) {
+            parsedAmount += ".00";
+        }
+        if (!Amount.isValidAmount(parsedAmount)) {
             throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
         }
-        return new Amount(trimmedAmount);
+        return new Amount(parsedAmount);
     }
 
     /**

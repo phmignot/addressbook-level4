@@ -54,7 +54,6 @@ public class XmlAdaptedTransaction {
         this.description = description;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
 
-
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
@@ -97,6 +96,9 @@ public class XmlAdaptedTransaction {
         //@@author ongkc
         if (this.amount == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName()));
+        }
+        if (!this.amount.contains(".")) {
+            this.amount += ".00";
         }
         if (!Amount.isValidAmount(this.amount)) {
             throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);

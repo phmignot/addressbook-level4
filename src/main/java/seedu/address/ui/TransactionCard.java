@@ -40,9 +40,12 @@ public class TransactionCard extends UiPart<Region> {
         payerName.setText(transaction.getPayer().getName().fullName);
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
-        for (Person payee : transaction.getPayees()) {
+        for (int i = 0; i < transaction.getPayees().asObservableList().size(); i++) {
+            Person payee = transaction.getPayees().asObservableList().get(i);
             payees.getChildren().add(new Label(payee.getName().fullName));
-            payees.getChildren().add(new Label(", "));
+            if (i != transaction.getPayees().asObservableList().size() - 1) {
+                payees.getChildren().add(new Label(", "));
+            }
         }
         date.setText(String.valueOf(transaction.getDateTime()));
     }
