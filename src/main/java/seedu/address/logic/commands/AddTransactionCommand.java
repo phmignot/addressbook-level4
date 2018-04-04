@@ -54,7 +54,6 @@ public class AddTransactionCommand extends UndoableCommand {
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         }
-
     }
 
     @Override

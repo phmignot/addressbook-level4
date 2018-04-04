@@ -116,7 +116,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author steven-jia
     public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
             throws PersonNotFoundException, IllegalValueException {
         UniquePersonList payees = new UniquePersonList();
@@ -146,16 +145,6 @@ public class ModelManager extends ComponentManager implements Model {
         return payees;
     }
     //@@author ongkc
-    @Override
-    public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-        Set<Person> matchingPersons = addressBook.getPersonList()
-                .stream()
-                .filter(person -> person.getName().equals(name))
-                .collect(Collectors.toSet());
-        if (matchingPersons.isEmpty()) {
-            throw new PersonNotFoundException();
-        }
-    }
     @Override
     public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()

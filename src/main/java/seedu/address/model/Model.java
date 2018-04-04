@@ -57,9 +57,6 @@ public interface Model {
     UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) throws PersonNotFoundException,
             IllegalValueException;
 
-    /** Finds a person by in transaction */
-    void findPersonInTransaction(Name name) throws PersonNotFoundException;
-
     //@@author
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
