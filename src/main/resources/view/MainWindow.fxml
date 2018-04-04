@@ -53,6 +53,20 @@
             </padding>
             <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS" />
           </VBox>
+          <VBox>
+            <VBox fx:id="personListPositive" minWidth="340" prefWidth="340" SplitPane.resizableWithParent="false">
+              <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+              </padding>
+              <StackPane fx:id="personPositiveListPanelPlaceholder" VBox.vgrow="ALWAYS" />
+            </VBox>
+            <VBox fx:id="personListNegative" minWidth="340" prefWidth="340" SplitPane.resizableWithParent="false">
+              <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+              </padding>
+              <StackPane fx:id="personNegativeListPanelPlaceholder" VBox.vgrow="ALWAYS" />
+            </VBox>
+          </VBox>
           <StackPane fx:id="transactionListPanelPlaceholder" prefWidth="340" >
             <padding>
               <Insets top="10" right="10" bottom="10" left="10" />
