@@ -78,7 +78,7 @@ public class LogicManager extends ComponentManager implements Logic {
         TransactionContainsPersonPredicate predicate = new TransactionContainsPersonPredicate(person);
         model.updateFilteredTransactionList(predicate);
     }
-
+    //@@author ongkc
     @Override
     public void updateFilteredPersonList(Person person) {
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
@@ -106,6 +106,7 @@ public class LogicManager extends ComponentManager implements Logic {
             }
         }
     }
+    //@@author
     /**
      * Reset amount of debt owed to other people
      */
