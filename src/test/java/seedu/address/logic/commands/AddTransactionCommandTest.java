@@ -134,11 +134,6 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-
-        }
-
-        @Override
         public ObservableList<Person> getFilteredPersonList() {
             fail("This method should not be called.");
             return null;
