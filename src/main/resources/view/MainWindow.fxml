@@ -47,27 +47,27 @@
         </StackPane>
 
         <SplitPane id="splitPane" fx:id="splitPane" dividerPositions="0.4" VBox.vgrow="ALWAYS">
-          <VBox fx:id="personList" minWidth="340" prefWidth="340" SplitPane.resizableWithParent="false">
+          <VBox fx:id="personList" minWidth="150" prefWidth="150" SplitPane.resizableWithParent="false">
             <padding>
               <Insets top="10" right="10" bottom="10" left="10" />
             </padding>
             <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS" />
           </VBox>
-          <VBox id="DebtsTables" minWidth="300" prefWidth="300">
-            <VBox fx:id="personListPositive"  SplitPane.resizableWithParent="false">
+          <VBox id="DebtsTables" minWidth="150" prefWidth="150">
+            <VBox fx:id="personListPositive"  SplitPane.resizableWithParent="true">
               <padding>
                 <Insets top="10" right="10" bottom="10" left="10" />
               </padding>
-              <StackPane fx:id="personPositiveListPanelPlaceholder" VBox.vgrow="ALWAYS" />
+              <StackPane fx:id="personDebtorListPanelPlaceholder" VBox.vgrow="ALWAYS" />
             </VBox>
-            <VBox fx:id="personListNegative" SplitPane.resizableWithParent="false">
+            <VBox fx:id="personListNegative" SplitPane.resizableWithParent="true">
               <padding>
                 <Insets top="10" right="10" bottom="10" left="10" />
               </padding>
-              <StackPane fx:id="personNegativeListPanelPlaceholder" VBox.vgrow="ALWAYS" />
+              <StackPane fx:id="personCreditorListPanelPlaceholder" VBox.vgrow="ALWAYS" />
             </VBox>
           </VBox>
-          <StackPane fx:id="transactionListPanelPlaceholder" prefWidth="340" >
+          <StackPane fx:id="transactionListPanelPlaceholder" prefWidth="480" >
             <padding>
               <Insets top="10" right="10" bottom="10" left="10" />
             </padding>

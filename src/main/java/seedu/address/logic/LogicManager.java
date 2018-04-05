@@ -1,7 +1,7 @@
 package seedu.address.logic;
 
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
-import static seedu.address.model.Model.PREDICATE_SHOW_NO_PERSON;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_CREDITORS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DEBTORS;
 
 import java.util.logging.Logger;
 
@@ -16,7 +16,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.DebtsList;
 import seedu.address.model.DebtsTable;
 import seedu.address.model.Model;
-import seedu.address.model.person.Balance;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionContainsPersonPredicate;
@@ -64,6 +65,16 @@ public class LogicManager extends ComponentManager implements Logic {
     }
 
     @Override
+    public ObservableList<Debtor> getFilteredDebtorsList() {
+        return model.getFilteredDebtors();
+    }
+
+    @Override
+    public ObservableList<Creditor> getFilteredCreditorsList() {
+        return model.getFilteredCreditors();
+    }
+
+    @Override
     public ListElementPointer getHistorySnapshot() {
         return new ListElementPointer(history.getHistory());
     }
@@ -78,42 +89,26 @@ public class LogicManager extends ComponentManager implements Logic {
         TransactionContainsPersonPredicate predicate = new TransactionContainsPersonPredicate(person);
         model.updateFilteredTransactionList(predicate);
     }
+    /**
+     * Update the people in the debt list
+     */
     //@@author ongkc
-    @Override
-    public void updateFilteredPersonList(Person person) {
+    public void updateDebtorsList(Person person) {
+        model.updateDebtorList(PREDICATE_SHOW_ALL_DEBTORS);
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
         DebtsList debtsList = debtsTable.get(person);
-        resetDebt();
-        updateDebt(debtsList);
-        //        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.getAddressBook().setDebtors(debtsList);
 
     }
-    @Override
-    public void updateFilteredPersonList() {
-        resetDebt();
-        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-    }
     /**
-     * Update amount of debt owed to other people
+     * Update the people in the creditor list
      */
-    private void updateDebt(DebtsList debtsList) {
-        ObservableList<Person> persons = model.getAddressBook().getPersonList();
-        for (Person person: persons) {
-            if (debtsList.get(person) != null) {
-                person.setDebt(debtsList.get(person));
-            }
-        }
+    public void updateCreditorsList(Person person) {
+        model.updateCreditorList(PREDICATE_SHOW_ALL_CREDITORS);
+        DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
+        DebtsList debtsList = debtsTable.get(person);
+        model.getAddressBook().setCreditors(debtsList);
+
     }
-    //@@author
-    /**
-     * Reset amount of debt owed to other people
-     */
-    private void resetDebt() {
-        ObservableList<Person> persons = model.getAddressBook().getPersonList();
-        for (Person person: persons) {
-            person.setDebt(new Balance("0.00"));
-        }
-    }
+
 }

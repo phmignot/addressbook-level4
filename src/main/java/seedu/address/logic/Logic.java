@@ -4,6 +4,8 @@ import javafx.collections.ObservableList;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 
@@ -40,6 +42,11 @@ public interface Logic {
      */
     void updateFilteredTransactionList(Person person);
 
-    void updateFilteredPersonList(Person person);
-    void updateFilteredPersonList();
+    ObservableList<Debtor> getFilteredDebtorsList();
+
+    ObservableList<Creditor> getFilteredCreditorsList();
+
+    void updateDebtorsList(Person person);
+
+    void updateCreditorsList(Person person);
 }

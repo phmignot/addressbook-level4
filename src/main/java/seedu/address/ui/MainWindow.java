@@ -38,8 +38,8 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
-    private PersonListPanel personPositiveListPanel;
-    private PersonListPanel personNegativeListPanel;
+    private DebtorListPanel personDebtorListPanel;
+    private CreditorListPanel personCreditorListPanel;
     private Config config;
     private UserPrefs prefs;
 
@@ -56,10 +56,10 @@ public class MainWindow extends UiPart<Stage> {
     private StackPane personListPanelPlaceholder;
 
     @FXML
-    private StackPane personPositiveListPanelPlaceholder;
+    private StackPane personDebtorListPanelPlaceholder;
 
     @FXML
-    private StackPane personNegativeListPanelPlaceholder;
+    private StackPane personCreditorListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -130,11 +130,11 @@ public class MainWindow extends UiPart<Stage> {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
 
-        personPositiveListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personPositiveListPanelPlaceholder.getChildren().add(personPositiveListPanel.getRoot());
+        personDebtorListPanel = new DebtorListPanel(logic.getFilteredDebtorsList());
+        personDebtorListPanelPlaceholder.getChildren().add(personDebtorListPanel.getRoot());
 
-        personNegativeListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personNegativeListPanelPlaceholder.getChildren().add(personNegativeListPanel.getRoot());
+        personCreditorListPanel = new CreditorListPanel(logic.getFilteredCreditorsList());
+        personCreditorListPanelPlaceholder.getChildren().add(personCreditorListPanel.getRoot());
 
         transactionListPanel = new TransactionListPanel(logic.getFilteredTransactionList());
         transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
@@ -212,6 +212,8 @@ public class MainWindow extends UiPart<Stage> {
     private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList(event.getNewSelection().person);
+        logic.updateDebtorsList(event.getNewSelection().person);
+        logic.updateCreditorsList(event.getNewSelection().person);
     }
 
     @Subscribe

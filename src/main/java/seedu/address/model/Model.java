@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.ArgumentMultimap;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -22,7 +24,13 @@ public interface Model {
     /** {@code Predicate} that always evaluate to true */
     Predicate<Person> PREDICATE_SHOW_ALL_PERSONS =  unused -> true;
 
-
+    /** {@code Predicate} that always evaluate to true */
+    Predicate<Debtor> PREDICATE_SHOW_ALL_DEBTORS =  unused -> true;
+    /** {@code Predicate} that always evaluate to true */
+    Predicate<Creditor> PREDICATE_SHOW_ALL_CREDITORS =  unused -> true;
+    /** {@code Predicate} that always evaluate to false */
+    Predicate<Debtor> PREDICATE_SHOW_NO_DEBTORS =  unused -> false;
+    Predicate<Creditor> PREDICATE_SHOW_NO_CREDITORS =  unused -> false;
     /** {@code Predicate} that always evaluate to false */
     Predicate<Person> PREDICATE_SHOW_NO_PERSON =  unused -> false;
 
@@ -89,4 +97,12 @@ public interface Model {
     //@@author phmignot
     /** Deletes the given person. */
     void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException;
+
+    ObservableList<Debtor> getFilteredDebtors();
+
+    ObservableList<Creditor> getFilteredCreditors();
+
+    void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors);
+
+    void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors);
 }
