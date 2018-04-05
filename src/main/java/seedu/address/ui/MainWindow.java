@@ -38,7 +38,8 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
-    private PersonListPanel personListPanel1;
+    private PersonListPanel personPositiveListPanel;
+    private PersonListPanel personNegativeListPanel;
     private Config config;
     private UserPrefs prefs;
 
@@ -53,6 +54,12 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane personListPanelPlaceholder;
+
+    @FXML
+    private StackPane personPositiveListPanelPlaceholder;
+
+    @FXML
+    private StackPane personNegativeListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -122,6 +129,12 @@ public class MainWindow extends UiPart<Stage> {
 
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+
+        personPositiveListPanel = new PersonListPanel(logic.getFilteredPersonList());
+        personPositiveListPanelPlaceholder.getChildren().add(personPositiveListPanel.getRoot());
+
+        personNegativeListPanel = new PersonListPanel(logic.getFilteredPersonList());
+        personNegativeListPanelPlaceholder.getChildren().add(personNegativeListPanel.getRoot());
 
         transactionListPanel = new TransactionListPanel(logic.getFilteredTransactionList());
         transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
