@@ -14,8 +14,8 @@ We are a team based in the http://www.comp.nus.edu.sg[School of Computing, Natio
 image::ongkc.png[width="150", align="left"]
 {empty}[https://github.com/ongkc[github]]
 
-Role: Team Lead +
-Responsibilities: Logic + Storage
+Role: Team Lead, Development, Testing +
+Responsibilities: Logic, Storage, UI
 
 '''
 
@@ -23,8 +23,8 @@ Responsibilities: Logic + Storage
 image::steven-jia.png[width="150", align="left"]
 {empty}[https://github.com/Steven-Jia[github]]
 
-Role: Scheduling and Tracking, Documentation +
-Responsibilities: Model + Logic
+Role: Project Management, Development +
+Responsibilities: Model, Logic, Storage
 
 '''
 
@@ -32,8 +32,8 @@ Responsibilities: Model + Logic
 image::phmignot.png[width="150", align="left"]
 {empty}[http://github.com/phmignot[github]]
 
-Role: Integration, Code quality +
-Responsibilities: UI
+Role: Development, Integration, Code Quality +
+Responsibilities: UI, Logic
 
 '''
 

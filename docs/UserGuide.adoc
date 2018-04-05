@@ -39,8 +39,9 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 * *`list`* : lists all contacts
 * **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com : adds a contact named `John Doe` to SmartSplit.
-* **`deletePerson`**`3` : deletes the 3rd contact shown in the current list
-* **`addTransaction`**`r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle` : adds a transaction payed by John Doe costing 3456.78$ for a dinner meal with Tom Riddle.
+* **`deletePerson`**`3` : deletes the 3rd contact shown in the current person list
+* **`addTransaction`**`payer/John Doe a/100.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu` : adds a transaction payed by John Doe costing $100.00 for a taxi ride split with Alex Yeoh and Bernice Yu.
+* **`deleteTransaction`**`2` : deletes the 2nd transaction shown in the current transaction list
 * *`exit`* : exits the app
 
 .  Refer to <<Features>> for details of each command.
@@ -123,7 +124,7 @@ Returns `john` and `John Doe`
 * `find Betsy Tim John` +
 Returns any person having names `Betsy`, `Tim`, or `John`
 
-=== Deleting a person : `deletePerson` [since v1.4]
+=== Deleting a person : `deletePerson` [Updated for v1.4]
 
 Deletes the specified person from SmartSplit if the person is cleared from any debts. +
 Format: `delete INDEX`
@@ -166,7 +167,7 @@ Selects the 2nd person in SmartSplit.
 `select 1` +
 Selects the 1st person in the results of the `find` command.
 
-=== Listing all transactions related to the person [since v1.3]
+=== Listing all transactions related to the person: `[Since v1.3]`
 
 By [important]double clicking on the person on the person panel list, the person can be selected.
  And so, transactions that are relevant to that person
@@ -177,7 +178,7 @@ the person selected.
 To de-select the person, press 'control' + a click (Mac/Linux: 'command' + click) on the person selected concurrently,
 and all history of transactions will be re-displayed. And the debt display will be reset.
 
-=== Adding a transaction: `addTransaction` `[since v1.2]`
+=== Adding a transaction: `addTransaction` `[Since v1.2]`
 
 Adds a transaction between one payer to one/multiple payees
 Format: `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME`
@@ -193,7 +194,7 @@ Examples:
 * `addTransaction payer/John Doe a/3456.78 d/for dinner meal payee/Tom Riddle`
 * `addTransaction payer/Betsy Crowe a/10.00 d/paying bus for the stadium payee/John Doe payee/Bernice Yu`
 
-=== Deleting a transaction : `deleteTransaction`[since v1.2]
+=== Deleting a transaction : `deleteTransaction` `[Since v1.2]`
 
 Deletes the specified transaction from SmartSplit. +
 Format: `deleteTransaction INDEX`
@@ -210,12 +211,7 @@ Examples:
 `deleteTransaction 2` +
 Deletes the 2nd transaction in SmartSplit.
 
-=== Listing all transactions : `listTransactions`[coming v1.5]
-
-Shows a list of all transactions in SmartSplit. +
-Format: `listTransactions`
-
-=== Locating transactions by name: `findTransaction`[coming v1.5]
+=== Locating transactions by name: `findTransaction` `[Coming in v2.0]`
 
 Finds transactions whose property values contain any of the given keywords. +
 Format: `findTransaction KEYWORD [MORE_KEYWORDS]`
@@ -309,12 +305,6 @@ Format: `exit`
 
 SmartSplit data is saved in the hard disk automatically after any command that changes the data. +
 There is no need to save manually.
-
-// tag::dataencryption[]
-=== Encrypting data files `[coming in v2.0]`
-
-_{explain how the user can enable/disable data encryption}_
-// end::dataencryption[]
 
 == FAQ
 

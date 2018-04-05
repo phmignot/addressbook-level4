@@ -8,7 +8,7 @@ https://www.codacy.com/app/damith/addressbook-level4?utm_source=github.com&utm_m
 https://gitter.im/se-edu/Lobby[image:https://badges.gitter.im/se-edu/Lobby.svg[Gitter chat]]
 
 ifdef::env-github[]
-image::docs/images/Ui.png[width="1000" height="600"]
+image::docs/images/Ui.png[width="1000"]
 endif::[]
 
 ifndef::env-github[]
@@ -19,7 +19,7 @@ endif::[]
 * Why should you use it?
 ** Conveniently record people and transactions
 ** Don't do any math! SmartSplit will tell you exactly how much you have to pay each person or how much you should expect to receive from each person!
-** More exciting features are in development!
+** More exciting features, such as different ways of splitting your transactions, will be available in `v1.5`!
 
 == Site Map
 

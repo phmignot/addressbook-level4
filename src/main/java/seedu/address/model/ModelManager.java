@@ -116,7 +116,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author steven-jia
     public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
             throws PersonNotFoundException, IllegalValueException {
         UniquePersonList payees = new UniquePersonList();
@@ -145,18 +144,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         return payees;
     }
-    //@auother ongkc
-    @Override
-    public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-        Set<Person> matchingPersons = addressBook.getPersonList()
-                .stream()
-                .filter(person -> person.getName().equals(name))
-                .collect(Collectors.toSet());
-        if (matchingPersons.isEmpty()) {
-            throw new PersonNotFoundException();
-        }
-    }
-    //@auother ongkc
+    //@@author ongkc
     @Override
     public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
@@ -170,7 +158,6 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonFoundException();
         }
     }
-    //@auother ongkc
     @Override
     public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
@@ -185,7 +172,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author ongkc
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */
@@ -194,7 +180,6 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
-    //@@author ongkc
     @Override
     public void addTransaction(Transaction transaction) {
         String transactionType = AddTransactionCommand.COMMAND_WORD;
@@ -240,7 +225,7 @@ public class ModelManager extends ComponentManager implements Model {
         filteredPersons.setPredicate(predicate);
     }
 
-    //@author ongkc
+    //@@author ongkc
     @Override
     public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
         requireNonNull(predicate);

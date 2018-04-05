@@ -10,7 +10,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 
-/**@author ongkc
+//@@author ongkc
+/**
  * Adds a transaction to the address book.
  */
 public class AddTransactionCommand extends UndoableCommand {
@@ -53,7 +54,6 @@ public class AddTransactionCommand extends UndoableCommand {
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         }
-
     }
 
     @Override

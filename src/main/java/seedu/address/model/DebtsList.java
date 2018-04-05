@@ -8,7 +8,7 @@ import seedu.address.model.person.Person;
 /**
  * DebtsList of a Person, contains every person matched with the amount is owed or owes.
  */
-//@author phmignot
+//@@author phmignot
 public class DebtsList extends HashMap<Person, Balance> {
     public DebtsList() {
         super();

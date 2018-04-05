@@ -10,7 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
-//@author ongkc
+//@@author ongkc
 /**
  * Recard all transactions to the list.
  *

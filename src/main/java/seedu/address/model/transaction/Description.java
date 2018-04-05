@@ -2,7 +2,7 @@ package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-//@author ongkc
+//@@author ongkc
 /**
  * Represents a Transaction's description in the address book.
  */
