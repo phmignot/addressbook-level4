@@ -33,6 +33,7 @@ public class AddTransactionCommand extends UndoableCommand {
 
     public static final String MESSAGE_SUCCESS = "New transaction added";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
+    public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
 
     private final Transaction toAdd;
 

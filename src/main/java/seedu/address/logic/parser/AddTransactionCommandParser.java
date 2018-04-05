@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
@@ -51,6 +52,9 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             UniquePersonList payees = model.getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
 
+            if (payees.contains(payer)) {
+                throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
+            }
             Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
 
             return new AddTransactionCommand(transaction);
