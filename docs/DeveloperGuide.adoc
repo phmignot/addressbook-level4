@@ -380,12 +380,29 @@ Why it is implemented that way
 
 Instead of saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
 
+// tag::selectfeature[]
 ===  Select feature
+
+There are two ways to triggered the Select feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
+The second one directly through the user interface, by clicking on a `Person card`. +
+These two interactions will result in the same raising Events.
+
+undo/redo mechanism is facilitated by an `UndoRedoStack`, which resides inside `LogicManager`. It supports undoing and redoing of commands that modifies the state of the address book (e.g. `add`, `edit`). Such commands will inherit from `UndoableCommand`.
+
+`UndoRedoStack` only deals with `UndoableCommands`. Commands that cannot be undone will inherit from `Command` instead. The following diagram shows the inheritance diagram for commands:
+
 ==== Select Command Implementation
+
+
+As you can see from the diagram, `UndoableCommand` adds an extra layer between the abstract `Command` class and concrete commands that can be undone, such as the `DeleteCommand`. Note that extra tasks need to be done when executing a command in an _undoable_ way, such as saving the state of the address book before execution. `UndoableCommand` contains the high-level algorithm for those extra tasks while the child classes implements the details of how to execute the specific command. Note that this technique of putting the high-level algorithm in the parent class and lower-level steps of the algorithm in child classes is also known as the https://www.tutorialspoint.com/design_pattern/template_pattern.htm[template pattern].
+
+
 .Component interactions for `select` command
 image::SelectCommandDiagram.png[width="800"]
-From the diagram above, when users enter the command select INDEX to select the first person in the persons list, SelectCommandParser will parse the argument, and return SelectCommand.
-Next, SelectCommand will call its method execute(). After select command is executed, an JumpToListRequestEvent is raised.
+
+From the diagram above when users enter the command `select INDEX` to select one of the person from the persons list, 
+`SelectCommandParser` will parse the argument, and return `SelectCommand`.
+Next, SelectCommand will call its method `execute()`. After SelectCommand is executed, an *JumpToListRequestEvent* is raised.
 
 
 ==== JumpToListRequest Event process
@@ -412,6 +429,7 @@ The FilteredTransactionList will be updated, the UI will display the new list.
 
 This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed. That implementation saves the application from wasting of resource by un.
 
+// end::selectfeature[]
 === [Proposed] Pay Debt feature
 ==== Pay Debt Command Implementation
 When users enter the command payDebt c/ Creditor d/ Debtor /a Amount to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
