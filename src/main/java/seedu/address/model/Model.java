@@ -105,4 +105,5 @@ public interface Model {
     void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors);
 
     void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors);
+
 }

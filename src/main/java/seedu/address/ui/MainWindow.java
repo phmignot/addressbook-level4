@@ -220,5 +220,6 @@ public class MainWindow extends UiPart<Stage> {
     private void handlePersonPanelNoSelectionEvent(PersonPanelNoSelectionEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList();
+        logic.updateDebtorsList();
     }
 }
