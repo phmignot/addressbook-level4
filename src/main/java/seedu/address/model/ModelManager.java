@@ -207,9 +207,6 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
     }
 
-    private void updateDebtorsList() {
-        addressBook.setDebtors();
-    }
 
     //@@author phmignot
     @Override
