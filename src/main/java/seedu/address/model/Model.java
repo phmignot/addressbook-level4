@@ -96,7 +96,8 @@ public interface Model {
 
     //@@author phmignot
     /** Deletes the given person. */
-    void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException;
+    void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException,
+            PersonNotFoundException;
 
     ObservableList<Debtor> getFilteredDebtors();
 

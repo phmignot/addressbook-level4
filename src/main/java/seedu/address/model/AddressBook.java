@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
-import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
@@ -272,7 +271,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      * add a new transaction
      */
     public void addTransaction(Transaction transaction) {
-        String typeOfTransaction = AddTransactionCommand.COMMAND_WORD;
+        String typeOfTransaction = transaction.getTransactionType().toString();
         transactions.add(transaction);
         debtsTable.updateDebts(typeOfTransaction, transaction);
         debtsTable.display();

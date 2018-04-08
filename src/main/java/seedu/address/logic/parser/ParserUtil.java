@@ -17,6 +17,7 @@ import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.SplitMethod;
+import seedu.address.model.transaction.TransactionType;
 
 /**
  * Contains utility methods used for parsing strings in the various *Parser classes.
@@ -213,5 +214,15 @@ public class ParserUtil {
         requireNonNull(splitMethod);
         return splitMethod.isPresent() ? Optional.of(parseSplitMethod(splitMethod.get())) : Optional.empty();
     }
-
+    /**
+     * Parses {@code Collection<String> TransactionType} into a {@code Set<TransactionType>}.
+     */
+    public static TransactionType parseTransactionType(String type) throws IllegalValueException {
+        requireNonNull(type);
+        String trimmedType = type.trim();
+        if (!TransactionType.isValidTransactionType(trimmedType)) {
+            throw new IllegalValueException(TransactionType.MESSAGE_TRANSACTION_TYPE_CONSTRAINTS);
+        }
+        return new TransactionType(trimmedType);
+    }
 }

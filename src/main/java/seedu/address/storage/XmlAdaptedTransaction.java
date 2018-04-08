@@ -20,6 +20,7 @@ import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionType;
 //@@author ongkc
 /**
  * JAXB-friendly adapted version of the Transaction.
@@ -37,6 +38,8 @@ public class XmlAdaptedTransaction {
     @XmlElement(required = true)
     private Date dateTime;
     @XmlElement(required = true)
+    private String transactionType;
+    @XmlElement(required = true)
     private List<XmlAdaptedPerson> payees = new ArrayList<>();
 
     /**
@@ -48,8 +51,10 @@ public class XmlAdaptedTransaction {
     /**
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
-    public XmlAdaptedTransaction(Person payer, String amount, String description, UniquePersonList payees) {
+    public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
+                                 UniquePersonList payees) {
         this.payer = new XmlAdaptedPerson(payer);
+        this.transactionType = transactionType;
         this.amount = amount;
         this.description = description;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
@@ -68,6 +73,7 @@ public class XmlAdaptedTransaction {
      * @param source future changes to this will not affect the created XmlAdaptedTransaction
      */
     public XmlAdaptedTransaction(Transaction source) {
+        transactionType = source.getTransactionType().value;
         payer = new XmlAdaptedPerson(source.getPayer());
         amount = source.getAmount().toString();
         description = source.getDescription().value;
@@ -112,6 +118,15 @@ public class XmlAdaptedTransaction {
         }
         final Description description = new Description(this.description);
 
+        if (this.transactionType == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    TransactionType.class.getSimpleName()));
+        }
+        if (!TransactionType.isValidTransactionType(this.transactionType)) {
+            throw new IllegalValueException(TransactionType.MESSAGE_TRANSACTION_TYPE_CONSTRAINTS);
+        }
+        final TransactionType transactionType = new TransactionType(this.transactionType);
+
         //@@author steven-jia
         if (this.payees == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
@@ -126,7 +141,7 @@ public class XmlAdaptedTransaction {
         }
         final UniquePersonList payees = convertedPayees;
 
-        return new Transaction(payer, amount, description, dateTime, payees);
+        return new Transaction(transactionType, payer, amount, description, dateTime, payees);
     }
 
     //@@author steven-jia
@@ -177,7 +192,8 @@ public class XmlAdaptedTransaction {
         return Objects.equals(payer, otherTransaction.payer)
                 && Objects.equals(amount, otherTransaction.amount)
                 && Objects.equals(description, otherTransaction.description)
-                && Objects.equals(payees, otherTransaction.payees);
+                && Objects.equals(payees, otherTransaction.payees)
+                && Objects.equals(transactionType, otherTransaction.transactionType);
     }
 
 }

@@ -15,5 +15,6 @@ public class CliSyntax {
     public static final Prefix PREFIX_PAYER = new Prefix("payer/");
     public static final Prefix PREFIX_PAYEE = new Prefix("payee/");
     public static final Prefix PREFIX_SPLIT_METHOD = new Prefix("m/");
+    public static final Prefix PREFIX_TRANSACTION_TYPE = new Prefix("type/");
 
 }

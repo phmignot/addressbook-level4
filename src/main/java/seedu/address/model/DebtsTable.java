@@ -7,6 +7,7 @@ import java.util.HashMap;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionType;
 
 /**
  * Stores all the debts between the persons from the addressBook.
@@ -26,13 +27,20 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
      * payerDebt is a positive {@Code Balance} value, because the payer is owed.
      * @param transaction to register the table.
      */
-    public void updateDebts(String typeOfTransaction, Transaction transaction) {
+    public void updateDebts(String typeOfTransaction, Transaction transaction)  {
         Person payer = transaction.getPayer();
         if (!this.containsKey(payer)) {
             this.add(payer);
             System.out.println("Adding payer " + payer.getName().fullName);
         }
-        DebtsList payerDebtsLit = this.get(payer);
+        DebtsList payerDebtsList = this.get(payer);
+        if (typeOfTransaction.equals(TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT)) {
+            for (Person payee : transaction.getPayees()) {
+                if (payerDebtsList.get(payee) == null || payerDebtsList.get(payee).getDoubleValue() == 0) {
+                    return;
+                }
+            }
+        }
         Balance payerDebt = calculatePayeeDebt(typeOfTransaction, transaction.getAmount(), transaction.getPayees());
         Balance payeeDebt = payerDebt.getInverse();
         for (Person payee: transaction.getPayees()) {
@@ -40,9 +48,9 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
                 this.add(payee);
                 System.out.println("Adding payee " + payee.getName().fullName);
             }
-            DebtsList payeeDebtsLit = this.get(payee);
-            payerDebtsLit.updateDebt(payee, payeeDebt);
-            payeeDebtsLit.updateDebt(payer, payerDebt);
+            DebtsList payeeDebtsList = this.get(payee);
+            payerDebtsList.updateDebt(payee, payeeDebt);
+            payeeDebtsList.updateDebt(payer, payerDebt);
         }
     }
 
