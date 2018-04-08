@@ -1,6 +1,7 @@
 package seedu.address.model;
 
 import javafx.collections.ObservableList;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Transaction;
@@ -28,4 +29,10 @@ public interface ReadOnlyAddressBook {
     ObservableList<Tag> getTagList();
 
     DebtsTable getDebtsTable();
+
+    ObservableList<Debtor> getDebtorsList();
+
+    void setDebtors(DebtsList debtsList);
+
+    void setCreditors(DebtsList debtsList);
 }
