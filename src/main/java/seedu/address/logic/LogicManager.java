@@ -95,12 +95,6 @@ public class LogicManager extends ComponentManager implements Logic {
     public void updateDebtorsList() {
         model.updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
     }
-
-    @Override
-    public void updateCreditorsList() {
-        model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-
-    }
     /**
      * Update the people in the debt list
      */
@@ -112,6 +106,12 @@ public class LogicManager extends ComponentManager implements Logic {
         model.getAddressBook().setDebtors(debtsList);
 
     }
+    @Override
+    public void updateCreditorsList() {
+        model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+
+    }
+
     /**
      * Update the people in the creditor list
      */
