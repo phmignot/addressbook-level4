@@ -71,9 +71,7 @@ public class Person {
         }
 
         Person otherPerson = (Person) other;
-        return otherPerson.getName().equals(this.getName())
-                && otherPerson.getPhone().equals(this.getPhone())
-                && otherPerson.getEmail().equals(this.getEmail());
+        return otherPerson.getName().equals(this.getName());
     }
 
     public void setBalance(Balance newBalance) {

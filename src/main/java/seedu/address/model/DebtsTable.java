@@ -1,12 +1,9 @@
 package seedu.address.model;
 
-import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDebt;
 
 import java.util.HashMap;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
@@ -17,7 +14,7 @@ import seedu.address.model.transaction.Transaction;
 //@@author phmignot
 public class DebtsTable extends HashMap<Person, DebtsList> {
 
-    private final ObservableList internalList = FXCollections.observableArrayList();
+    private DebtsTable internalList;
 
     public DebtsTable() {
         super();
@@ -53,14 +50,10 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
         this.putIfAbsent(personToAdd, new DebtsList());
     }
 
-    public ObservableList asObservableList() {
-        return FXCollections.unmodifiableObservableList(internalList);
+    public DebtsTable asObservableList() {
+        return internalList;
     }
 
-    public void setDebtsTable(DebtsTable debtsTable) {
-        requireAllNonNull(debtsTable);
-        internalList.setAll(debtsTable);
-    }
     /**
      * Displays the content of the Debts Table in the terminal.
      */

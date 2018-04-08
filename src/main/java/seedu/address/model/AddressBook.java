@@ -69,7 +69,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public AddressBook(ReadOnlyAddressBook toBeCopied) {
         this();
-        this.debtsTable = toBeCopied.getDebtsTable();
         resetData(toBeCopied);
     }
 
@@ -83,10 +82,6 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.debtors.setDebtors(debtsList);
     }
 
-    public void setDebtors()  {
-        this.debtors = new UniqueDebtorList();
-    }
-
     public void setCreditors(DebtsList debtsList) {
         this.creditors.setCreditors(debtsList); }
     public void setTransactions(List<Transaction> transactions) {
@@ -98,7 +93,13 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     public void setDebtsTable(DebtsTable debtsTable) {
-        this.debtsTable.setDebtsTable(debtsTable);
+        final DebtsTable replacement = new DebtsTable();
+        for (DebtsTable.Entry<Person, DebtsList> entry : debtsTable.entrySet()) {
+            DebtsList debtsList = new DebtsList();
+            debtsList.putAll(entry.getValue());
+            replacement.put(entry.getKey(), debtsList);
+        }
+        this.debtsTable = replacement;
     }
     /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
