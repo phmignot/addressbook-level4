@@ -18,7 +18,11 @@ import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.UniqueCreditorList;
+import seedu.address.model.person.UniqueDebtorList;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -38,6 +42,8 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons;
     private final UniqueTagList tags;
     private final TransactionList transactions;
+    private UniqueDebtorList debtors;
+    private UniqueCreditorList creditors;
     private DebtsTable debtsTable;
 
     /*
@@ -51,6 +57,8 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons = new UniquePersonList();
         tags = new UniqueTagList();
         transactions = new TransactionList();
+        debtors = new UniqueDebtorList();
+        creditors = new UniqueCreditorList();
         debtsTable = new DebtsTable();
     }
 
@@ -71,6 +79,16 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.persons.setPersons(persons);
     }
 
+    public void setDebtors(DebtsList debtsList)  {
+        this.debtors.setDebtors(debtsList);
+    }
+
+    public void setDebtors()  {
+        this.debtors = new UniqueDebtorList();
+    }
+
+    public void setCreditors(DebtsList debtsList) {
+        this.creditors.setCreditors(debtsList); }
     public void setTransactions(List<Transaction> transactions) {
         this.transactions.setTransactions(transactions);
     }
@@ -228,6 +246,13 @@ public class AddressBook implements ReadOnlyAddressBook {
         return transactions.asObservableList();
     }
 
+    public ObservableList<Debtor> getDebtorsList() {
+        return debtors.asObservableList();
+    }
+
+    public ObservableList<Creditor> getCreditorsList() {
+        return creditors.asObservableList();
+    }
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
