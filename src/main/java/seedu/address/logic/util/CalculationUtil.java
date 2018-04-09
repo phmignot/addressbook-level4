@@ -13,7 +13,7 @@ import seedu.address.model.transaction.TransactionType;
 /**
  * Contains utility methods used for calculating balances of Persons.
  */
-public class BalanceCalculationUtil {
+public class CalculationUtil {
 
     private static final int NUMBER_OF_DECIMAL_PLACES = 2;
 
@@ -24,9 +24,9 @@ public class BalanceCalculationUtil {
     public static Balance calculatePayerDebt(String transactionType, Amount amount,
                                              UniquePersonList payees) {
         switch (transactionType) {
-        case TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYMENT:
+        case TransactionType.TRANSACTION_TYPE_PAYMENT:
             return calculateAddTransactionPaymentTypePayerDebt(amount, payees);
-        case TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT:
+        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAddTransactionPayDebtTypePayerDebt(amount);
         case DeleteTransactionCommand.COMMAND_WORD:
             return calculateDeleteTransactionPayerDebt(amount, payees);
@@ -42,9 +42,9 @@ public class BalanceCalculationUtil {
     public static Balance calculatePayeeDebt(String transactionType, Amount amount,
                                              UniquePersonList payees) {
         switch (transactionType) {
-        case TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYMENT:
+        case TransactionType.TRANSACTION_TYPE_PAYMENT:
             return calculateAddTransactionPaymentTypePayeeDebt(amount, payees);
-        case TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT:
+        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAddTransactionPayDebtTypePayeeDebt(amount, payees);
         case DeleteTransactionCommand.COMMAND_WORD:
             return calculateDeleteTransactionPayeeDebt(amount, payees);

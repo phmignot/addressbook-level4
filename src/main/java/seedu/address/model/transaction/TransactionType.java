@@ -8,21 +8,21 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class TransactionType {
 
     public static final String MESSAGE_TRANSACTION_TYPE_CONSTRAINTS =
-            "Transaction type can only be paydebt or payment "
+            "Transaction type can only be \"paydebt\" or \"payment\" "
                     + "and it should not be blank";
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String TRANSACTION_TYPE_VALIDATION_REGEX_PAYMENT = "payment";
-    public static final String TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT = "paydebt";
+    public static final String TRANSACTION_TYPE_PAYMENT = "payment";
+    public static final String TRANSACTION_TYPE_PAYDEBT = "paydebt";
 
     public final String value;
 
     /**
      * Constructs an {@code TransactionType}.
      *
-     * @param TransactionType a valid transaction type.
+     * @param type a valid transaction type.
      */
     public TransactionType(String type) {
         requireNonNull(type);
@@ -33,13 +33,12 @@ public class TransactionType {
      * Returns true if a given string is a valid transaction type.
      */
     public static boolean isValidTransactionType(String test) {
-        if (test.equals(TRANSACTION_TYPE_VALIDATION_REGEX_PAYMENT) || test.equals(
-                TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT)) {
+        if (test.equals(TRANSACTION_TYPE_PAYMENT) || test.equals(
+                TRANSACTION_TYPE_PAYDEBT)) {
             return true;
         }
         return false;
     }
-
 
     @Override
     public String toString() {

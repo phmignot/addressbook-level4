@@ -19,6 +19,7 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionType;
 //@@author ongkc
@@ -40,6 +41,8 @@ public class XmlAdaptedTransaction {
     @XmlElement(required = true)
     private String transactionType;
     @XmlElement(required = true)
+    private String splitMethod;
+    @XmlElement(required = true)
     private List<XmlAdaptedPerson> payees = new ArrayList<>();
 
     /**
@@ -52,7 +55,7 @@ public class XmlAdaptedTransaction {
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
     public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
-                                 UniquePersonList payees) {
+                                 UniquePersonList payees, SplitMethod splitMethod) {
         this.payer = new XmlAdaptedPerson(payer);
         this.transactionType = transactionType;
         this.amount = amount;
@@ -63,6 +66,7 @@ public class XmlAdaptedTransaction {
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         this.payees = payeesToStore;
+        this.splitMethod = splitMethod.toString();
         //@@author
     }
 
@@ -82,6 +86,7 @@ public class XmlAdaptedTransaction {
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         source.getPayees().asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         payees = payeesToStore;
+        splitMethod = source.getSplitMethod().toString();
         //@@author
     }
 
@@ -143,7 +148,16 @@ public class XmlAdaptedTransaction {
         }
         final UniquePersonList payees = convertedPayees;
 
-        return new Transaction(transactionType, payer, amount, description, dateTime, payees);
+        if (this.splitMethod == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    SplitMethod.class.getSimpleName()));
+        }
+        if (!SplitMethod.isValidSplitMethod(this.splitMethod)) {
+            throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
+        }
+        final SplitMethod splitMethod = new SplitMethod(this.splitMethod);
+
+        return new Transaction(transactionType, payer, amount, description, dateTime, payees, splitMethod);
     }
 
     //@@author steven-jia
@@ -195,7 +209,8 @@ public class XmlAdaptedTransaction {
                 && Objects.equals(amount, otherTransaction.amount)
                 && Objects.equals(description, otherTransaction.description)
                 && Objects.equals(payees, otherTransaction.payees)
-                && Objects.equals(transactionType, otherTransaction.transactionType);
+                && Objects.equals(transactionType, otherTransaction.transactionType)
+                && Objects.equals(splitMethod, otherTransaction.splitMethod);
     }
 
 }

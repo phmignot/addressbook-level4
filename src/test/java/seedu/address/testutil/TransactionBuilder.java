@@ -11,6 +11,7 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionType;
 import seedu.address.model.util.SampleDataUtil;
@@ -29,6 +30,7 @@ public class TransactionBuilder {
     private Date dateTime;
     private UniquePersonList payees;
     private TransactionType transactionType;
+    private SplitMethod splitMethod;
 
     public TransactionBuilder() {
         transactionType = new TransactionType("payment");
@@ -46,6 +48,7 @@ public class TransactionBuilder {
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         payees = samplePayees;
+        splitMethod = new SplitMethod("1");
     }
 
     /**
@@ -57,8 +60,9 @@ public class TransactionBuilder {
         description = transactionToCopy.getDescription();
         dateTime = transactionToCopy.getDateTime();
         payees = transactionToCopy.getPayees();
+        transactionType = transactionToCopy.getTransactionType();
+        splitMethod = transactionToCopy.getSplitMethod();
     }
-
 
     /**
      * Sets the {@code payer} of the {@code Transaction} that we are building.
@@ -91,12 +95,13 @@ public class TransactionBuilder {
     }
 
     /**
-     * Sets the {@code payeeName} of the {@code Transaction} that we are building.
+     * Sets the {@code payees} of the {@code Transaction} that we are building.
      */
     public TransactionBuilder withPayees(UniquePersonList payees) {
         this.payees = payees;
         return this;
     }
+
     /**
      * Sets the {@code date & time} of the {@code Transaction} that we are building.
      */
@@ -105,7 +110,19 @@ public class TransactionBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code SplitMethod} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withSplitMethod(SplitMethod splitMethod) {
+        this.splitMethod = splitMethod;
+        return this;
+    }
+
+    /**
+     * Builds a new {@code Transaction}.
+     */
     public Transaction build() {
-        return new Transaction(transactionType, payer, amount, description, dateTime, payees);
+        return new Transaction(transactionType, payer, amount, description, dateTime,
+                payees, splitMethod);
     }
 }

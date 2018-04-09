@@ -14,14 +14,19 @@ public class SplitMethod {
      * Split methods that can be used
      */
     public enum Method {
+        NOT_APPLICABLE,
         EVENLY,
-        BY_UNITS
+        UNITS,
+        PERCENTAGE
     }
 
     public static final String MESSAGE_SPLIT_METHOD_CONSTRAINTS =
-            "Transaction split method can only be one of the numbers shown in the list of options";
+            "Transaction split method can only be \"evenly\", \"units\", or \"percentage\"";
 
-    public static final String SPLIT_METHOD_VALIDATION_REGEX = "^[1-9]$";
+    public static final String SPLIT_METHOD_NOT_APPLICABLE = "not_applicable";
+    public static final String SPLIT_METHOD_EVENLY = "evenly";
+    public static final String SPLIT_METHOD_UNITS = "units";
+    public static final String SPLIT_METHOD_PERCENTAGE = "percentage";
 
     public final Method method;
 
@@ -33,12 +38,18 @@ public class SplitMethod {
     public SplitMethod(String splitMethod) {
         requireNonNull(splitMethod);
         checkArgument(isValidSplitMethod(splitMethod), MESSAGE_SPLIT_METHOD_CONSTRAINTS);
-        switch (Integer.valueOf(splitMethod)) {
-        case 1:
+        switch (splitMethod) {
+        case SPLIT_METHOD_NOT_APPLICABLE:
+            this.method = Method.NOT_APPLICABLE;
+            break;
+        case SPLIT_METHOD_EVENLY:
             this.method = Method.EVENLY;
             break;
-        case 2:
-            this.method = Method.BY_UNITS;
+        case SPLIT_METHOD_UNITS:
+            this.method = Method.UNITS;
+            break;
+        case SPLIT_METHOD_PERCENTAGE:
+            this.method = Method.PERCENTAGE;
             break;
         default:
             this.method = Method.EVENLY;
@@ -49,18 +60,15 @@ public class SplitMethod {
      * Returns true if a given string is a valid split method.
      */
     public static boolean isValidSplitMethod(String test) {
-        boolean found = false;
-        for (Method method: Method.values()) {
-            if (method.ordinal() == Integer.parseInt(test)) {
-                found = true;
-            }
-        }
-        return test.matches(SPLIT_METHOD_VALIDATION_REGEX) && found;
+        return test.matches(SPLIT_METHOD_EVENLY)
+        || test.matches(SPLIT_METHOD_UNITS)
+        || test.matches(SPLIT_METHOD_PERCENTAGE)
+        || test.matches(SPLIT_METHOD_NOT_APPLICABLE);
     }
 
     @Override
     public String toString() {
-        return method.toString();
+        return method.toString().toLowerCase();
     }
 
     @Override

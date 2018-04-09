@@ -2,8 +2,8 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.commands.DeletePersonCommand.MESSAGE_DEBT_NOT_PAID;
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDebt;
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayerDebt;
+import static seedu.address.logic.util.CalculationUtil.calculatePayeeDebt;
+import static seedu.address.logic.util.CalculationUtil.calculatePayerDebt;
 
 import java.util.HashMap;
 import java.util.HashSet;

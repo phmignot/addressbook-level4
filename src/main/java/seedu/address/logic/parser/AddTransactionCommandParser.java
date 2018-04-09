@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_METHOD;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TRANSACTION_TYPE;
 
 import java.time.Clock;
@@ -25,6 +26,7 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionType;
 //@@author ongkc
@@ -32,6 +34,9 @@ import seedu.address.model.transaction.TransactionType;
  * Parses input arguments and creates a new AddTransactionCommand object
  */
 public class AddTransactionCommandParser implements Parser<AddTransactionCommand> {
+    private TransactionType transactionType;
+    private SplitMethod splitMethod;
+
     /**
      * Parses the given {@code String} of arguments in the context of the AddTransactionCommand
      * and returns an AddTransactionCommand object for execution.
@@ -40,18 +45,43 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
     public AddTransactionCommand parse(String args, Model model) throws ParseException, CommandException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
-                        PREFIX_DESCRIPTION, PREFIX_PAYEE);
+                        PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION,
-                PREFIX_PAYEE)
+        if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
+                PREFIX_DESCRIPTION, PREFIX_PAYEE)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     AddTransactionCommand.MESSAGE_USAGE));
         }
 
+        //@@author steven-jia
         try {
-            TransactionType transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
+            transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
                     PREFIX_TRANSACTION_TYPE).get());
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        }
+
+        if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
+            try {
+                splitMethod = ParserUtil.parseSplitMethod(argMultimap.getAllValues(PREFIX_SPLIT_METHOD));
+                switch (splitMethod.method) {
+                    case EVENLY:
+                        break;
+                    case UNITS:
+                        break;
+                    case PERCENTAGE:
+                        break;
+                    default:
+                }
+            } catch (IllegalValueException ive) {
+                throw new ParseException(ive.getMessage(), ive);
+            }
+        } else {
+            splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
+        }
+
+        try {
             Person payer = model.findPersonByName(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
@@ -61,8 +91,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             if (payees.contains(payer)) {
                 throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
             }
-            Transaction transaction = new Transaction(transactionType, payer, amount, description, dateTime, payees);
-
+            Transaction transaction = new Transaction(transactionType, payer, amount, description, dateTime,
+                    payees, splitMethod);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);

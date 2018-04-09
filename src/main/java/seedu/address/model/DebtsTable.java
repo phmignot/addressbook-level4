@@ -1,6 +1,7 @@
 package seedu.address.model;
 
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDebt;
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+import static seedu.address.logic.util.CalculationUtil.calculatePayeeDebt;
 
 import java.util.HashMap;
 
@@ -34,7 +35,7 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
             System.out.println("Adding payer " + payer.getName().fullName);
         }
         DebtsList payerDebtsList = this.get(payer);
-        if (typeOfTransaction.equals(TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT)) {
+        if (typeOfTransaction.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             for (Person payee : transaction.getPayees()) {
                 if (payerDebtsList.get(payee) == null || payerDebtsList.get(payee).getDoubleValue() >= 0) {
                     return false;

@@ -201,22 +201,19 @@ public class ParserUtil {
      *
      * @throws IllegalValueException if the given {@code splitMethod} is invalid.
      */
-    public static SplitMethod parseSplitMethod(String splitMethod) throws IllegalValueException {
+    public static SplitMethod parseSplitMethod(Collection<String> splitMethod) throws IllegalValueException {
         requireNonNull(splitMethod);
-        String trimmedSplitMethod = splitMethod.trim();
+        if (splitMethod.isEmpty()) {
+            return new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+        }
+        String trimmedSplitMethod = splitMethod.iterator().next().trim();
         if (!SplitMethod.isValidSplitMethod(trimmedSplitMethod)) {
             throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
         }
-        return new SplitMethod(splitMethod);
+        return new SplitMethod(trimmedSplitMethod);
     }
 
-    /**
-     * Parses {@code Collection<String> SplitMethod} into a {@code Set<SplitMethod>}.
-     */
-    public static Optional<SplitMethod> parseSplitMethod(Optional<String> splitMethod) throws IllegalValueException {
-        requireNonNull(splitMethod);
-        return splitMethod.isPresent() ? Optional.of(parseSplitMethod(splitMethod.get())) : Optional.empty();
-    }
+    //@@author ongkc
     /**
      * Parses {@code Collection<String> TransactionType} into a {@code Set<TransactionType>}.
      */

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.logic.util.BalanceCalculationUtil;
+import seedu.address.logic.util.CalculationUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -14,7 +14,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  * Represents a Transaction in SmartSplit.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
-public class Transaction extends BalanceCalculationUtil {
+public class Transaction {
     private static Integer lastTransactionId = 0;
     private final Integer id;
     private final Date dateTime;
@@ -23,9 +23,10 @@ public class Transaction extends BalanceCalculationUtil {
     private final Description description;
     private final UniquePersonList payees;
     private final TransactionType transactionType;
+    private final SplitMethod splitMethod;
 
     public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, UniquePersonList payees) {
+                       Date dateTime, UniquePersonList payees, SplitMethod splitMethod) {
         this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
@@ -33,10 +34,11 @@ public class Transaction extends BalanceCalculationUtil {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+        this.splitMethod = splitMethod;
     }
 
     public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, Set<Person> payeesToAdd) {
+                       Date dateTime, Set<Person> payeesToAdd, SplitMethod splitMethod) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {
@@ -53,6 +55,7 @@ public class Transaction extends BalanceCalculationUtil {
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+        this.splitMethod = splitMethod;
     }
 
     public Integer getId() {
@@ -83,6 +86,10 @@ public class Transaction extends BalanceCalculationUtil {
         return transactionType;
     }
 
+    public SplitMethod getSplitMethod() {
+        return splitMethod;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -99,7 +106,8 @@ public class Transaction extends BalanceCalculationUtil {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, transactionType, dateTime, payer, amount, description, payees);
+        return Objects.hash(id, transactionType, dateTime, payer, amount,
+                description, payees, splitMethod);
     }
 
     @Override
@@ -115,10 +123,14 @@ public class Transaction extends BalanceCalculationUtil {
                 .append(getPayer().getName())
                 .append("\n Amount: ")
                 .append(getAmount().toString())
-                .append("\r\n Description: ")
+                .append("\n Description: ")
                 .append(getDescription().toString())
                 .append("\n Payees: ")
                 .append(getPayees().asObservableList().toString());
+        if (!splitMethod.method.equals(SplitMethod.Method.NOT_APPLICABLE)) {
+            builder.append("\n Split method: ")
+                    .append(getSplitMethod());
+        }
         return builder.toString();
     }
 
@@ -131,4 +143,5 @@ public class Transaction extends BalanceCalculationUtil {
     public boolean isImplied(Person person) {
         return (payer.equals(person) || payees.contains(person));
     }
+
 }
