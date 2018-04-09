@@ -53,10 +53,9 @@ public class CalculationUtil {
         }
     }
 
-
     //@@author ongkc
     /**
-     * Calculate payer new debt for paydebt transaction
+     * Calculate debt of payer after a new paydebt transaction is added
      */
     private static Balance calculateAddTransactionPayDebtTypePayerDebt(Amount amount) {
         Double debt = Double.valueOf(amount.value);
@@ -65,7 +64,7 @@ public class CalculationUtil {
         return new Balance(String.valueOf(formatter.format(debt)));
     }
     /**
-     * Calculate payee new debt for paydebt transaction
+     * Calculate debt of payee(s) after a new paydebt transaction is added
      */
     private static Balance calculateAddTransactionPayDebtTypePayeeDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
@@ -75,7 +74,7 @@ public class CalculationUtil {
         return new Balance(String.valueOf(formatter.format(debt)));
     }
     /**
-     * Calculate new payee(s) balance after a new transaction is added
+     * Calculate debt of payee(s) after a new payment transaction is added
      */
     public static Balance calculateAddTransactionPaymentTypePayeeDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
@@ -85,7 +84,7 @@ public class CalculationUtil {
         return new Balance(String.valueOf(formatter.format(debt)));
     }
     /**
-     * Calculate new payer balance after a new transaction is added
+     * Calculate debt of payer after a new payment transaction is added
      */
     public static Balance calculateAddTransactionPaymentTypePayerDebt(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
