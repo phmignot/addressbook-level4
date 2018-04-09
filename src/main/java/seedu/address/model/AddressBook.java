@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
-import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
@@ -69,7 +68,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public AddressBook(ReadOnlyAddressBook toBeCopied) {
         this();
-        this.debtsTable = toBeCopied.getDebtsTable();
         resetData(toBeCopied);
     }
 
@@ -83,10 +81,6 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.debtors.setDebtors(debtsList);
     }
 
-    public void setDebtors()  {
-        this.debtors = new UniqueDebtorList();
-    }
-
     public void setCreditors(DebtsList debtsList) {
         this.creditors.setCreditors(debtsList); }
     public void setTransactions(List<Transaction> transactions) {
@@ -98,7 +92,13 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     public void setDebtsTable(DebtsTable debtsTable) {
-        this.debtsTable.setDebtsTable(debtsTable);
+        final DebtsTable replacement = new DebtsTable();
+        for (DebtsTable.Entry<Person, DebtsList> entry : debtsTable.entrySet()) {
+            DebtsList debtsList = new DebtsList();
+            debtsList.putAll(entry.getValue());
+            replacement.put(entry.getKey(), debtsList);
+        }
+        this.debtsTable = replacement;
     }
     /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
@@ -270,11 +270,14 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * add a new transaction
      */
-    public void addTransaction(Transaction transaction) {
-        String typeOfTransaction = AddTransactionCommand.COMMAND_WORD;
+    public boolean addTransaction(Transaction transaction) {
+        String typeOfTransaction = transaction.getTransactionType().toString();
         transactions.add(transaction);
-        debtsTable.updateDebts(typeOfTransaction, transaction);
-        debtsTable.display();
+        if (debtsTable.updateDebts(typeOfTransaction, transaction)) {
+            debtsTable.display();
+            return true;
+        }
+        return false;
     }
 
     /**

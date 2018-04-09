@@ -12,6 +12,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionType;
 import seedu.address.model.util.SampleDataUtil;
 
 /**
@@ -27,8 +28,10 @@ public class TransactionBuilder {
     private Description description;
     private Date dateTime;
     private UniquePersonList payees;
+    private TransactionType transactionType;
 
     public TransactionBuilder() {
+        transactionType = new TransactionType("payment");
         payer = SampleDataUtil.getSamplePersons()[0];
         amount = new Amount(DEFAULT_AMOUNT);
         description = new Description(DEFAULT_DESCRIPTION);
@@ -64,7 +67,13 @@ public class TransactionBuilder {
         this.payer = payer;
         return this;
     }
-
+    /**
+     * Sets the {@code payer} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+        return this;
+    }
     /**
      * Sets the {@code Amount} of the {@code Transaction} that we are building.
      */
@@ -97,6 +106,6 @@ public class TransactionBuilder {
     }
 
     public Transaction build() {
-        return new Transaction(payer, amount, description, dateTime, payees);
+        return new Transaction(transactionType, payer, amount, description, dateTime, payees);
     }
 }

@@ -29,6 +29,7 @@ public class XmlSerializableAddressBook {
      * This empty constructor is required for marshalling.
      */
     public XmlSerializableAddressBook() {
+
         persons = new ArrayList<>();
         tags = new ArrayList<>();
         transactions = new ArrayList<>();

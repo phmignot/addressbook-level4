@@ -2,6 +2,7 @@ package seedu.address.logic;
 
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_CREDITORS;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DEBTORS;
+import static seedu.address.model.Model.PREDICATE_SHOW_NO_CREDITORS;
 import static seedu.address.model.Model.PREDICATE_SHOW_NO_DEBTORS;
 
 import java.util.logging.Logger;
@@ -94,7 +95,6 @@ public class LogicManager extends ComponentManager implements Logic {
     public void updateDebtorsList() {
         model.updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
     }
-
     /**
      * Update the people in the debt list
      */
@@ -106,6 +106,12 @@ public class LogicManager extends ComponentManager implements Logic {
         model.getAddressBook().setDebtors(debtsList);
 
     }
+    @Override
+    public void updateCreditorsList() {
+        model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+
+    }
+
     /**
      * Update the people in the creditor list
      */

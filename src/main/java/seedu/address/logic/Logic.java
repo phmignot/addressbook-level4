@@ -50,4 +50,6 @@ public interface Logic {
 
     void updateDebtorsList();
     void updateCreditorsList(Person person);
+
+    void updateCreditorsList();
 }

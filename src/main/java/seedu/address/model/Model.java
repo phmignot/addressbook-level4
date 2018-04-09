@@ -92,7 +92,7 @@ public interface Model {
      */
     void updateFilteredTransactionList(Predicate<Transaction> predicate);
 
-    void addTransaction(Transaction transaction) throws PersonNotFoundException;
+    boolean addTransaction(Transaction transaction) throws PersonNotFoundException, CommandException;
 
     //@@author phmignot
     /** Deletes the given person. */

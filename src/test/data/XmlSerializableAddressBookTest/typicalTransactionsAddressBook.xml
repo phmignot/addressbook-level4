@@ -19,5 +19,6 @@
             <balance>0.00</balance>
             <tagged>acquaintance</tagged>
         </payees>
+        <transactionType>paydebt</transactionType>
     </transactions>
 </addressbook>

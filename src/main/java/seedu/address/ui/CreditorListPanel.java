@@ -4,17 +4,12 @@ import java.util.logging.Logger;
 
 import org.fxmisc.easybind.EasyBind;
 
-import com.google.common.eventbus.Subscribe;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.commons.events.ui.CreditorPanelNoSelectionEvent;
-import seedu.address.commons.events.ui.CreditorPanelSelectionChangedEvent;
-import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.model.person.Creditor;
 /**
  * Panel containing the list of creditors.
@@ -39,21 +34,9 @@ public class CreditorListPanel extends UiPart<Region>  {
                 creditorsList, (creditor) -> new CreditorCard(creditor, creditorsList.indexOf(creditor) + 1));
         creditorListView.setItems(mappedList);
         creditorListView.setCellFactory(listView -> new CreditorListViewCell());;
-        setEventHandlerForSelectionChangeEvent();
+
     }
 
-    private void setEventHandlerForSelectionChangeEvent() {
-        creditorListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        logger.fine("Selection in person list panel changed to : '" + newValue + "'");
-                        raise(new CreditorPanelSelectionChangedEvent(newValue));
-                    } else {
-                        logger.fine("No person selected in the person list");
-                        raise(new CreditorPanelNoSelectionEvent());
-                    }
-                });
-    }
 
     /**
      * Scrolls to the {@code PersonCard} at the {@code index} and selects it.
@@ -65,11 +48,6 @@ public class CreditorListPanel extends UiPart<Region>  {
         });
     }
 
-    @Subscribe
-    private void handleJumpToListRequestEvent(JumpToListRequestEvent event) {
-        logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        scrollTo(event.targetIndex);
-    }
 
     /**
      * Custom {@code ListCell} that displays the graphics of a {@code PersonCard}.
