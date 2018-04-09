@@ -22,6 +22,8 @@ import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -134,11 +136,6 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-
-        }
-
-        @Override
         public ObservableList<Person> getFilteredPersonList() {
             fail("This method should not be called.");
             return null;
@@ -172,10 +169,32 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) {}
+        public boolean addTransaction(Transaction transaction) {
+            return true;
+        }
 
         @Override
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
+
+        @Override
+        public ObservableList<Debtor> getFilteredDebtors() {
+            return null;
+        }
+
+        @Override
+        public ObservableList<Creditor> getFilteredCreditors() {
+            return null;
+        }
+
+        @Override
+        public void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors) {
+
+        }
+
+        @Override
+        public void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors) {
+
+        }
     }
 
     public class ModelStubImpl extends AddTransactionCommandTest.ModelStub { }
@@ -188,9 +207,10 @@ public class AddTransactionCommandTest {
         final ArrayList<Transaction> transactionsAdded = new ArrayList<>();
 
         @Override
-        public void addTransaction(Transaction transaction) {
+        public boolean addTransaction(Transaction transaction) {
             requireNonNull(transaction);
             transactionsAdded.add(transaction);
+            return true;
         }
 
         @Override

@@ -42,7 +42,7 @@ public class XmlAdaptedTransactionTest {
     @Ignore
     @Test
     public void toModelType_nullPayer_throwsIllegalValueException() {
-        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(null, VALID_AMOUNT, VALID_DESCRIPTION,
+        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(null, null, VALID_AMOUNT, VALID_DESCRIPTION,
                 validPayees);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payer");
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
@@ -51,14 +51,15 @@ public class XmlAdaptedTransactionTest {
     @Test
     public void toModelType_invalidAmount_throwsIllegalValueException() {
         XmlAdaptedTransaction transaction =
-                new XmlAdaptedTransaction(VALID_PAYER, INVALID_AMOUNT, VALID_DESCRIPTION, validPayees);
+                new XmlAdaptedTransaction(null, VALID_PAYER, INVALID_AMOUNT, VALID_DESCRIPTION, validPayees);
         String expectedMessage = Amount.MESSAGE_AMOUNT_CONSTRAINTS;
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
 
     @Test
     public void toModelType_nullAmount_throwsIllegalValueException() {
-        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_PAYER, null, VALID_DESCRIPTION,
+        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(null,
+                VALID_PAYER, null, VALID_DESCRIPTION,
                 validPayees);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName());
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
@@ -67,14 +68,15 @@ public class XmlAdaptedTransactionTest {
     @Test
     public void toModelType_invalidDescription_throwsIllegalValueException() {
         XmlAdaptedTransaction transaction =
-                new XmlAdaptedTransaction(VALID_PAYER, VALID_AMOUNT, INVALID_DESCRIPTION, validPayees);
+                new XmlAdaptedTransaction(null, VALID_PAYER, VALID_AMOUNT, INVALID_DESCRIPTION, validPayees);
         String expectedMessage = Description.MESSAGE_DESCRIPTION_CONSTRAINTS;
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
 
     @Test
     public void toModelType_nullDescription_throwsIllegalValueException() {
-        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_PAYER, VALID_AMOUNT, null, validPayees);
+        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(null, VALID_PAYER, VALID_AMOUNT,
+                null, validPayees);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Description.class.getSimpleName());
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
@@ -82,7 +84,8 @@ public class XmlAdaptedTransactionTest {
     @Ignore
     @Test
     public void toModelType_nullPayee_throwsIllegalValueException() {
-        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_PAYER, VALID_AMOUNT, VALID_DESCRIPTION,
+        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(null,
+                VALID_PAYER, VALID_AMOUNT, VALID_DESCRIPTION,
                 null);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees");
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);

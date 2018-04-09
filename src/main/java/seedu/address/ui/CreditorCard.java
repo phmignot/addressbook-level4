@@ -5,14 +5,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import seedu.address.model.person.Person;
+import seedu.address.model.person.Creditor;
 
 /**
- * An UI component that displays information of a {@code Person}.
+ * An UI component that displays information of a {@code Creditor}.
  */
-public class PersonCard extends UiPart<Region> {
+public class CreditorCard extends UiPart<Region> {
 
-    private static final String FXML = "PersonListCard.fxml";
+    private static final String FXML = "CreditorListCard.fxml";
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -21,12 +21,11 @@ public class PersonCard extends UiPart<Region> {
      *
      * @see <a href="https://github.com/se-edu/addressbook-level4/issues/336">The issue on AddressBook level 4</a>
      */
+    public final Creditor creditor;
 
-    public final Person person;
-
-    @FXML
+    @javafx.fxml.FXML
     private HBox cardPane;
-    @FXML
+    @javafx.fxml.FXML
     private Label name;
     @FXML
     private Label id;
@@ -35,19 +34,19 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label email;
     @FXML
-    private Label balance;
+    private Label debt;
     @FXML
     private FlowPane tags;
 
-    public PersonCard(Person person, int displayedIndex) {
+    public CreditorCard(Creditor creditor, int displayedIndex) {
         super(FXML);
-        this.person = person;
+        this.creditor = creditor;
         id.setText(displayedIndex + ". ");
-        name.setText(person.getName().fullName);
-        phone.setText(person.getPhone().value);
-        balance.setText(person.getBalance().toString());
-        email.setText(person.getEmail().value);
-        person.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        name.setText(creditor.getCreditor().getName().fullName);
+        phone.setText(creditor.getCreditor().getPhone().value);
+        email.setText(creditor.getCreditor().getEmail().value);
+        debt.setText(creditor.getDebt().toString());
+        creditor.getCreditor().getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 
     @Override
@@ -56,15 +55,13 @@ public class PersonCard extends UiPart<Region> {
         if (other == this) {
             return true;
         }
-
         // instanceof handles nulls
-        if (!(other instanceof PersonCard)) {
+        if (!(other instanceof CreditorCard)) {
             return false;
         }
 
         // state check
-        PersonCard card = (PersonCard) other;
+        CreditorCard card = (CreditorCard) other;
         return id.getText().equals(card.id.getText())
-                && person.equals(card.person);
-    }
+                    && creditor.equals(card.creditor); }
 }

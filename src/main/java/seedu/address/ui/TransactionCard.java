@@ -29,6 +29,8 @@ public class TransactionCard extends UiPart<Region> {
     @FXML
     private Label description;
     @FXML
+    private Label transactionType;
+    @FXML
     private FlowPane payees;
     @FXML
     private Label date;
@@ -40,8 +42,9 @@ public class TransactionCard extends UiPart<Region> {
         payerName.setText(transaction.getPayer().getName().fullName);
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
-        for (int i = 0; i < transaction.getPayees().asObservableList().size(); i++) {
-            Person payee = transaction.getPayees().asObservableList().get(i);
+        transactionType.setText(transaction.getTransactionType().toString().substring(0, 1).toUpperCase()
+                + transaction.getTransactionType().toString().substring(1));
+        for (Person payee : transaction.getPayees()) {
             payees.getChildren().add(new Label(payee.getName().fullName));
             if (i != transaction.getPayees().asObservableList().size() - 1) {
                 payees.getChildren().add(new Label(", "));

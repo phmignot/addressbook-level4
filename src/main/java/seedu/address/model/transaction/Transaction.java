@@ -22,18 +22,21 @@ public class Transaction extends BalanceCalculationUtil {
     private final Amount amount;
     private final Description description;
     private final UniquePersonList payees;
+    private final TransactionType transactionType;
 
-    public Transaction(Person payer, Amount amount, Description description, Date dateTime, UniquePersonList payees) {
+    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
+                       Date dateTime, UniquePersonList payees) {
+        this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
-
     }
 
-    public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
+    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
+                       Date dateTime, Set<Person> payeesToAdd) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {
@@ -43,6 +46,7 @@ public class Transaction extends BalanceCalculationUtil {
             }
         }
 
+        this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
@@ -75,6 +79,10 @@ public class Transaction extends BalanceCalculationUtil {
         return payees;
     }
 
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -91,7 +99,7 @@ public class Transaction extends BalanceCalculationUtil {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, payer, amount, description, payees);
+        return Objects.hash(id, transactionType, dateTime, payer, amount, description, payees);
     }
 
     @Override
@@ -99,6 +107,8 @@ public class Transaction extends BalanceCalculationUtil {
         final StringBuilder builder = new StringBuilder();
         builder.append(" Transaction id: ")
                 .append(getId())
+                .append("\n Transaction Type: ")
+                .append(getTransactionType())
                 .append("\n Created on: ")
                 .append(getDateTime())
                 .append("\n Transaction paid by: ")

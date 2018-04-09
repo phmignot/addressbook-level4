@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TRANSACTION_TYPE;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
@@ -20,11 +21,13 @@ public class AddTransactionCommand extends UndoableCommand {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a new transaction to the address book. "
             + "Parameters: "
+            + PREFIX_TRANSACTION_TYPE + "TRANSACTION TYPE "
             + PREFIX_PAYER + "PAYER NAME "
             + PREFIX_AMOUNT + "AMOUNT "
             + PREFIX_DESCRIPTION + "DESCRIPTION "
             + "[" + PREFIX_PAYEE + "PAYEE NAME]...\n"
             + "Example: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "payment or paydebt "
             + PREFIX_PAYER + "John Doe "
             + PREFIX_AMOUNT + "3456.78 "
             + PREFIX_DESCRIPTION + "Taxi ride to NUS "
@@ -33,6 +36,7 @@ public class AddTransactionCommand extends UndoableCommand {
 
     public static final String MESSAGE_SUCCESS = "New transaction added";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
+    public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
 
     private final Transaction toAdd;
 
@@ -48,13 +52,14 @@ public class AddTransactionCommand extends UndoableCommand {
     public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(model);
         try {
-            model.addTransaction(toAdd);
 
+            if (!model.addTransaction(toAdd)) {
+                throw new CommandException("Payee(s) has no debt");
+            }
             return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         }
-
     }
 
     @Override

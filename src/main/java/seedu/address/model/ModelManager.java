@@ -18,11 +18,12 @@ import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.commands.AddTransactionCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ParserUtil;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -42,6 +43,8 @@ public class ModelManager extends ComponentManager implements Model {
     private final AddressBook addressBook;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Transaction> filteredTransactions;
+    private final FilteredList<Debtor> filteredDebtors;
+    private final FilteredList<Creditor> filteredCreditors;
 
 
     /**
@@ -56,6 +59,8 @@ public class ModelManager extends ComponentManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
+        filteredDebtors = new FilteredList<>(this.addressBook.getDebtorsList());
+        filteredCreditors = new FilteredList<>(this.addressBook.getCreditorsList());
     }
 
     public ModelManager() {
@@ -116,7 +121,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author steven-jia
     public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
             throws PersonNotFoundException, IllegalValueException {
         UniquePersonList payees = new UniquePersonList();
@@ -146,16 +150,6 @@ public class ModelManager extends ComponentManager implements Model {
         return payees;
     }
     //@@author ongkc
-    @Override
-    public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-        Set<Person> matchingPersons = addressBook.getPersonList()
-                .stream()
-                .filter(person -> person.getName().equals(name))
-                .collect(Collectors.toSet());
-        if (matchingPersons.isEmpty()) {
-            throw new PersonNotFoundException();
-        }
-    }
     @Override
     public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
@@ -191,29 +185,46 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
-    @Override
-    public void addTransaction(Transaction transaction) {
-        String transactionType = AddTransactionCommand.COMMAND_WORD;
-        addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesDebt(transactionType , transaction.getAmount(),
-                transaction.getPayer(), transaction.getPayees());
-        updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
-        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        indicateAddressBookChanged();
+    public ObservableList<Debtor> getFilteredDebtors() {
+        return FXCollections.unmodifiableObservableList(filteredDebtors);
     }
+
+    public ObservableList<Creditor> getFilteredCreditors() {
+        return FXCollections.unmodifiableObservableList(filteredCreditors);
+    }
+    @Override
+    public boolean addTransaction(Transaction transaction) {
+        String transactionType = transaction.getTransactionType().toString();
+
+        if (addressBook.addTransaction(transaction)) {
+            addressBook.updatePayerAndPayeesDebt(transactionType, transaction.getAmount(),
+                    transaction.getPayer(), transaction.getPayees());
+            updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
+            updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+            updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+            updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+            updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+            indicateAddressBookChanged();
+            return true;
+        }
+        return false;
+    }
+
 
     //@@author phmignot
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
         String transactionType = DeleteTransactionCommand.COMMAND_WORD;
         try {
-            addressBook.updatePayerAndPayeesDebt(transactionType , target.getAmount(),
+            addressBook.updatePayerAndPayeesDebt(transactionType, target.getAmount(),
                     findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
-        }   catch (PersonNotFoundException e) {
+        } catch (PersonNotFoundException e) {
             throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
         }
+
         addressBook.removeTransaction(target);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
@@ -234,6 +245,17 @@ public class ModelManager extends ComponentManager implements Model {
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+    @Override
+    public void updateDebtorList(Predicate<Debtor> predicate) {
+        requireNonNull(predicate);
+        filteredDebtors.setPredicate(predicate);
+    }
+
+    @Override
+    public void updateCreditorList(Predicate<Creditor> predicate) {
+        requireNonNull(predicate);
+        filteredCreditors.setPredicate(predicate);
     }
 
     //@@author ongkc

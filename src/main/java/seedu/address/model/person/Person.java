@@ -19,7 +19,6 @@ public class Person {
     private final Phone phone;
     private final Email email;
     private Balance balance;
-    private Balance debt = new Balance("0.00");
 
     private final UniqueTagList tags;
 
@@ -52,8 +51,6 @@ public class Person {
         return balance;
     }
 
-    public Balance getDebt() {
-        return debt; }
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
      * if modification is attempted.
@@ -74,17 +71,11 @@ public class Person {
         }
 
         Person otherPerson = (Person) other;
-        return otherPerson.getName().equals(this.getName())
-                && otherPerson.getPhone().equals(this.getPhone())
-                && otherPerson.getEmail().equals(this.getEmail());
+        return otherPerson.getName().equals(this.getName());
     }
 
     public void setBalance(Balance newBalance) {
         this.balance = newBalance;
-    }
-
-    public void setDebt(Balance newDebt) {
-        this.debt = newDebt;
     }
 
     public void addToBalance(Balance balanceToAdd) {
