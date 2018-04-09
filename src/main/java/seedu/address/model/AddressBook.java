@@ -116,7 +116,7 @@ public class AddressBook implements ReadOnlyAddressBook {
             setTransactions(syncedTransactionList);
             setDebtsTable(syncedDebtsTable);
         } catch (DuplicatePersonException e) {
-            throw new AssertionError("AddressBooks should not have duplicate persons");
+            throw new AssertionError("SmartSplit should not have duplicate persons");
         }
     }
 
