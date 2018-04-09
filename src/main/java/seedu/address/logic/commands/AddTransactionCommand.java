@@ -52,8 +52,10 @@ public class AddTransactionCommand extends UndoableCommand {
     public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(model);
         try {
-            model.addTransaction(toAdd);
 
+            if (!model.addTransaction(toAdd)) {
+                throw new CommandException("Payee(s) has no debt");
+            }
             return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);

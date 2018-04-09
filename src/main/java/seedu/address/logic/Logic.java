@@ -7,7 +7,6 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Creditor;
 import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 
 /**
@@ -21,7 +20,7 @@ public interface Logic {
      * @throws CommandException If an error occurs during command execution.
      * @throws ParseException If an error occurs during parsing.
      */
-    CommandResult execute(String commandText) throws CommandException, ParseException, PersonNotFoundException;
+    CommandResult execute(String commandText) throws CommandException, ParseException;
 
     /** Returns an unmodifiable view of the filtered list of persons */
     ObservableList<Person> getFilteredPersonList();

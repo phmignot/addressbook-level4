@@ -92,12 +92,11 @@ public interface Model {
      */
     void updateFilteredTransactionList(Predicate<Transaction> predicate);
 
-    void addTransaction(Transaction transaction) throws PersonNotFoundException;
+    boolean addTransaction(Transaction transaction) throws PersonNotFoundException, CommandException;
 
     //@@author phmignot
     /** Deletes the given person. */
-    void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException,
-            PersonNotFoundException;
+    void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException;
 
     ObservableList<Debtor> getFilteredDebtors();
 

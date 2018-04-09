@@ -27,7 +27,7 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
      * payerDebt is a positive {@Code Balance} value, because the payer is owed.
      * @param transaction to register the table.
      */
-    public void updateDebts(String typeOfTransaction, Transaction transaction)  {
+    public boolean updateDebts(String typeOfTransaction, Transaction transaction) {
         Person payer = transaction.getPayer();
         if (!this.containsKey(payer)) {
             this.add(payer);
@@ -36,8 +36,8 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
         DebtsList payerDebtsList = this.get(payer);
         if (typeOfTransaction.equals(TransactionType.TRANSACTION_TYPE_VALIDATION_REGEX_PAYDEBT)) {
             for (Person payee : transaction.getPayees()) {
-                if (payerDebtsList.get(payee) == null || payerDebtsList.get(payee).getDoubleValue() == 0) {
-                    return;
+                if (payerDebtsList.get(payee) == null || payerDebtsList.get(payee).getDoubleValue() >= 0) {
+                    return false;
                 }
             }
         }
@@ -52,6 +52,7 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
             payerDebtsList.updateDebt(payee, payeeDebt);
             payeeDebtsList.updateDebt(payer, payerDebt);
         }
+        return true;
     }
 
     public void add(Person personToAdd) {

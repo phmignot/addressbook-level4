@@ -270,11 +270,14 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * add a new transaction
      */
-    public void addTransaction(Transaction transaction) {
+    public boolean addTransaction(Transaction transaction) {
         String typeOfTransaction = transaction.getTransactionType().toString();
         transactions.add(transaction);
-        debtsTable.updateDebts(typeOfTransaction, transaction);
-        debtsTable.display();
+        if (debtsTable.updateDebts(typeOfTransaction, transaction)) {
+            debtsTable.display();
+            return true;
+        }
+        return false;
     }
 
     /**

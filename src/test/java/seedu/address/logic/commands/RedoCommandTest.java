@@ -20,7 +20,6 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 public class RedoCommandTest {
     private static final CommandHistory EMPTY_COMMAND_HISTORY = new CommandHistory();
@@ -39,7 +38,7 @@ public class RedoCommandTest {
     }
 
     @Test
-    public void execute() throws CommandException, PersonNotFoundException {
+    public void execute() throws CommandException {
         UndoRedoStack undoRedoStack = prepareStack(
                 Collections.emptyList(), Arrays.asList(deletePersonCommandTwo, deletePersonCommandOne));
         RedoCommand redoCommand = new RedoCommand();

@@ -177,7 +177,9 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) {}
+        public boolean addTransaction(Transaction transaction) {
+            return true;
+        }
 
         @Override
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}

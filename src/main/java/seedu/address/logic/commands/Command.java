@@ -5,7 +5,6 @@ import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * Represents a command with hidden internal logic and the ability to be executed.
@@ -31,7 +30,7 @@ public abstract class Command {
      * @return feedback message of the operation result for display
      * @throws CommandException If an error occurs during command execution.
      */
-    public abstract CommandResult execute() throws CommandException, PersonNotFoundException;
+    public abstract CommandResult execute() throws CommandException;
 
     /**
      * Provides any needed dependencies to the command.

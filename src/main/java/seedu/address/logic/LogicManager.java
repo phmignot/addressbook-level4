@@ -21,7 +21,6 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Creditor;
 import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionContainsPersonPredicate;
 
@@ -44,7 +43,7 @@ public class LogicManager extends ComponentManager implements Logic {
     }
 
     @Override
-    public CommandResult execute(String commandText) throws CommandException, ParseException, PersonNotFoundException {
+    public CommandResult execute(String commandText) throws CommandException, ParseException {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
         try {
             Command command = addressBookParser.parseCommand(commandText);

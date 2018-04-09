@@ -193,17 +193,21 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredCreditors);
     }
     @Override
-    public void addTransaction(Transaction transaction) {
+    public boolean addTransaction(Transaction transaction) {
         String transactionType = transaction.getTransactionType().toString();
-        addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesDebt(transactionType, transaction.getAmount(),
+
+        if (addressBook.addTransaction(transaction)) {
+            addressBook.updatePayerAndPayeesDebt(transactionType, transaction.getAmount(),
                     transaction.getPayer(), transaction.getPayees());
-        updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
-        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
-        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        indicateAddressBookChanged();
+            updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
+            updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+            updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+            updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+            updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+            indicateAddressBookChanged();
+            return true;
+        }
+        return false;
     }
 
 

@@ -16,7 +16,6 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 
 public class LogicManagerTest {
@@ -27,21 +26,21 @@ public class LogicManagerTest {
     private Logic logic = new LogicManager(model);
 
     @Test
-    public void execute_invalidCommandFormat_throwsParseException() throws PersonNotFoundException {
+    public void execute_invalidCommandFormat_throwsParseException() {
         String invalidCommand = "uicfhmowqewca";
         assertParseException(invalidCommand, MESSAGE_UNKNOWN_COMMAND);
         assertHistoryCorrect(invalidCommand);
     }
 
     @Test
-    public void execute_commandExecutionError_throwsCommandException() throws PersonNotFoundException {
+    public void execute_commandExecutionError_throwsCommandException() {
         String deletePersonCommand = "deletePerson 9";
         assertCommandException(deletePersonCommand, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         assertHistoryCorrect(deletePersonCommand);
     }
 
     @Test
-    public void execute_validCommand_success() throws PersonNotFoundException {
+    public void execute_validCommand_success() {
         String listCommand = ListCommand.COMMAND_WORD;
         assertCommandSuccess(listCommand, ListCommand.MESSAGE_SUCCESS, model);
         assertHistoryCorrect(listCommand);
@@ -58,8 +57,7 @@ public class LogicManagerTest {
      * Also confirms that {@code expectedModel} is as specified.
      * @see #assertCommandBehavior(Class, String, String, Model)
      */
-    private void assertCommandSuccess(String inputCommand, String expectedMessage, Model expectedModel) throws
-            PersonNotFoundException {
+    private void assertCommandSuccess(String inputCommand, String expectedMessage, Model expectedModel) {
         assertCommandBehavior(null, inputCommand, expectedMessage, expectedModel);
     }
 
@@ -67,7 +65,7 @@ public class LogicManagerTest {
      * Executes the command, confirms that a ParseException is thrown and that the result message is correct.
      * @see #assertCommandBehavior(Class, String, String, Model)
      */
-    private void assertParseException(String inputCommand, String expectedMessage) throws PersonNotFoundException {
+    private void assertParseException(String inputCommand, String expectedMessage) {
         assertCommandFailure(inputCommand, ParseException.class, expectedMessage);
     }
 
@@ -75,7 +73,7 @@ public class LogicManagerTest {
      * Executes the command, confirms that a CommandException is thrown and that the result message is correct.
      * @see #assertCommandBehavior(Class, String, String, Model)
      */
-    private void assertCommandException(String inputCommand, String expectedMessage) throws PersonNotFoundException {
+    private void assertCommandException(String inputCommand, String expectedMessage) {
         assertCommandFailure(inputCommand, CommandException.class, expectedMessage);
     }
 
@@ -83,8 +81,7 @@ public class LogicManagerTest {
      * Executes the command, confirms that the exception is thrown and that the result message is correct.
      * @see #assertCommandBehavior(Class, String, String, Model)
      */
-    private void assertCommandFailure(String inputCommand, Class<?> expectedException, String expectedMessage)
-            throws PersonNotFoundException {
+    private void assertCommandFailure(String inputCommand, Class<?> expectedException, String expectedMessage) {
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         assertCommandBehavior(expectedException, inputCommand, expectedMessage, expectedModel);
     }
@@ -96,7 +93,7 @@ public class LogicManagerTest {
      *      - {@code expectedModel}'s address book was saved to the storage file.
      */
     private void assertCommandBehavior(Class<?> expectedException, String inputCommand,
-                                           String expectedMessage, Model expectedModel) throws PersonNotFoundException {
+                                           String expectedMessage, Model expectedModel) {
 
         try {
             CommandResult result = logic.execute(inputCommand);
@@ -114,7 +111,7 @@ public class LogicManagerTest {
      * Asserts that the result display shows all the {@code expectedCommands} upon the execution of
      * {@code HistoryCommand}.
      */
-    private void assertHistoryCorrect(String... expectedCommands) throws PersonNotFoundException {
+    private void assertHistoryCorrect(String... expectedCommands) {
         try {
             CommandResult result = logic.execute(HistoryCommand.COMMAND_WORD);
             String expectedMessage = String.format(

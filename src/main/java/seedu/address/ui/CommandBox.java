@@ -14,7 +14,6 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * The UI component that is responsible for receiving user command inputs.
@@ -100,7 +99,7 @@ public class CommandBox extends UiPart<Region> {
      * Handles the Enter button pressed event.
      */
     @FXML
-    private void handleCommandInputChanged() throws PersonNotFoundException {
+    private void handleCommandInputChanged() {
         try {
             CommandResult commandResult = logic.execute(commandTextField.getText());
             initHistory();
