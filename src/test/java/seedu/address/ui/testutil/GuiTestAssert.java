@@ -95,8 +95,12 @@ public class GuiTestAssert {
         assertEquals(expectedTransaction.getDescription().value, actualCard.getDescription());
 
         String expectedPayeesString = "";
-        for (Person expectedPayee: expectedTransaction.getPayees().asObservableList()) {
-            expectedPayeesString = expectedPayeesString + expectedPayee.getName().fullName + ", ";
+        for (int i = 0; i < expectedTransaction.getPayees().asObservableList().size(); i++) {
+            Person expectedPayee = expectedTransaction.getPayees().asObservableList().get(i);
+            expectedPayeesString += expectedPayee.getName().fullName;
+            if (i != expectedTransaction.getPayees().asObservableList().size() - 1) {
+                expectedPayeesString += ", ";
+            }
         }
 
         assertEquals(expectedPayeesString, actualCard.getPayees());

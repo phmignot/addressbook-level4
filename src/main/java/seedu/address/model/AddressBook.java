@@ -272,8 +272,9 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void addTransaction(Transaction transaction) throws CommandException {
         if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             Person payeeToFind = transaction.getPayees().asObservableList().get(0);
-            if (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
-                    || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0) {
+            if (debtsTable.size() != 0
+                    && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
+                    || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0)) {
                 throw new CommandException("Payee(s) is not owed any debt");
             }
         }

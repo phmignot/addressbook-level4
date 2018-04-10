@@ -1,7 +1,13 @@
 package seedu.address.testutil;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -9,6 +15,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.util.SampleDataUtil;
 //@@author ongkc
@@ -36,6 +43,14 @@ public class TypicalTransactions {
     private static UniquePersonList payeeGeorge = new UniquePersonList();
     private static UniquePersonList payeeFiona = new UniquePersonList();
 
+    private static Date date;
+
+    private static SplitMethod splitEvenly = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+    private static SplitMethod splitByUnits = new SplitMethod(SplitMethod.SPLIT_METHOD_UNITS);
+    private static SplitMethod splitByPercentage = new SplitMethod(SplitMethod.SPLIT_METHOD_PERCENTAGE);
+    private static List<Integer> unitsList = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
+    private static List<Integer> percentagesList = new ArrayList<Integer>(Arrays.asList(25, 30, 45));
+
     static {
         try {
             payee2.add(person2);
@@ -44,18 +59,28 @@ public class TypicalTransactions {
             payeeGeorge.add(TypicalPersons.GEORGE);
             payeeFiona.add(TypicalPersons.FIONA);
 
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+                    .withZone(ZoneId.of("Asia/Singapore"));
+            Instant instant = Instant.from(dateTimeFormatter.parse("2018-04-10T19:20:07"));
+            date = Date.from(instant);
+
             t1 = new TransactionBuilder().withPayer(person1).withAmount("0.00")
-                    .withDescription("Boat trip").withPayees(payee2).build();
+                    .withDescription("Boat trip").withPayees(payee2).withDate(date)
+                    .withSplitMethod(splitEvenly).build();
             t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
-                    .withDescription("Food for barbecue").withPayees(payee4).build();
+                    .withDescription("Food for barbecue").withPayees(payee4)
+                    .withSplitMethod(splitByUnits).withUnits(unitsList).build();
             t3 = new TransactionBuilder().withPayer(person5).withAmount("0.00")
-                    .withDescription("Open air concert").withPayees(payee6).build();
+                    .withDescription("Open air concert").withPayees(payee6)
+                    .withSplitMethod(splitByPercentage).withPercentages(percentagesList).build();
             t4 = new TransactionBuilder().withPayer(TypicalPersons.GEORGE).withAmount("0.00")
                     .withDescription("Transport")
-                    .withPayees(payeeFiona).build();
+                    .withPayees(payeeFiona)
+                    .withSplitMethod(splitEvenly).build();
             t5 = new TransactionBuilder().withPayer(TypicalPersons.FIONA)
                     .withAmount("0.00").withDescription("Dinner")
-                    .withPayees(payeeFiona).build();
+                    .withPayees(payeeFiona)
+                    .withSplitMethod(splitEvenly).build();
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         }

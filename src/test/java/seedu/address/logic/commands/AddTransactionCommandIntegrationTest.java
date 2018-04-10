@@ -34,8 +34,6 @@ public class AddTransactionCommandIntegrationTest {
                 String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction), expectedModel);
     }
 
-
-
     /**
      * Generates a new {@code AddCommand} which upon execution, adds {@code person} into the {@code model}.
      */

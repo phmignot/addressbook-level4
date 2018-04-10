@@ -60,7 +60,7 @@ public class XmlAdaptedTransaction {
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
     public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
-                                 UniquePersonList payees, SplitMethod splitMethod, List<Integer> unitsList,
+                                 UniquePersonList payees, String splitMethod, List<Integer> unitsList,
                                  List<Integer> percentagesList) {
         this.payer = new XmlAdaptedPerson(payer);
         this.transactionType = transactionType;
@@ -72,7 +72,7 @@ public class XmlAdaptedTransaction {
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         this.payees = payeesToStore;
-        this.splitMethod = splitMethod.toString();
+        this.splitMethod = splitMethod;
         if (!unitsList.isEmpty()) {
             this.unitsList = buildIntegerListString(unitsList);
         }
@@ -92,7 +92,7 @@ public class XmlAdaptedTransaction {
         payer = new XmlAdaptedPerson(source.getPayer());
         amount = source.getAmount().toString();
         description = source.getDescription().value;
-        this.dateTime = source.getDateTime();
+        dateTime = source.getDateTime();
 
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
