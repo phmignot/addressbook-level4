@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_BY_PERCENTAGE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_BY_UNITS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_METHOD;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TRANSACTION_TYPE;
 
@@ -28,10 +29,12 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_AMOUNT + "AMOUNT "
             + PREFIX_DESCRIPTION + "DESCRIPTION "
             + "[" + PREFIX_PAYEE + "PAYEE NAME] "
-            + PREFIX_SPLIT_METHOD + "SPLIT METHOD...\n"
+            + PREFIX_SPLIT_METHOD + "SPLIT METHOD "
+            + PREFIX_SPLIT_BY_UNITS + "LIST OF UNITS "
+            + PREFIX_SPLIT_BY_PERCENTAGE + "LIST OF PERCENTAGES...\n"
             + "The transaction type options are: \"payment\" or \"paydebt\". \n"
+            + "The split method options are: \"evenly\", \"units\", or \"percentage\". "
             + "Only add a split method if you are recording a payment (i.e. the transaction type is \"payment\"). \n"
-            + "The split method options are: \"evenly\", \"units\", or \"percentage\". \n"
             + "Units and percentages must be entered as a comma-separated list. "
             + "The first number in the list is associated with the payer "
             + "and subsequent numbers are associated with each payee in the order in which they are listed. \n"
@@ -50,8 +53,17 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_DESCRIPTION + "Team dinner "
             + PREFIX_PAYEE + "John Doe "
             + PREFIX_PAYEE + "Bernice Yu "
-            + PREFIX_SPLIT_METHOD + "percentage"
+            + PREFIX_SPLIT_METHOD + "percentage "
             + PREFIX_SPLIT_BY_PERCENTAGE + "40, 40, 20 \n"
+            + "Example 2: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "payment "
+            + PREFIX_PAYER + "Bernice Yu "
+            + PREFIX_AMOUNT + "35.00 "
+            + PREFIX_DESCRIPTION + "Team apparel items "
+            + PREFIX_PAYEE + "Alex Yeoh "
+            + PREFIX_PAYEE + "John Doe "
+            + PREFIX_SPLIT_METHOD + "units "
+            + PREFIX_SPLIT_BY_UNITS + "4, 2, 1 \n"
             + "Example 3: " + COMMAND_WORD + " "
             + PREFIX_TRANSACTION_TYPE + "paydebt "
             + PREFIX_PAYER + "Bernice Yu "

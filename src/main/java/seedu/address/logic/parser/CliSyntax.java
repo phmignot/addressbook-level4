@@ -17,6 +17,6 @@ public class CliSyntax {
     public static final Prefix PREFIX_PAYEE = new Prefix("payee/");
     public static final Prefix PREFIX_SPLIT_METHOD = new Prefix("m/");
     public static final Prefix PREFIX_SPLIT_BY_UNITS = new Prefix("units/");
-    public static final Prefix PREFIX_SPLIT_BY_PERCENTAGE = new Prefix("units/");
+    public static final Prefix PREFIX_SPLIT_BY_PERCENTAGE = new Prefix("percentage/");
 
 }

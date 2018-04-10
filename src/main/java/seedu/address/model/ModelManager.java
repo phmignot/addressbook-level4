@@ -2,7 +2,6 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
-import static seedu.address.logic.commands.DeleteTransactionCommand.MESSAGE_NONEXISTENT_PAYER_PAYEES;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 
 import java.util.List;
@@ -18,7 +17,6 @@ import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ParserUtil;
@@ -194,12 +192,8 @@ public class ModelManager extends ComponentManager implements Model {
     }
     @Override
     public boolean addTransaction(Transaction transaction) {
-        String transactionType = transaction.getTransactionType().toString();
-
         if (addressBook.addTransaction(transaction)) {
-            addressBook.updatePayerAndPayeesBalance(transactionType, transaction.getAmount(),
-                    transaction.getPayer(), transaction.getPayees(), transaction.getSplitMethod(),
-                    transaction.getUnits(), transaction.getPercentages());
+            addressBook.updatePayerAndPayeesBalance(true, transaction);
             updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
             updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
             updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
@@ -215,21 +209,14 @@ public class ModelManager extends ComponentManager implements Model {
     //@@author phmignot
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
-        String transactionType = DeleteTransactionCommand.COMMAND_WORD;
-        try {
-            addressBook.updatePayerAndPayeesBalance(transactionType, target.getAmount(),
-                    findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()),
-                    target.getSplitMethod(), target.getUnits(), target.getPercentages());
-        } catch (PersonNotFoundException e) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
+        if (addressBook.removeTransaction(target)) {
+            addressBook.updatePayerAndPayeesBalance(false, target);
+            updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+            updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+            updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+            updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+            indicateAddressBookChanged();
         }
-
-        addressBook.removeTransaction(target);
-        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
-        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        indicateAddressBookChanged();
     }
     //=========== Filtered Person List Accessors =============================================================
 

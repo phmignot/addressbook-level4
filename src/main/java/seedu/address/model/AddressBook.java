@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
-import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Creditor;
@@ -27,8 +26,6 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
-import seedu.address.model.transaction.Amount;
-import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
@@ -269,12 +266,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * add a new transaction
+     * Adds a {@code transaction} to the list of transactions.
      */
     public boolean addTransaction(Transaction transaction) {
-        String typeOfTransaction = transaction.getTransactionType().toString();
         transactions.add(transaction);
-        if (debtsTable.updateDebts(typeOfTransaction, transaction)) {
+        if (debtsTable.updateDebts(transaction, true)) {
             debtsTable.display();
             return true;
         }
@@ -284,38 +280,37 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Update each payer and payee(s) balance whenever each new transaction is added
      */
-    public void updatePayerAndPayeesBalance(String transactionType, Amount amount, Person payer,
-                                            UniquePersonList payees, SplitMethod splitMethod,
-                                            List<Integer> units, List<Integer> percentages) {
-        updatePayerBalance(transactionType, amount, payer, payees, splitMethod, units, percentages);
-        for (Person payee: payees) {
-            updatePayeeBalance(transactionType, amount, payee, payees, splitMethod, units, percentages);
+    public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction) {
+        updatePayerBalance(isAddingTransaction, transaction);
+        for (int i = 0; i < transaction.getPayees().asObservableList().size(); i++) {
+            Person payee = transaction.getPayees().asObservableList().get(i);
+            Integer splitMethodValuesListIndex = i + 1;
+            updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
         }
     }
     /**
-     * Update payer balance whenever each new transaction is added
+     * Update payer balance whenever a new transaction is added or deleted
      */
-    private void updatePayerBalance(String transactionType, Amount amount, Person payer,
-                                    UniquePersonList payees, SplitMethod splitMethod,
-                                    List<Integer> units, List<Integer> percentages) {
-        payer.addToBalance(calculateAmountToAddForPayer(transactionType, amount, payees,
-                splitMethod, units, percentages));
+    private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction) {
+        transaction.getPayer().addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
+                transaction));
     }
     /**
-     * Update payee balance whenever each new transaction is added
+     * Update payee balance whenever a new transaction is added or deleted
      */
-    private void updatePayeeBalance(String transactionType, Amount amount, Person payee, UniquePersonList payees,
-                                    SplitMethod splitMethod, List<Integer> units, List<Integer> percentages) {
-        payee.addToBalance(calculateAmountToAddForPayee(transactionType, amount, payees,
-                splitMethod, units, percentages));
+    private void updatePayeeBalance(Person payee,
+                                    Boolean isAddingTransaction,
+                                    Integer splitMethodValuesListIndex,
+                                    Transaction transaction) {
+        payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
+                splitMethodValuesListIndex, transaction));
     }
     /**
      * Removes {@code target} from the list of transactions.
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
      */
     public boolean removeTransaction(Transaction target) throws TransactionNotFoundException {
-        String typeOfTransaction = DeleteTransactionCommand.COMMAND_WORD;
-        debtsTable.updateDebts(typeOfTransaction, target);
+        debtsTable.updateDebts(target, false);
         debtsTable.display();
         if (transactions.remove(target)) {
             return true;

@@ -27,22 +27,21 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
      * payerDebt is a positive {@Code Balance} value, because the payer is owed.
      * @param transaction to register the table.
      */
-    public boolean updateDebts(String typeOfTransaction, Transaction transaction) {
+    public boolean updateDebts(Transaction transaction, Boolean isAddingTransaction) {
         Person payer = transaction.getPayer();
         if (!this.containsKey(payer)) {
             this.add(payer);
             System.out.println("Adding payer " + payer.getName().fullName);
         }
         DebtsList payerDebtsList = this.get(payer);
-        if (typeOfTransaction.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+        if (transaction.getTransactionType().value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             for (Person payee : transaction.getPayees()) {
                 if (payerDebtsList.get(payee) == null || payerDebtsList.get(payee).getDoubleValue() >= 0) {
                     return false;
                 }
             }
         }
-        Balance payerDebtToAdd = calculateAmountToAddForPayee(typeOfTransaction, transaction.getAmount(),
-                transaction.getPayees());
+        Balance payerDebtToAdd = calculateAmountToAddForPayee(isAddingTransaction, 1, transaction);
         Balance payeeDebtToAdd = payerDebtToAdd.getInverse();
         for (Person payee: transaction.getPayees()) {
             if (!this.containsKey(payee)) {
