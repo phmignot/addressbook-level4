@@ -193,12 +193,12 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredCreditors);
     }
     @Override
-    public boolean addTransaction(Transaction transaction) {
+    public boolean addTransaction(Transaction transaction) throws PersonNotFoundException {
         String transactionType = transaction.getTransactionType().toString();
 
         if (addressBook.addTransaction(transaction)) {
             addressBook.updatePayerAndPayeesDebt(transactionType, transaction.getAmount(),
-                    transaction.getPayer(), transaction.getPayees());
+                    findPersonByName(transaction.getPayer().getName()), getPayeesList(transaction.getPayees()));
             updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
             updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
             updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
