@@ -14,8 +14,8 @@ public class AddTransactionCommandTest {
 
     @Test
     public void execute_transactionAcceptedByModel_addSuccessful() throws Exception {
-        AddTransactionCommandTest.ModelStubAcceptingTransactionAdded modelStub =
-                new AddTransactionCommandTest.ModelStubAcceptingTransactionAdded();
+        ModelStubAcceptingTransactionAdded modelStub =
+                new ModelStubAcceptingTransactionAdded();
         Transaction validTransaction = new TransactionBuilder().build();
 
         CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
@@ -24,6 +24,17 @@ public class AddTransactionCommandTest {
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
 
+    @Test
+    public void execute_payerOrPayeeIsPayerOrPayee_throwsCommandException() throws Exception {
+        ModelStub modelStub =
+                new ModelStubThrowingPayerIsPayeeException();
+        Transaction validTransaction = new TransactionBuilder().build();
+
+        thrown.expect(CommandException.class);
+        thrown.expectMessage(AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER);
+
+        getAddTransactionCommand(validTransaction, modelStub).execute();
+    }
 
     @Test
     public void equals() {
@@ -135,10 +146,11 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) {}
+        public void addTransaction(Transaction transaction) throws CommandException {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
+        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
+        }
 
         @Override
         public ObservableList<Debtor> getFilteredDebtors() {
@@ -161,13 +173,14 @@ public class AddTransactionCommandTest {
         }
     }
 
-    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub { }
+    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub {
+    }
 
 
     /**
-     * A Model stub that always accept the person being added.
+     * A Model stub that always accept the transaction being added.
      */
-    private class ModelStubAcceptingTransactionAdded extends AddTransactionCommandTest.ModelStub {
+    private class ModelStubAcceptingTransactionAdded extends ModelStub {
         final ArrayList<Transaction> transactionsAdded = new ArrayList<>();
 
         @Override
@@ -175,12 +188,27 @@ public class AddTransactionCommandTest {
             requireNonNull(transaction);
             transactionsAdded.add(transaction);
         }
-
         @Override
         public ReadOnlyAddressBook getAddressBook() {
             return new AddressBook();
         }
     }
+
+    private class ModelStubThrowingPayerIsPayeeException extends ModelStub {
+        @Override
+        public void addTransaction(Transaction transaction) throws CommandException {
+            throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
+        }
+
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            return new AddressBook();
+        }
+
+    }
+
+
 }
 ```
 ###### /java/seedu/address/storage/XmlSerializableAddressBookTest.java
@@ -322,7 +350,7 @@ public class TypicalTransactions {
     private static UniquePersonList payeeGeorge = new UniquePersonList();
     private static UniquePersonList payeeFiona = new UniquePersonList();
 
-    private static Date date;
+    private static Date date = new Date();
 
     private static SplitMethod splitEvenly = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
     private static SplitMethod splitByUnits = new SplitMethod(SplitMethod.SPLIT_METHOD_UNITS);
@@ -338,28 +366,24 @@ public class TypicalTransactions {
             payeeGeorge.add(TypicalPersons.GEORGE);
             payeeFiona.add(TypicalPersons.FIONA);
 
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-                    .withZone(ZoneId.of("Asia/Singapore"));
-            Instant instant = Instant.from(dateTimeFormatter.parse("2018-04-10T19:20:07"));
-            date = Date.from(instant);
 
             t1 = new TransactionBuilder().withPayer(person1).withAmount("0.00")
                     .withDescription("Boat trip").withPayees(payee2).withDate(date)
                     .withSplitMethod(splitEvenly).build();
             t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
                     .withDescription("Food for barbecue").withPayees(payee4)
-                    .withSplitMethod(splitByUnits).withUnits(unitsList).build();
+                    .withSplitMethod(splitByUnits).withUnits(unitsList).withDate(date).build();
             t3 = new TransactionBuilder().withPayer(person5).withAmount("0.00")
                     .withDescription("Open air concert").withPayees(payee6)
-                    .withSplitMethod(splitByPercentage).withPercentages(percentagesList).build();
+                    .withSplitMethod(splitByPercentage).withPercentages(percentagesList).withDate(date).build();
             t4 = new TransactionBuilder().withPayer(TypicalPersons.GEORGE).withAmount("0.00")
                     .withDescription("Transport")
                     .withPayees(payeeFiona)
-                    .withSplitMethod(splitEvenly).build();
+                    .withSplitMethod(splitEvenly).withDate(date).build();
             t5 = new TransactionBuilder().withPayer(TypicalPersons.FIONA)
                     .withAmount("0.00").withDescription("Dinner")
-                    .withPayees(payeeFiona)
-                    .withSplitMethod(splitEvenly).build();
+                    .withPayees(payeeFiona).withDate(date)
+                    .withSplitMethod(splitEvenly).withDate(date).build();
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         }

@@ -102,6 +102,7 @@ public class AddTransactionCommand extends UndoableCommand {
 ``` java
     public static final String MESSAGE_SUCCESS = "New transaction added";
 
+
     private final Transaction toAdd;
 
     /**
@@ -455,9 +456,10 @@ public class TransactionList implements Iterable<Transaction> {
         return FXCollections.unmodifiableObservableList(filteredCreditors);
     }
     @Override
-    public void addTransaction(Transaction transaction) throws CommandException {
+    public void addTransaction(Transaction transaction) throws CommandException, PersonNotFoundException {
         addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesBalance(true, transaction);
+        addressBook.updatePayerAndPayeesBalance(true, transaction, findPersonByName(
+                transaction.getPayer().getName()), getPayeesList(transaction.getPayees()));
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
         updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
         updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);

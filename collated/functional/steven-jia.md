@@ -17,8 +17,10 @@
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
-            return null;
+            assert false : transaction.getTransactionType().value;
+            ;
         }
+        return null;
     }
 
     /**
@@ -38,8 +40,9 @@
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAmountToAddForPayeeForPaydebtTransaction(transaction);
         default:
-            return null;
+            assert false : transaction.getTransactionType().value;
         }
+        return null;
     }
 
 ```

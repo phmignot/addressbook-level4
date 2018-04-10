@@ -267,8 +267,9 @@ public class DebtsList extends HashMap<Person, Balance> {
 ###### /java/seedu/address/model/ModelManager.java
 ``` java
     @Override
-    public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
-        addressBook.updatePayerAndPayeesBalance(false, target);
+    public void deleteTransaction(Transaction target) throws TransactionNotFoundException, PersonNotFoundException {
+        addressBook.updatePayerAndPayeesBalance(false, target,
+                findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
         addressBook.removeTransaction(target);
         updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
         updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
@@ -371,7 +372,8 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
 ###### /java/seedu/address/model/Model.java
 ``` java
     /** Deletes the given person. */
-    void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException;
+    void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException,
+            PersonNotFoundException;
 
     ObservableList<Debtor> getFilteredDebtors();
 
