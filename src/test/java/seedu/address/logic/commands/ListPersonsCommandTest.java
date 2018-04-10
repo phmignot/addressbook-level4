@@ -16,31 +16,31 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
- * Contains integration tests (interaction with the Model) and unit tests for ListCommand.
+ * Contains integration tests (interaction with the Model) and unit tests for ListPersonsCommand.
  */
-public class ListCommandTest {
+public class ListPersonsCommandTest {
 
     private Model model;
     private Model expectedModel;
-    private ListCommand listCommand;
+    private ListPersonsCommand listPersonsCommand;
 
     @Before
     public void setUp() {
         model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
 
-        listCommand = new ListCommand();
-        listCommand.setData(model, new CommandHistory(), new UndoRedoStack());
+        listPersonsCommand = new ListPersonsCommand();
+        listPersonsCommand.setData(model, new CommandHistory(), new UndoRedoStack());
     }
 
     @Test
     public void execute_listIsNotFiltered_showsSameList() throws PersonNotFoundException {
-        assertCommandSuccess(listCommand, model, ListCommand.MESSAGE_SUCCESS, expectedModel);
+        assertCommandSuccess(listPersonsCommand, model, ListPersonsCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
     @Test
     public void execute_listIsFiltered_showsEverything() throws PersonNotFoundException {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
-        assertCommandSuccess(listCommand, model, ListCommand.MESSAGE_SUCCESS, expectedModel);
+        assertCommandSuccess(listPersonsCommand, model, ListPersonsCommand.MESSAGE_SUCCESS, expectedModel);
     }
 }
