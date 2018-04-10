@@ -11,8 +11,8 @@ import seedu.address.logic.commands.SelectPersonCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 
 /**
- * Test scope: similar to {@code DeleteCommandParserTest}.
- * @see DeleteCommandParserTest
+ * Test scope: similar to {@code DeletePersonCommandParserTest}.
+ * @see DeletePersonCommandParserTest
  */
 public class SelectPersonCommandParserTest {
 
@@ -25,6 +25,7 @@ public class SelectPersonCommandParserTest {
 
     @Test
     public void parse_invalidArgs_throwsParseException() throws CommandException {
-        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectPersonCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                SelectPersonCommand.MESSAGE_USAGE));
     }
 }

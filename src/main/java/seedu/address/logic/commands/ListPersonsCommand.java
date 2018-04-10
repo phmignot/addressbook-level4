@@ -9,7 +9,6 @@ public class ListPersonsCommand extends Command {
 
     public static final String COMMAND_WORD = "listPersons";
     public static final String MESSAGE_SUCCESS = "Listed all persons";
-    
     @Override
     public CommandResult execute() {
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
