@@ -140,8 +140,12 @@ public class TransactionCardTest extends GuiUnitTest {
         assertEquals(expectedTransaction.getDescription().value, actualCard.getDescription());
 
         String expectedPayeesString = "";
-        for (Person expectedPayee: expectedTransaction.getPayees().asObservableList()) {
-            expectedPayeesString = expectedPayeesString + expectedPayee.getName().fullName + ", ";
+        for (int i = 0; i < expectedTransaction.getPayees().asObservableList().size(); i++) {
+            Person expectedPayee = expectedTransaction.getPayees().asObservableList().get(i);
+            expectedPayeesString += expectedPayee.getName().fullName;
+            if (i != expectedTransaction.getPayees().asObservableList().size() - 1) {
+                expectedPayeesString += ", ";
+            }
         }
 
         assertEquals(expectedPayeesString, actualCard.getPayees());
@@ -155,14 +159,18 @@ package seedu.address.testutil;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionType;
 import seedu.address.model.util.SampleDataUtil;
 
 /**
@@ -178,8 +186,13 @@ public class TransactionBuilder {
     private Description description;
     private Date dateTime;
     private UniquePersonList payees;
+    private TransactionType transactionType;
+    private SplitMethod splitMethod;
+    private List<Integer> unitsList;
+    private List<Integer> percentagesList;
 
     public TransactionBuilder() {
+        transactionType = new TransactionType("payment");
         payer = SampleDataUtil.getSamplePersons()[0];
         amount = new Amount(DEFAULT_AMOUNT);
         description = new Description(DEFAULT_DESCRIPTION);
@@ -194,6 +207,9 @@ public class TransactionBuilder {
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         payees = samplePayees;
+        splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+        unitsList = Collections.emptyList();
+        percentagesList = Collections.emptyList();
     }
 
     /**
@@ -205,8 +221,11 @@ public class TransactionBuilder {
         description = transactionToCopy.getDescription();
         dateTime = transactionToCopy.getDateTime();
         payees = transactionToCopy.getPayees();
+        transactionType = transactionToCopy.getTransactionType();
+        splitMethod = transactionToCopy.getSplitMethod();
+        unitsList = transactionToCopy.getUnits();
+        percentagesList = transactionToCopy.getPercentages();
     }
-
 
     /**
      * Sets the {@code payer} of the {@code Transaction} that we are building.
@@ -215,7 +234,6 @@ public class TransactionBuilder {
         this.payer = payer;
         return this;
     }
-
     /**
      * Sets the {@code Amount} of the {@code Transaction} that we are building.
      */
@@ -233,12 +251,13 @@ public class TransactionBuilder {
     }
 
     /**
-     * Sets the {@code payeeName} of the {@code Transaction} that we are building.
+     * Sets the {@code payees} of the {@code Transaction} that we are building.
      */
     public TransactionBuilder withPayees(UniquePersonList payees) {
         this.payees = payees;
         return this;
     }
+
     /**
      * Sets the {@code date & time} of the {@code Transaction} that we are building.
      */
@@ -246,9 +265,15 @@ public class TransactionBuilder {
         this.dateTime = dateTime;
         return this;
     }
-
+```
+###### /java/seedu/address/testutil/TransactionBuilder.java
+``` java
+    /**
+     * Builds a new {@code Transaction}.
+     */
     public Transaction build() {
-        return new Transaction(payer, amount, description, dateTime, payees);
+        return new Transaction(transactionType, payer, amount, description, dateTime,
+                payees, splitMethod, unitsList, percentagesList);
     }
 }
 ```

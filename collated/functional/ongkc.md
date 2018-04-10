@@ -1,46 +1,22 @@
 # ongkc
-###### /java/seedu/address/logic/util/BalanceCalculationUtil.java
+###### /java/seedu/address/logic/util/CalculationUtil.java
 ``` java
     /**
-     * Calculate new payee(s) balance after a new transaction is added
+     * Calculates amount to add to the payer's balance after a new paydebt transaction is added.
+     * Returned amount will be positive.
      */
-    public static Balance calculateAddTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
-        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+    private static Balance calculateAmountToAddForPayerForPaydebtTransaction(Transaction transaction) {
+        Double amountToAdd = Double.valueOf(transaction.getAmount().value);
+        return getRoundedFormattedBalance(amountToAdd);
     }
+
     /**
-     * Calculate new payer balance a transaction is deleted
+     * Calculates amount to add to the payee's balance after a new paydebt transaction is added.
+     * Returned amount will be negative.
      */
-    public static Balance calculateDeleteTransactionPayerDebt(Amount amount, UniquePersonList payees) {
-        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = -Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
-                / numberOfInvolvedPersons;
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
-    }
-    /**
-     * Calculate new payer balance after a new transaction is added
-     */
-    public static Balance calculateAddTransactionPayerDebt(Amount amount, UniquePersonList payees) {
-        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
-                / numberOfInvolvedPersons;
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
-    }
-    /**
-     * Calculate new payee(s) balance after a transaction is deleted
-     */
-    public static Balance calculateDeleteTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
-        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+    private static Balance calculateAmountToAddForPayeeForPaydebtTransaction(Transaction transaction) {
+        Double amountToAdd = -Double.valueOf(transaction.getAmount().value);
+        return getRoundedFormattedBalance(amountToAdd);
     }
 
 ```
@@ -50,6 +26,11 @@
  * Parses input arguments and creates a new AddTransactionCommand object
  */
 public class AddTransactionCommandParser implements Parser<AddTransactionCommand> {
+    private TransactionType transactionType;
+    private SplitMethod splitMethod;
+    private List<Integer> units = Collections.emptyList();
+    private List<Integer> percentages = Collections.emptyList();
+
     /**
      * Parses the given {@code String} of arguments in the context of the AddTransactionCommand
      * and returns an AddTransactionCommand object for execution.
@@ -57,29 +38,43 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      */
     public AddTransactionCommand parse(String args, Model model) throws ParseException, CommandException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE);
+                ArgumentTokenizer.tokenize(args, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
+                        PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS,
+                        PREFIX_SPLIT_BY_PERCENTAGE);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_PAYER, PREFIX_AMOUNT, PREFIX_DESCRIPTION, PREFIX_PAYEE)
+        if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
+                PREFIX_DESCRIPTION, PREFIX_PAYEE)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     AddTransactionCommand.MESSAGE_USAGE));
         }
 
-        try {
-            Person payer = model.findPersonByName(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
-            Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
-            Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
-            UniquePersonList payees = model.getPayeesList(argMultimap, model);
-            Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+```
+###### /java/seedu/address/logic/parser/AddTransactionCommandParser.java
+``` java
+    /**
+     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
+    }
 
-            Transaction transaction = new Transaction(payer, amount, description, dateTime, payees);
+}
 
-            return new AddTransactionCommand(transaction);
-        } catch (PersonNotFoundException pnfe) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
-        } catch (IllegalValueException ive) {
-            throw new ParseException(ive.getMessage(), ive);
+```
+###### /java/seedu/address/logic/parser/ParserUtil.java
+``` java
+    /**
+     * Parses {@code Collection<String> TransactionType} into a {@code Set<TransactionType>}.
+     */
+    public static TransactionType parseTransactionType(String type) throws IllegalValueException {
+        requireNonNull(type);
+        String trimmedType = type.trim();
+        if (!TransactionType.isValidTransactionType(trimmedType)) {
+            throw new IllegalValueException(TransactionType.MESSAGE_TRANSACTION_TYPE_CONSTRAINTS);
         }
+        return new TransactionType(trimmedType);
     }
 
 ```
@@ -92,21 +87,20 @@ public class AddTransactionCommand extends UndoableCommand {
 
     public static final String COMMAND_WORD = "addTransaction";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a new transaction to the address book. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a new transaction to the address book. \n"
             + "Parameters: "
+            + PREFIX_TRANSACTION_TYPE + "TRANSACTION TYPE "
             + PREFIX_PAYER + "PAYER NAME "
             + PREFIX_AMOUNT + "AMOUNT "
             + PREFIX_DESCRIPTION + "DESCRIPTION "
-            + "[" + PREFIX_PAYEE + "PAYEE NAME]...\n"
-            + "Example: " + COMMAND_WORD + " "
-            + PREFIX_PAYER + "John Doe "
-            + PREFIX_AMOUNT + "3456.78 "
-            + PREFIX_DESCRIPTION + "Taxi ride to NUS "
-            + PREFIX_PAYEE + "Alex Yeoh "
-            + PREFIX_PAYEE + "Bernice Yu";
-
+            + "[" + PREFIX_PAYEE + "PAYEE NAME] "
+            + PREFIX_SPLIT_METHOD + "SPLIT METHOD "
+            + PREFIX_SPLIT_BY_UNITS + "LIST OF UNITS "
+            + PREFIX_SPLIT_BY_PERCENTAGE + "LIST OF PERCENTAGES...\n"
+```
+###### /java/seedu/address/logic/commands/AddTransactionCommand.java
+``` java
     public static final String MESSAGE_SUCCESS = "New transaction added";
-    public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
 
     private final Transaction toAdd;
 
@@ -123,12 +117,10 @@ public class AddTransactionCommand extends UndoableCommand {
         requireNonNull(model);
         try {
             model.addTransaction(toAdd);
-
             return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         }
-
     }
 
     @Override
@@ -141,33 +133,31 @@ public class AddTransactionCommand extends UndoableCommand {
 ```
 ###### /java/seedu/address/logic/LogicManager.java
 ``` java
-    @Override
-    public void updateFilteredPersonList(Person person) {
+    public void updateDebtorsList(Person person) {
+        model.updateDebtorList(PREDICATE_SHOW_ALL_DEBTORS);
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
         DebtsList debtsList = debtsTable.get(person);
-        resetDebt();
-        updateDebt(debtsList);
-        //        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.getAddressBook().setDebtors(debtsList);
 
     }
     @Override
-    public void updateFilteredPersonList() {
-        resetDebt();
-        model.updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    public void updateCreditorsList() {
+        model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+
     }
+
     /**
-     * Update amount of debt owed to other people
+     * Update the people in the creditor list
      */
-    private void updateDebt(DebtsList debtsList) {
-        ObservableList<Person> persons = model.getAddressBook().getPersonList();
-        for (Person person: persons) {
-            if (debtsList.get(person) != null) {
-                person.setDebt(debtsList.get(person));
-            }
-        }
+    public void updateCreditorsList(Person person) {
+        model.updateCreditorList(PREDICATE_SHOW_ALL_CREDITORS);
+        DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
+        DebtsList debtsList = debtsTable.get(person);
+        model.getAddressBook().setCreditors(debtsList);
+
     }
+
+}
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
@@ -179,6 +169,8 @@ public class XmlAdaptedTransaction {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
 
     @XmlElement(required = true)
+    private String transactionType;
+    @XmlElement(required = true)
     private XmlAdaptedPerson payer;
     @XmlElement(required = true)
     private String amount;
@@ -188,6 +180,13 @@ public class XmlAdaptedTransaction {
     private Date dateTime;
     @XmlElement(required = true)
     private List<XmlAdaptedPerson> payees = new ArrayList<>();
+    @XmlElement(required = true)
+    private String splitMethod;
+
+    @XmlElement
+    private String unitsList;
+    @XmlElement
+    private String percentagesList;
 
     /**
      * Constructs an XmlAdaptedTransaction.
@@ -198,18 +197,23 @@ public class XmlAdaptedTransaction {
     /**
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
-    public XmlAdaptedTransaction(Person payer, String amount, String description, UniquePersonList payees) {
+    public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
+                                 UniquePersonList payees, String splitMethod, List<Integer> unitsList,
+                                 List<Integer> percentagesList) {
         this.payer = new XmlAdaptedPerson(payer);
+        this.transactionType = transactionType;
         this.amount = amount;
         this.description = description;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
-
 
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
         if (this.amount == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName()));
+        }
+        if (!this.amount.contains(".")) {
+            this.amount += ".00";
         }
         if (!Amount.isValidAmount(this.amount)) {
             throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
@@ -224,6 +228,15 @@ public class XmlAdaptedTransaction {
             throw new IllegalValueException(Description.MESSAGE_DESCRIPTION_CONSTRAINTS);
         }
         final Description description = new Description(this.description);
+
+        if (this.transactionType == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    TransactionType.class.getSimpleName()));
+        }
+        if (!TransactionType.isValidTransactionType(this.transactionType)) {
+            throw new IllegalValueException(TransactionType.MESSAGE_TRANSACTION_TYPE_CONSTRAINTS);
+        }
+        final TransactionType transactionType = new TransactionType(this.transactionType);
 
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
@@ -242,10 +255,11 @@ public class XmlAdaptedTransaction {
         return Objects.equals(payer, otherTransaction.payer)
                 && Objects.equals(amount, otherTransaction.amount)
                 && Objects.equals(description, otherTransaction.description)
-                && Objects.equals(payees, otherTransaction.payees);
+                && Objects.equals(payees, otherTransaction.payees)
+                && Objects.equals(transactionType, otherTransaction.transactionType)
+                && Objects.equals(splitMethod, otherTransaction.splitMethod);
     }
 
-}
 ```
 ###### /java/seedu/address/model/transaction/Amount.java
 ``` java
@@ -399,16 +413,6 @@ public class TransactionList implements Iterable<Transaction> {
 ###### /java/seedu/address/model/ModelManager.java
 ``` java
     @Override
-    public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-        Set<Person> matchingPersons = addressBook.getPersonList()
-                .stream()
-                .filter(person -> person.getName().equals(name))
-                .collect(Collectors.toSet());
-        if (matchingPersons.isEmpty()) {
-            throw new PersonNotFoundException();
-        }
-    }
-    @Override
     public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
@@ -443,13 +447,20 @@ public class TransactionList implements Iterable<Transaction> {
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
+    public ObservableList<Debtor> getFilteredDebtors() {
+        return FXCollections.unmodifiableObservableList(filteredDebtors);
+    }
+
+    public ObservableList<Creditor> getFilteredCreditors() {
+        return FXCollections.unmodifiableObservableList(filteredCreditors);
+    }
     @Override
-    public void addTransaction(Transaction transaction) {
-        String transactionType = AddTransactionCommand.COMMAND_WORD;
+    public void addTransaction(Transaction transaction) throws CommandException {
         addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesDebt(transactionType , transaction.getAmount(),
-                transaction.getPayer(), transaction.getPayees());
+        addressBook.updatePayerAndPayeesBalance(true, transaction);
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();

@@ -1,44 +1,206 @@
 # steven-jia
-###### /java/seedu/address/logic/util/BalanceCalculationUtil.java
+###### /java/seedu/address/logic/util/CalculationUtil.java
 ``` java
     /**
-     * Returns the debt that a {@code payee} owes to the payer.
+     * Returns the amount to add to the balance of a payer.
      */
-    public static Balance calculatePayerDebt(String transactionType, Amount amount,
-                                             UniquePersonList payees) {
-        switch (transactionType) {
-        case AddTransactionCommand.COMMAND_WORD:
-            return calculateAddTransactionPayerDebt(amount, payees);
-        case DeleteTransactionCommand.COMMAND_WORD:
-            return calculateDeleteTransactionPayerDebt(amount, payees);
+    public static Balance calculateAmountToAddForPayer(Boolean isAddingTransaction,
+                                                       Transaction transaction) {
+        // This is a deleteTransaction command
+        if (!isAddingTransaction) {
+            return calculateAmountToAddForPayerForDeleteTransaction(transaction);
+        }
+
+        switch (transaction.getTransactionType().value) {
+        case TransactionType.TRANSACTION_TYPE_PAYMENT:
+            return calculateAmountToAddForPayerForPaymentTransaction(transaction);
+        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
+            return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
             return null;
         }
     }
+
     /**
-     * Returns an updated balance for {@code payee}
+     * Returns the amount to add to the balance or debt of a payee.
      */
-    public static Balance calculatePayeeDebt(String transactionType, Amount amount,
-                                             UniquePersonList payees) {
-        switch (transactionType) {
-        case AddTransactionCommand.COMMAND_WORD:
-            return calculateAddTransactionPayeeDebt(amount, payees);
-        case DeleteTransactionCommand.COMMAND_WORD:
-            return calculateDeleteTransactionPayeeDebt(amount, payees);
+    public static Balance calculateAmountToAddForPayee(Boolean isAddingTransaction,
+                                                       Integer splitMethodValuesListIndex,
+                                                       Transaction transaction) {
+        // This is a deleteTransaction command
+        if (!isAddingTransaction) {
+            return calculateAmountToAddForPayeeForDeleteTransaction(splitMethodValuesListIndex, transaction);
+        }
+
+        switch (transaction.getTransactionType().value) {
+        case TransactionType.TRANSACTION_TYPE_PAYMENT:
+            return calculateAmountToAddForPayeeForPaymentTransaction(splitMethodValuesListIndex, transaction);
+        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
+            return calculateAmountToAddForPayeeForPaydebtTransaction(transaction);
         default:
             return null;
         }
     }
 
 ```
-###### /java/seedu/address/logic/util/BalanceCalculationUtil.java
+###### /java/seedu/address/logic/util/CalculationUtil.java
 ``` java
     /**
-     * Calculate the number of people involved in a transaction
+     * Calculates amount to add to the payer's balance after a new payment transaction is added.
+     * Returned amount will be positive.
+     */
+    public static Balance calculateAmountToAddForPayerForPaymentTransaction(Transaction transaction) {
+        Double amountToAdd;
+        switch (transaction.getSplitMethod().method) {
+        case UNITS:
+            Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
+            int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
+            amountToAdd = transaction.getAmount().getDoubleValue()
+                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+            break;
+        case PERCENTAGE:
+            Integer percentageForPayer = transaction.getPercentages().get(0);
+            amountToAdd = transaction.getAmount().getDoubleValue()
+                    * (100 - percentageForPayer) / 100;
+            break;
+        case EVENLY:
+        default:
+            amountToAdd = calculateAmountForPayerSplitEvenly(transaction.getAmount(),
+                    transaction.getPayees());
+            break;
+        }
+        return getRoundedFormattedBalance(amountToAdd);
+    }
+
+    /**
+     * Calculates amount to add to the payee's balance after a new payment transaction is added.
+     * Returned amount will be negative.
+     */
+    public static Balance calculateAmountToAddForPayeeForPaymentTransaction(Integer splitMethodValuesListIndex,
+                                                                            Transaction transaction) {
+        Double amountToAdd;
+        switch (transaction.getSplitMethod().method) {
+        case UNITS:
+            Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
+            int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
+            amountToAdd = -Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
+                    / totalNumberOfUnits;
+            break;
+        case PERCENTAGE:
+            Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
+            amountToAdd = -Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
+            break;
+        case EVENLY:
+        default:
+            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+                    transaction.getPayees());
+            break;
+        }
+        return getRoundedFormattedBalance(amountToAdd);
+    }
+    /**
+     * Calculates amount to add to the payer's balance after a transaction is deleted.
+     * Returned amount will be negative.
+     */
+    public static Balance calculateAmountToAddForPayerForDeleteTransaction(Transaction transaction) {
+        if (transaction.getTransactionType().value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            return getRoundedFormattedBalance(-transaction.getAmount().getDoubleValue());
+        }
+
+        Double amountToAdd;
+        switch (transaction.getSplitMethod().method) {
+        case UNITS:
+            Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
+            int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
+            amountToAdd = -transaction.getAmount().getDoubleValue()
+                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+            break;
+        case PERCENTAGE:
+            Integer percentageForPayer = transaction.getPercentages().get(0);
+            amountToAdd = -transaction.getAmount().getDoubleValue()
+                    * (100 - percentageForPayer) / 100;
+            break;
+        case EVENLY:
+        default:
+            amountToAdd = -calculateAmountForPayerSplitEvenly(transaction.getAmount(),
+                    transaction.getPayees());
+            break;
+        }
+        return getRoundedFormattedBalance(amountToAdd);
+    }
+    /**
+     * Calculates amount to add to the payee's balance after a transaction is deleted.
+     * Returned amount will be positive.
+     */
+    public static Balance calculateAmountToAddForPayeeForDeleteTransaction(Integer splitMethodValuesListIndex,
+                                                                           Transaction transaction) {
+        if (transaction.getTransactionType().value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue());
+        }
+
+        Double amountToAdd;
+        switch (transaction.getSplitMethod().method) {
+        case UNITS:
+            Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
+            int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
+            amountToAdd = transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
+                    / totalNumberOfUnits;
+            break;
+        case PERCENTAGE:
+            Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
+            amountToAdd = transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
+            break;
+        case EVENLY:
+        default:
+            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+                    transaction.getPayees());
+            break;
+        }
+        return getRoundedFormattedBalance(amountToAdd);
+    }
+
+    /**
+     * Calculates amount to add to a payer's balance for a transaction that is split evenly.
+     * Returned amount will be positive.
+     */
+    private static Double calculateAmountForPayerSplitEvenly(Amount amount, UniquePersonList payees) {
+        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
+        return Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1) / numberOfInvolvedPersons;
+    }
+
+    /**
+     * Calculates amount to add to a payee's balance for a transaction that is split evenly.
+     * Returned amount will be positive.
+     */
+    private static Double calculateAmountForPayeeSplitEvenly(Amount amount, UniquePersonList payees) {
+        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
+        return Double.valueOf(amount.value) / numberOfInvolvedPersons;
+    }
+
+    private static Balance getRoundedFormattedBalance(Double amountToAdd) {
+        amountToAdd = round(amountToAdd, NUMBER_OF_DECIMAL_PLACES);
+        DecimalFormat formatter = new DecimalFormat("#.00");
+        return new Balance(String.valueOf(formatter.format(amountToAdd)));
+    }
+
+    /**
+     * Calculates the total number of people involved in a transaction
      */
     public static int calculateNumberOfInvolvedPersons(UniquePersonList payees) {
         return payees.asObservableList().size() + 1;
     }
+
+    /**
+     * Calculates the total number of units given a list of units
+     */
+    private static int calculateTotalNumberOfUnits(List<Integer> units) {
+        int totalNumberOfUnits = 0;
+        for (Integer unit: units) {
+            totalNumberOfUnits += unit;
+        }
+        return totalNumberOfUnits;
+    }
+
     private static double round(double value, int places) {
         BigDecimal amount = new BigDecimal(value);
         amount = amount.setScale(places, RoundingMode.HALF_UP);
@@ -47,6 +209,85 @@
 
 }
 
+
+```
+###### /java/seedu/address/logic/parser/AddTransactionCommandParser.java
+``` java
+        try {
+            transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
+                    PREFIX_TRANSACTION_TYPE).get());
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        }
+
+        if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
+            try {
+                splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
+                switch (splitMethod.method) {
+                case EVENLY:
+                    break;
+                case UNITS:
+                    units = ParserUtil.parseUnitsList(argMultimap.getValue(PREFIX_SPLIT_BY_UNITS));
+                    break;
+                case PERCENTAGE:
+                    percentages = ParserUtil.parsePercentagesList(argMultimap.getValue(PREFIX_SPLIT_BY_PERCENTAGE));
+                    break;
+                default:
+                }
+            } catch (IllegalValueException ive) {
+                throw new ParseException(ive.getMessage(), ive);
+            }
+        } else {
+            splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
+        }
+
+        try {
+            Person payer = model.findPersonByName(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
+            Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
+            Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
+            UniquePersonList payees = model.getPayeesList(argMultimap, model);
+            Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+
+            validatePayees(payer, payees);
+            validateSplitMethodValues(payees, splitMethod, units, percentages);
+
+            Transaction transaction = new Transaction(transactionType, payer, amount, description, dateTime,
+                    payees, splitMethod, units, percentages);
+            return new AddTransactionCommand(transaction);
+        } catch (PersonNotFoundException pnfe) {
+            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        }
+    }
+    /**
+     * Checks list of units and list of percentages for validity
+     */
+    private void validateSplitMethodValues(UniquePersonList payees, SplitMethod splitMethod,
+                                           List<Integer> units, List<Integer> percentages) throws CommandException {
+        if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
+            if (units.size() != payees.asObservableList().size() + 1) {
+                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+            }
+        } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
+            if (percentages.size() != payees.asObservableList().size() + 1) {
+                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+            }
+            Integer total = 0;
+            for (Integer percentage: percentages) {
+                total += percentage;
+            }
+            if (total != 100) {
+                throw new CommandException(MESSAGE_INVALID_PERCENTAGE_VALUES);
+            }
+        }
+    }
+
+    private void validatePayees(Person payer, UniquePersonList payees) throws CommandException {
+        if (payees.contains(payer)) {
+            throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
+        }
+    }
 
 ```
 ###### /java/seedu/address/logic/parser/ParserUtil.java
@@ -63,18 +304,122 @@
         if (!SplitMethod.isValidSplitMethod(trimmedSplitMethod)) {
             throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
         }
-        return new SplitMethod(splitMethod);
+        return new SplitMethod(trimmedSplitMethod);
     }
 
     /**
-     * Parses {@code Collection<String> SplitMethod} into a {@code Set<SplitMethod>}.
+     * Parses {@code String splitMethod} into a {@code SplitMethod}.
      */
-    public static Optional<SplitMethod> parseSplitMethod(Optional<String> splitMethod) throws IllegalValueException {
+    public static SplitMethod parseSplitMethod(Optional<String> splitMethod) throws IllegalValueException {
         requireNonNull(splitMethod);
-        return splitMethod.isPresent() ? Optional.of(parseSplitMethod(splitMethod.get())) : Optional.empty();
+        return splitMethod.isPresent() ? parseSplitMethod(splitMethod.get())
+                : new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+    }
+
+    /**
+     * Parses a {@code String unitsList} into a {@code List<Integer>}.
+     * Leading and trailing whitespaces between values will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
+    public static List<Integer> parseUnitsList(String unitsList) throws IllegalValueException {
+        requireNonNull(unitsList);
+        ArrayList<Integer> trimmedUnitsList = new ArrayList<>();
+        if (unitsList.matches("[0-9]+(,( )?[0-9]+)*")) {
+            String[] unitsArray = unitsList.split(",");
+            for (String unit: unitsArray) {
+                trimmedUnitsList.add(Integer.valueOf(unit.trim()));
+            }
+        } else {
+            throw new IllegalValueException("List of units can only take comma-separated integers");
+        }
+        return trimmedUnitsList;
+    }
+
+    /**
+     * Parses {@code Collection<String> unitsList} into a {@code List<Integer>}.
+     */
+    public static List<Integer> parseUnitsList(Optional<String> unitsList) throws IllegalValueException {
+        requireNonNull(unitsList);
+        return unitsList.isPresent() ? parseUnitsList(unitsList.get()) : Collections.emptyList();
+    }
+
+    /**
+     * Parses a {@code String percentagesList} into a {@code List<Integer>}.
+     * Leading and trailing whitespaces between values will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
+    public static List<Integer> parsePercentagesList(String percentagesList) throws IllegalValueException {
+        requireNonNull(percentagesList);
+        ArrayList<Integer> trimmedPercentagesList = new ArrayList<>();
+        if (percentagesList.matches("[0-9]+(,( )?[0-9]+)*")) {
+            String[] percentagesArray = percentagesList.split(",");
+            for (String percentage: percentagesArray) {
+                trimmedPercentagesList.add(Integer.valueOf(percentage.trim()));
+            }
+        } else {
+            throw new IllegalValueException("List of percentages can only take comma-separated integers");
+        }
+        return trimmedPercentagesList;
+    }
+
+    /**
+     * Parses {@code Collection<String> percentagesList} into a {@code List<Integer>}.
+     */
+    public static List<Integer> parsePercentagesList(Optional<String> percentagesList) throws IllegalValueException {
+        requireNonNull(percentagesList);
+        return percentagesList.isPresent() ? parsePercentagesList(percentagesList.get()) : Collections.emptyList();
     }
 
 }
+```
+###### /java/seedu/address/logic/commands/AddTransactionCommand.java
+``` java
+            + "The transaction type options are: \"payment\" or \"paydebt\". \n"
+            + "The split method options are: \"evenly\", \"units\", or \"percentage\". "
+            + "Only add a split method if you are recording a payment (i.e. the transaction type is \"payment\"). \n"
+            + "Units and percentages must be entered as a comma-separated list. "
+            + "The first number in the list is associated with the payer "
+            + "and subsequent numbers are associated with each payee in the order in which they are listed. \n"
+            + "Example 1: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "payment "
+            + PREFIX_PAYER + "John Doe "
+            + PREFIX_AMOUNT + "120.00 "
+            + PREFIX_DESCRIPTION + "Taxi ride to NUS "
+            + PREFIX_PAYEE + "Alex Yeoh "
+            + PREFIX_PAYEE + "Bernice Yu "
+            + PREFIX_SPLIT_METHOD + "evenly \n"
+            + "Example 2: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "payment "
+            + PREFIX_PAYER + "Alex Yeoh "
+            + PREFIX_AMOUNT + "50.00 "
+            + PREFIX_DESCRIPTION + "Team dinner "
+            + PREFIX_PAYEE + "John Doe "
+            + PREFIX_PAYEE + "Bernice Yu "
+            + PREFIX_SPLIT_METHOD + "percentage "
+            + PREFIX_SPLIT_BY_PERCENTAGE + "40, 40, 20 \n"
+            + "Example 3: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "payment "
+            + PREFIX_PAYER + "Bernice Yu "
+            + PREFIX_AMOUNT + "35.00 "
+            + PREFIX_DESCRIPTION + "Team apparel items "
+            + PREFIX_PAYEE + "Alex Yeoh "
+            + PREFIX_PAYEE + "John Doe "
+            + PREFIX_SPLIT_METHOD + "units "
+            + PREFIX_SPLIT_BY_UNITS + "4, 2, 1 \n"
+            + "Example 4: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "paydebt "
+            + PREFIX_PAYER + "Bernice Yu "
+            + PREFIX_AMOUNT + "40.00 "
+            + PREFIX_DESCRIPTION + "Amount owed for taxi ride "
+            + PREFIX_PAYEE + "John Doe";
+
+    public static final String MESSAGE_INVALID_NUMBER_OF_VALUES = "The number of %1$s values does not match"
+            + " the number of persons involved. Remember to include the payer in the count.";
+    public static final String MESSAGE_INVALID_PERCENTAGE_VALUES = "The sum of the percentages does not equal 100.";
+    public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
+    public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
 ```
 ###### /java/seedu/address/storage/XmlAdaptedPerson.java
 ``` java
@@ -92,12 +437,26 @@
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         this.payees = payeesToStore;
+        this.splitMethod = splitMethod;
+        if (!unitsList.isEmpty()) {
+            this.unitsList = buildIntegerListString(unitsList);
+        }
+        if (!percentagesList.isEmpty()) {
+            this.percentagesList = buildIntegerListString(percentagesList);
+        }
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         source.getPayees().asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         payees = payeesToStore;
+        splitMethod = source.getSplitMethod().toString();
+        if (!source.getUnits().isEmpty()) {
+            unitsList = buildIntegerListString(source.getUnits());
+        }
+        if (!source.getPercentages().isEmpty()) {
+            percentagesList = buildIntegerListString(source.getPercentages());
+        }
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
@@ -110,6 +469,12 @@
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
+        if (this.dateTime == null) {
+            throw new IllegalValueException(String.format
+                    (MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName()));
+        }
+        final Date dateTime = this.dateTime;
+
         if (this.payees == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
@@ -123,7 +488,33 @@
         }
         final UniquePersonList payees = convertedPayees;
 
-        return new Transaction(payer, amount, description, dateTime, payees);
+        if (this.splitMethod == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    SplitMethod.class.getSimpleName()));
+        }
+        if (!SplitMethod.isValidSplitMethod(this.splitMethod)) {
+            throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
+        }
+        final SplitMethod splitMethod = new SplitMethod(this.splitMethod);
+
+        final List<Integer> units = new ArrayList<>();
+        if (this.unitsList != null) {
+            String[] unitsArray = this.unitsList.split(",");
+            for (String unit: unitsArray) {
+                units.add(Integer.valueOf(unit.trim()));
+            }
+        }
+
+        final List<Integer> percentages = new ArrayList<>();
+        if (this.percentagesList != null) {
+            String[] percentagesArray = this.percentagesList.split(",");
+            for (String percentage: percentagesArray) {
+                percentages.add(Integer.valueOf(percentage.trim()));
+            }
+        }
+
+        return new Transaction(transactionType, payer, amount, description, dateTime, payees,
+                splitMethod, units, percentages);
     }
 
 ```
@@ -162,6 +553,25 @@
     }
 
 ```
+###### /java/seedu/address/storage/XmlAdaptedTransaction.java
+``` java
+    /**
+     * Converts integersList into a comma-separated string for storage
+     * @param integersList
+     */
+    private String buildIntegerListString(List<Integer> integersList) {
+        String integersListString = "";
+        for (int i = 0; i < integersList.size(); i++) {
+            integersListString += String.valueOf(integersList.get(i));
+            if (i != integersList.size() - 1) {
+                integersListString += ", ";
+            }
+        }
+        return integersListString;
+    }
+
+}
+```
 ###### /java/seedu/address/model/transaction/SplitMethod.java
 ``` java
 
@@ -177,14 +587,19 @@ public class SplitMethod {
      * Split methods that can be used
      */
     public enum Method {
+        NOT_APPLICABLE,
         EVENLY,
-        BY_UNITS
+        UNITS,
+        PERCENTAGE
     }
 
     public static final String MESSAGE_SPLIT_METHOD_CONSTRAINTS =
-            "Transaction split method can only be one of the numbers shown in the list of options";
+            "Transaction split method can only be \"evenly\", \"units\", or \"percentage\"";
 
-    public static final String SPLIT_METHOD_VALIDATION_REGEX = "^[1-9]$";
+    public static final String SPLIT_METHOD_NOT_APPLICABLE = "not_applicable";
+    public static final String SPLIT_METHOD_EVENLY = "evenly";
+    public static final String SPLIT_METHOD_UNITS = "units";
+    public static final String SPLIT_METHOD_PERCENTAGE = "percentage";
 
     public final Method method;
 
@@ -196,12 +611,18 @@ public class SplitMethod {
     public SplitMethod(String splitMethod) {
         requireNonNull(splitMethod);
         checkArgument(isValidSplitMethod(splitMethod), MESSAGE_SPLIT_METHOD_CONSTRAINTS);
-        switch (Integer.valueOf(splitMethod)) {
-        case 1:
+        switch (splitMethod) {
+        case SPLIT_METHOD_NOT_APPLICABLE:
+            this.method = Method.NOT_APPLICABLE;
+            break;
+        case SPLIT_METHOD_EVENLY:
             this.method = Method.EVENLY;
             break;
-        case 2:
-            this.method = Method.BY_UNITS;
+        case SPLIT_METHOD_UNITS:
+            this.method = Method.UNITS;
+            break;
+        case SPLIT_METHOD_PERCENTAGE:
+            this.method = Method.PERCENTAGE;
             break;
         default:
             this.method = Method.EVENLY;
@@ -212,18 +633,15 @@ public class SplitMethod {
      * Returns true if a given string is a valid split method.
      */
     public static boolean isValidSplitMethod(String test) {
-        boolean found = false;
-        for (Method method: Method.values()) {
-            if (method.ordinal() == Integer.parseInt(test)) {
-                found = true;
-            }
-        }
-        return test.matches(SPLIT_METHOD_VALIDATION_REGEX) && found;
+        return test.matches(SPLIT_METHOD_EVENLY)
+            || test.matches(SPLIT_METHOD_UNITS)
+            || test.matches(SPLIT_METHOD_PERCENTAGE)
+            || test.matches(SPLIT_METHOD_NOT_APPLICABLE);
     }
 
     @Override
     public String toString() {
-        return method.toString();
+        return method.toString().toLowerCase();
     }
 
     @Override
@@ -237,11 +655,12 @@ public class SplitMethod {
 ``` java
 package seedu.address.model.transaction;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.logic.util.CalculationUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -250,7 +669,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  * Represents a Transaction in SmartSplit.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
-public class Transaction extends BalanceCalculationUtil {
+public class Transaction {
     private static Integer lastTransactionId = 0;
     private final Integer id;
     private final Date dateTime;
@@ -258,18 +677,28 @@ public class Transaction extends BalanceCalculationUtil {
     private final Amount amount;
     private final Description description;
     private final UniquePersonList payees;
+    private final TransactionType transactionType;
+    private final SplitMethod splitMethod;
+    private ArrayList<Integer> units;
+    private ArrayList<Integer> percentages;
 
-    public Transaction(Person payer, Amount amount, Description description, Date dateTime, UniquePersonList payees) {
+    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
+                       Date dateTime, UniquePersonList payees, SplitMethod splitMethod, List<Integer> units,
+                       List<Integer> percentages) {
+        this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
-
+        this.splitMethod = splitMethod;
+        initializeSplitMethodListValues(units, percentages);
     }
 
-    public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
+    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
+                       Date dateTime, Set<Person> payeesToAdd, SplitMethod splitMethod,
+                       List<Integer> units, List<Integer> percentages) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {
@@ -279,12 +708,34 @@ public class Transaction extends BalanceCalculationUtil {
             }
         }
 
+        this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+        this.splitMethod = splitMethod;
+        initializeSplitMethodListValues(units, percentages);
+    }
+
+    /**
+     * @param units
+     * @param percentages
+     * Initializes the split method units list if the split method is by units
+     * or initializes the split method percentages list if the split method is by percentage.
+     */
+    private void initializeSplitMethodListValues(List<Integer> units, List<Integer> percentages) {
+        if (this.splitMethod.toString().equals(SplitMethod.SPLIT_METHOD_UNITS)) {
+            this.units = new ArrayList<>(units);
+            this.percentages = new ArrayList<>();
+        } else if (this.splitMethod.toString().equals(SplitMethod.SPLIT_METHOD_PERCENTAGE)) {
+            this.units = new ArrayList<>();
+            this.percentages = new ArrayList<>(percentages);
+        } else {
+            this.units = new ArrayList<>();
+            this.percentages = new ArrayList<>();
+        }
     }
 
     public Integer getId() {
@@ -311,6 +762,22 @@ public class Transaction extends BalanceCalculationUtil {
         return payees;
     }
 
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public SplitMethod getSplitMethod() {
+        return splitMethod;
+    }
+
+    public List<Integer> getUnits() {
+        return units;
+    }
+
+    public List<Integer> getPercentages() {
+        return percentages;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -327,7 +794,8 @@ public class Transaction extends BalanceCalculationUtil {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, payer, amount, description, payees);
+        return Objects.hash(id, transactionType, dateTime, payer, amount,
+                description, payees, splitMethod, units, percentages);
     }
 
     @Override
@@ -335,16 +803,24 @@ public class Transaction extends BalanceCalculationUtil {
         final StringBuilder builder = new StringBuilder();
         builder.append(" Transaction id: ")
                 .append(getId())
+                .append("\n Transaction Type: ")
+                .append(getTransactionType())
                 .append("\n Created on: ")
                 .append(getDateTime())
                 .append("\n Transaction paid by: ")
                 .append(getPayer().getName())
                 .append("\n Amount: ")
                 .append(getAmount().toString())
-                .append("\r\n Description: ")
+                .append("\n Description: ")
                 .append(getDescription().toString())
                 .append("\n Payees: ")
-                .append(getPayees().asObservableList().toString());
+                .append(getPayees().asObservableList().toString())
+                .append("\n Split method: ")
+                .append(getSplitMethod().toString())
+                .append("\n Units list: ")
+                .append(getUnits().toString())
+                .append("\n Percentages list: ")
+                .append(getPercentages().toString());
         return builder.toString();
     }
 
@@ -357,12 +833,28 @@ public class Transaction extends BalanceCalculationUtil {
     public boolean isImplied(Person person) {
         return (payer.equals(person) || payees.contains(person));
     }
+
 }
+```
+###### /java/seedu/address/model/person/Person.java
+``` java
+    /**
+     * Update the balance of the person
+     * @param balanceToAdd
+     */
+    public void addToBalance(Balance balanceToAdd) {
+        Balance newBalance = this.balance.add(balanceToAdd);
+        if (newBalance.getDoubleValue() == 0) {
+            setBalance(new Balance("0.00"));
+        } else {
+            setBalance(newBalance);
+        }
+    }
 ```
 ###### /java/seedu/address/model/person/Balance.java
 ``` java
 /**
- * Represents a Person's balance in SmartSplit.
+ * Represents a Person's balance or debt in SmartSplit.
  * Guarantees: immutable; is valid as declared in {@link #isValidBalance(String)}
  */
 public class Balance {
@@ -454,9 +946,6 @@ public class Balance {
         }
     }
 
-```
-###### /java/seedu/address/model/ModelManager.java
-``` java
     public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
             throws PersonNotFoundException, IllegalValueException {
         UniquePersonList payees = new UniquePersonList();
@@ -493,9 +982,6 @@ public class Balance {
 
     UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) throws PersonNotFoundException,
             IllegalValueException;
-
-    /** Finds a person by in transaction */
-    void findPersonInTransaction(Name name) throws PersonNotFoundException;
 
 ```
 ###### /java/seedu/address/model/Model.java
