@@ -216,6 +216,7 @@ public class TransactionBuilder {
      * Initializes the TransactionBuilder with the data of {@code transactionToCopy}.
      */
     public TransactionBuilder(Transaction transactionToCopy) {
+        transactionType = transactionToCopy.getTransactionType();
         payer = transactionToCopy.getPayer();
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
