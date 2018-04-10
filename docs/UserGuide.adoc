@@ -17,7 +17,7 @@ By: `Kok Cong, Wen Qin, Paul Henri`      Since: `March 2018`      Licence: `MIT`
 
 == Introduction
 
-SmartSplit is a desktop app for managing share expenses between your contacts*. More importantly, SmartSplit is *optimized for those who prefer to work with a Command Line Interface* (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, SmartSplit can get your shared expense management tasks done faster than traditional GUI apps. Interested? Jump to the <<Quick Start>> to get started. Enjoy!
+SmartSplit is a desktop app for managing shared expenses between contacts. More importantly, SmartSplit is *optimized for those who prefer to work with a Command Line Interface* (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, SmartSplit can get your shared expense management tasks done faster than traditional GUI apps. Interested? Jump to the <<Quick Start>> to get started. Enjoy!
 
 == Quick Start
 
@@ -180,9 +180,9 @@ appear with the amount that they are owed.
 
 To de-select the person, press 'control' + click (for Mac/Linux: 'command' + click) on the person.
 All transactions will be re-displayed and the debtors panel and creditors panel will be cleared.
-
 // end::select[]
 
+// tag::addTransaction[]
 === Adding a transaction: `addTransaction` `[Since v1.2]` `[Updated for v1.5rc]`
 
 Adds a transaction between one payer and one or multiple payees. +
@@ -240,6 +240,7 @@ he no longer owes that amount. John Doe's balance decreases by 500.00 since he i
 6. `addTransaction type/paydebt payer/Bernice Yu a/15.00 d/Pay Betsy for last night's dinner payee/Betsy Crowe payee/John Doe
 * The *addTransaction* command fails because the there is more than 1 payee when the transaction type is *paydebt*.
 
+// end::addTransaction[]
 === Deleting a transaction : `deleteTransaction` `[Since v1.2]`
 
 Deletes the specified transaction from SmartSplit. +
@@ -376,8 +377,8 @@ e.g. `findPerson James Jake`
 e.g. `deletePerson 3`
 * *SelectPerson* : `selectPerson INDEX` +
 e.g.`selectPerson 2`
-* *AddTransaction* `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]...` +
-e.g. `addTransaction payer/John Doe a/3456.00 d/for dinner meal payee/Tom Riddle e/Becky Simmons`
+* *AddTransaction* `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]...` +
+e.g. `addTransaction type/payment payer/John Doe a/3456.00 d/for dinner meal payee/Tom Riddle e/Becky Simmons`
 * *DeleteTransaction* `deleteTransaction INDEX` +
 e.g. `deleteTransaction 1`
 * *FindTransaction* `findTransaction KEYWORD [MORE_KEYWORDS]` +

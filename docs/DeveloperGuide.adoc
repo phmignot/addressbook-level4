@@ -398,7 +398,6 @@ From the diagram above when users enter the command `select INDEX` to select one
 `SelectCommandParser` will parse the argument, and return `SelectCommand`.
 Next, SelectCommand will call its method `execute()`. After SelectCommand is executed, an *JumpToListRequestEvent* is raised.
 
-
 ==== JumpToListRequest Event process
 .Component interactions for `JumpToListRequest` event
 image::JumpToListRequestEventDiagram.png[width="800"]
@@ -435,17 +434,29 @@ This implementation saves the application from wasting of computing resource.
 
 // end::selectfeature[]
 
+// tag::payDebt[]
 === [Proposed] Pay Debt feature
 ==== Pay Debt Command Implementation
-When users enter the command payDebt c/ Creditor d/ Debtor /a Amount to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
-Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a payDebt() method will be called.
+When users enter the payDebt command to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
+Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a calculateUpdatedBalance() method will be called.
 
 ==== Pay Debt Event process
 After the payDebt method is executed, the PayDebtCommandParser, as part of the Logic component, will subtract the amount from the balance of the debtor and record
-the event as a transaction.
-An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
-The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
+the event as a transaction of type "paydebt".
+An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the storage file.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person that was involved in the transaction.
 
+==== Design Considerations
+===== Aspect: Implementation of `payDebtCommand`
+
+* **Alternative 1 (current choice):** Add a `transactionType` parameter that allows for a transaction to be added as a transaction of type "payDebt"
+** Pros: `addTransactionCommand` already works well and would simply need to include another parameter.
+** Cons: Increases the length of CLI input required from the user and adds complexity to the command by increasing the number of parameter combinations.
+* **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
+** Pros: Easier for users to understand. Allows for the use of a clearer and more obvious command word (i.e. "payDebt").
+** Cons: Very similar to addTransaction and will likely re-use a lot of the same code. As a new command, `payDebtCommand` would also require new tests for coverage.
+
+// end::payDebt[]
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
@@ -885,8 +896,8 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Wen Qin Jia*
 
-* Major feature: Allow users to settle their balance by recording a payment via a "record payment" command
-* Minor feature: Allow users to split their expenses using evenly, by percentage, and by units
+* Major feature: Allow users to split their expenses using evenly, by units, and by percentage
+* Minor feature: Calculate and display a net balance for every user based on all their transactions
 
 [appendix]
 == User Stories
