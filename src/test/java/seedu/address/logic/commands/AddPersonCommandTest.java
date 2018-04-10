@@ -177,16 +177,10 @@ public class AddPersonCommandTest {
             fail("This method should not be called.");
         }
 
-        @Override
-        public boolean addTransaction(Transaction transaction) {
-            fail("This method should not be called.");
-            return true;
-        }
+        public void addTransaction(Transaction transaction) {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
-            fail("This method should not be called.");
-        }
+        public void deleteTransaction(Transaction transaction) {}
 
         @Override
         public ObservableList<Debtor> getFilteredDebtors() {

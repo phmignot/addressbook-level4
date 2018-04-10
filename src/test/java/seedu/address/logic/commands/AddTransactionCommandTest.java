@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_HAS_NO_DEBT;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
 
 import java.util.ArrayList;
@@ -73,17 +72,6 @@ public class AddTransactionCommandTest {
         getAddTransactionCommand(validTransaction, modelStub).execute();
     }
 
-    @Test
-    public void execute_PayeeHasNoDebt_throwsCommandException() throws Exception {
-        ModelStub modelStub =
-                new ModelStubThrowingPayeeHasNoDebtException();
-        Transaction validTransaction = new TransactionBuilder().build();
-
-        thrown.expect(CommandException.class);
-        thrown.expectMessage(AddTransactionCommand.MESSAGE_PAYEE_HAS_NO_DEBT);
-
-        getAddTransactionCommand(validTransaction, modelStub).execute();
-    }
     @Test
     public void equals() {
         Transaction one = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(3)).build();
@@ -194,9 +182,7 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public boolean addTransaction(Transaction transaction) throws CommandException {
-            return true;
-        }
+        public void addTransaction(Transaction transaction) throws CommandException {}
 
         @Override
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
@@ -234,10 +220,9 @@ public class AddTransactionCommandTest {
         final ArrayList<Transaction> transactionsAdded = new ArrayList<>();
 
         @Override
-        public boolean addTransaction(Transaction transaction) {
+        public void addTransaction(Transaction transaction) {
             requireNonNull(transaction);
             transactionsAdded.add(transaction);
-            return true;
         }
         @Override
         public ReadOnlyAddressBook getAddressBook() {
@@ -247,7 +232,7 @@ public class AddTransactionCommandTest {
 
     private class ModelStubThrowingPayerIsPayeeException extends ModelStub {
         @Override
-        public boolean addTransaction(Transaction transaction) throws CommandException {
+        public void addTransaction(Transaction transaction) throws CommandException {
             throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
         }
 
@@ -259,18 +244,5 @@ public class AddTransactionCommandTest {
 
     }
 
-    private class ModelStubThrowingPayeeHasNoDebtException extends ModelStub {
-        @Override
-        public boolean addTransaction(Transaction transaction) throws CommandException {
-            throw new CommandException(MESSAGE_PAYEE_HAS_NO_DEBT);
-        }
-
-
-        @Override
-        public ReadOnlyAddressBook getAddressBook() {
-            return new AddressBook();
-        }
-
-    }
 
 }

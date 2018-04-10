@@ -19,6 +19,7 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionType;
 //@@author ongkc
@@ -30,6 +31,8 @@ public class XmlAdaptedTransaction {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
 
     @XmlElement(required = true)
+    private String transactionType;
+    @XmlElement(required = true)
     private XmlAdaptedPerson payer;
     @XmlElement(required = true)
     private String amount;
@@ -38,9 +41,14 @@ public class XmlAdaptedTransaction {
     @XmlElement(required = true)
     private Date dateTime;
     @XmlElement(required = true)
-    private String transactionType;
-    @XmlElement(required = true)
     private List<XmlAdaptedPerson> payees = new ArrayList<>();
+    @XmlElement(required = true)
+    private String splitMethod;
+
+    @XmlElement
+    private String unitsList;
+    @XmlElement
+    private String percentagesList;
 
     /**
      * Constructs an XmlAdaptedTransaction.
@@ -52,18 +60,25 @@ public class XmlAdaptedTransaction {
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
     public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
-                                 UniquePersonList payees) {
+                                 UniquePersonList payees, String splitMethod, List<Integer> unitsList,
+                                 List<Integer> percentagesList) {
         this.payer = new XmlAdaptedPerson(payer);
         this.transactionType = transactionType;
         this.amount = amount;
         this.description = description;
         this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
 
-
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         this.payees = payeesToStore;
+        this.splitMethod = splitMethod;
+        if (!unitsList.isEmpty()) {
+            this.unitsList = buildIntegerListString(unitsList);
+        }
+        if (!percentagesList.isEmpty()) {
+            this.percentagesList = buildIntegerListString(percentagesList);
+        }
         //@@author
     }
 
@@ -77,12 +92,19 @@ public class XmlAdaptedTransaction {
         payer = new XmlAdaptedPerson(source.getPayer());
         amount = source.getAmount().toString();
         description = source.getDescription().value;
-        this.dateTime = source.getDateTime();
+        dateTime = source.getDateTime();
 
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         source.getPayees().asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         payees = payeesToStore;
+        splitMethod = source.getSplitMethod().toString();
+        if (!source.getUnits().isEmpty()) {
+            unitsList = buildIntegerListString(source.getUnits());
+        }
+        if (!source.getPercentages().isEmpty()) {
+            percentagesList = buildIntegerListString(source.getPercentages());
+        }
         //@@author
     }
 
@@ -103,6 +125,9 @@ public class XmlAdaptedTransaction {
         //@@author ongkc
         if (this.amount == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName()));
+        }
+        if (!this.amount.contains(".")) {
+            this.amount += ".00";
         }
         if (!Amount.isValidAmount(this.amount)) {
             throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
@@ -128,6 +153,12 @@ public class XmlAdaptedTransaction {
         final TransactionType transactionType = new TransactionType(this.transactionType);
 
         //@@author steven-jia
+        if (this.dateTime == null) {
+            throw new IllegalValueException(String.format
+                    (MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName()));
+        }
+        final Date dateTime = this.dateTime;
+
         if (this.payees == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
@@ -141,7 +172,33 @@ public class XmlAdaptedTransaction {
         }
         final UniquePersonList payees = convertedPayees;
 
-        return new Transaction(transactionType, payer, amount, description, dateTime, payees);
+        if (this.splitMethod == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    SplitMethod.class.getSimpleName()));
+        }
+        if (!SplitMethod.isValidSplitMethod(this.splitMethod)) {
+            throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
+        }
+        final SplitMethod splitMethod = new SplitMethod(this.splitMethod);
+
+        final List<Integer> units = new ArrayList<>();
+        if (this.unitsList != null) {
+            String[] unitsArray = this.unitsList.split(",");
+            for (String unit: unitsArray) {
+                units.add(Integer.valueOf(unit.trim()));
+            }
+        }
+
+        final List<Integer> percentages = new ArrayList<>();
+        if (this.percentagesList != null) {
+            String[] percentagesArray = this.percentagesList.split(",");
+            for (String percentage: percentagesArray) {
+                percentages.add(Integer.valueOf(percentage.trim()));
+            }
+        }
+
+        return new Transaction(transactionType, payer, amount, description, dateTime, payees,
+                splitMethod, units, percentages);
     }
 
     //@@author steven-jia
@@ -193,7 +250,24 @@ public class XmlAdaptedTransaction {
                 && Objects.equals(amount, otherTransaction.amount)
                 && Objects.equals(description, otherTransaction.description)
                 && Objects.equals(payees, otherTransaction.payees)
-                && Objects.equals(transactionType, otherTransaction.transactionType);
+                && Objects.equals(transactionType, otherTransaction.transactionType)
+                && Objects.equals(splitMethod, otherTransaction.splitMethod);
+    }
+
+    //@@author steven-jia
+    /**
+     * Converts integersList into a comma-separated string for storage
+     * @param integersList
+     */
+    private String buildIntegerListString(List<Integer> integersList) {
+        String integersListString = "";
+        for (int i = 0; i < integersList.size(); i++) {
+            integersListString += String.valueOf(integersList.get(i));
+            if (i != integersList.size() - 1) {
+                integersListString += ", ";
+            }
+        }
+        return integersListString;
     }
 
 }

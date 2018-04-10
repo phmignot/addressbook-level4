@@ -4,13 +4,16 @@ package seedu.address.testutil;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionType;
 import seedu.address.model.util.SampleDataUtil;
@@ -29,6 +32,9 @@ public class TransactionBuilder {
     private Date dateTime;
     private UniquePersonList payees;
     private TransactionType transactionType;
+    private SplitMethod splitMethod;
+    private List<Integer> unitsList;
+    private List<Integer> percentagesList;
 
     public TransactionBuilder() {
         transactionType = new TransactionType("payment");
@@ -46,6 +52,9 @@ public class TransactionBuilder {
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         payees = samplePayees;
+        splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+        unitsList = Collections.emptyList();
+        percentagesList = Collections.emptyList();
     }
 
     /**
@@ -58,22 +67,17 @@ public class TransactionBuilder {
         description = transactionToCopy.getDescription();
         dateTime = transactionToCopy.getDateTime();
         payees = transactionToCopy.getPayees();
+        transactionType = transactionToCopy.getTransactionType();
+        splitMethod = transactionToCopy.getSplitMethod();
+        unitsList = transactionToCopy.getUnits();
+        percentagesList = transactionToCopy.getPercentages();
     }
-
 
     /**
      * Sets the {@code payer} of the {@code Transaction} that we are building.
      */
     public TransactionBuilder withPayer(Person payer) {
         this.payer = payer;
-        return this;
-    }
-    /**
-     * Sets the {@code payer} of the {@code Transaction} that we are building.
-     * @param transactionType
-     */
-    public TransactionBuilder withTransactionType(String transactionType) {
-        this.transactionType = new TransactionType(transactionType);
         return this;
     }
     /**
@@ -93,12 +97,13 @@ public class TransactionBuilder {
     }
 
     /**
-     * Sets the {@code payeeName} of the {@code Transaction} that we are building.
+     * Sets the {@code payees} of the {@code Transaction} that we are building.
      */
     public TransactionBuilder withPayees(UniquePersonList payees) {
         this.payees = payees;
         return this;
     }
+
     /**
      * Sets the {@code date & time} of the {@code Transaction} that we are building.
      */
@@ -106,8 +111,44 @@ public class TransactionBuilder {
         this.dateTime = dateTime;
         return this;
     }
+    //@@author steven-jia
+    /**
+     * Sets the {@code payer} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+        return this;
+    }
+    /**
+     * Sets the {@code SplitMethod} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withSplitMethod(SplitMethod splitMethod) {
+        this.splitMethod = splitMethod;
+        return this;
+    }
 
+    /**
+     * Sets the units {@code List<Integer>} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withUnits(List<Integer> unitsList) {
+        this.unitsList = unitsList;
+        return this;
+    }
+
+    /**
+     * Sets the percentages {@code List<Integer>} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withPercentages(List<Integer> percentagesList) {
+        this.percentagesList = percentagesList;
+        return this;
+    }
+
+    //@@author phmignot
+    /**
+     * Builds a new {@code Transaction}.
+     */
     public Transaction build() {
-        return new Transaction(transactionType, payer, amount, description, dateTime, payees);
+        return new Transaction(transactionType, payer, amount, description, dateTime,
+                payees, splitMethod, unitsList, percentagesList);
     }
 }

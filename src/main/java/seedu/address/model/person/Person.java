@@ -78,9 +78,20 @@ public class Person {
         this.balance = newBalance;
     }
 
+    //@@author steven-jia
+    /**
+     * Update the balance of the person
+     * @param balanceToAdd
+     */
     public void addToBalance(Balance balanceToAdd) {
-        setBalance(this.balance.add(balanceToAdd));
+        Balance newBalance = this.balance.add(balanceToAdd);
+        if (newBalance.getDoubleValue() == 0) {
+            setBalance(new Balance("0.00"));
+        } else {
+            setBalance(newBalance);
+        }
     }
+    //@@author
 
     @Override
     public int hashCode() {
