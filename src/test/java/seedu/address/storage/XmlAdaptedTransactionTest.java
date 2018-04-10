@@ -57,14 +57,16 @@ public class XmlAdaptedTransactionTest {
     //@@author steven-jia
     @Test(expected = NullPointerException.class)
     public void toModelType_nullPayer_throwsNullPointerException() {
-        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE, null, VALID_AMOUNT, VALID_DESCRIPTION,
-                    validPayees, VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
+        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE, null,
+                VALID_AMOUNT, VALID_DESCRIPTION, validPayees,
+                VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
     }
 
     @Test
     public void toModelType_invalidAmount_throwsIllegalValueException() {
         XmlAdaptedTransaction transaction =
-                new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE, VALID_PAYER, INVALID_AMOUNT, VALID_DESCRIPTION, validPayees,
+                new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE, VALID_PAYER, INVALID_AMOUNT,
+                        VALID_DESCRIPTION, validPayees,
                         VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
         String expectedMessage = Amount.MESSAGE_AMOUNT_CONSTRAINTS;
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
