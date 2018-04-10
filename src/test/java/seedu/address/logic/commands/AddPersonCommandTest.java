@@ -177,12 +177,10 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public boolean addTransaction(Transaction transaction) {
-            return true;
-        }
+        public void addTransaction(Transaction transaction) {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
+        public void deleteTransaction(Transaction transaction) {}
 
         @Override
         public ObservableList<Debtor> getFilteredDebtors() {
