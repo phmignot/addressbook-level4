@@ -5,6 +5,7 @@ import static seedu.address.testutil.TypicalPersons.getTypicalPersons;
 import static seedu.address.testutil.TypicalTransactions.getTypicalTransactions;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -58,7 +59,11 @@ public class AddressBookBuilder {
      */
     public AddressBookBuilder withTransaction(Transaction transaction) {
         requireNonNull(transaction);
-        addressBook.addTransaction(transaction);
+        try {
+            addressBook.addTransaction(transaction);
+        } catch (CommandException ce) {
+            System.out.println(ce.getMessage());
+        }
         return this;
     }
     public AddressBook build() {
@@ -78,7 +83,11 @@ public class AddressBookBuilder {
             }
         }
         for (Transaction transaction : getTypicalTransactions()) {
-            ab.addTransaction(transaction);
+            try {
+                ab.addTransaction(transaction);
+            } catch (CommandException ce) {
+                System.out.println(ce.getMessage());
+            }
         }
         return ab;
     }

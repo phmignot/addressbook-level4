@@ -32,6 +32,7 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_SPLIT_METHOD + "SPLIT METHOD "
             + PREFIX_SPLIT_BY_UNITS + "LIST OF UNITS "
             + PREFIX_SPLIT_BY_PERCENTAGE + "LIST OF PERCENTAGES...\n"
+            //@@author steven-jia
             + "The transaction type options are: \"payment\" or \"paydebt\". \n"
             + "The split method options are: \"evenly\", \"units\", or \"percentage\". "
             + "Only add a split method if you are recording a payment (i.e. the transaction type is \"payment\"). \n"
@@ -71,12 +72,13 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_DESCRIPTION + "Amount owed for taxi ride "
             + PREFIX_PAYEE + "John Doe";
 
-    public static final String MESSAGE_SUCCESS = "New transaction added";
     public static final String MESSAGE_INVALID_NUMBER_OF_VALUES = "The number of %1$s values does not match"
             + " the number of persons involved. Remember to include the payer in the count.";
     public static final String MESSAGE_INVALID_PERCENTAGE_VALUES = "The sum of the percentages does not equal 100.";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
     public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
+    //@@author ongkc
+    public static final String MESSAGE_SUCCESS = "New transaction added";
 
     private final Transaction toAdd;
 

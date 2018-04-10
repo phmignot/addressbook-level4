@@ -80,13 +80,6 @@ public class TransactionBuilder {
         return this;
     }
     /**
-     * Sets the {@code payer} of the {@code Transaction} that we are building.
-     */
-    public TransactionBuilder withTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-        return this;
-    }
-    /**
      * Sets the {@code Amount} of the {@code Transaction} that we are building.
      */
     public TransactionBuilder withAmount(String amount) {
@@ -117,7 +110,14 @@ public class TransactionBuilder {
         this.dateTime = dateTime;
         return this;
     }
-
+    //@@author steven-jia
+    /**
+     * Sets the {@code payer} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+        return this;
+    }
     /**
      * Sets the {@code SplitMethod} of the {@code Transaction} that we are building.
      */
@@ -142,6 +142,7 @@ public class TransactionBuilder {
         return this;
     }
 
+    //@@author phmignot
     /**
      * Builds a new {@code Transaction}.
      */

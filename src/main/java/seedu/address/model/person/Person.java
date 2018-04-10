@@ -78,6 +78,7 @@ public class Person {
         this.balance = newBalance;
     }
 
+    //@@author steven-jia
     /**
      * Update the balance of the person
      * @param balanceToAdd
@@ -90,6 +91,7 @@ public class Person {
             setBalance(newBalance);
         }
     }
+    //@@author
 
     @Override
     public int hashCode() {

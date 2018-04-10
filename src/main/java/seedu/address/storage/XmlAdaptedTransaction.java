@@ -254,6 +254,7 @@ public class XmlAdaptedTransaction {
                 && Objects.equals(splitMethod, otherTransaction.splitMethod);
     }
 
+    //@@author steven-jia
     /**
      * Converts integersList into a comma-separated string for storage
      * @param integersList

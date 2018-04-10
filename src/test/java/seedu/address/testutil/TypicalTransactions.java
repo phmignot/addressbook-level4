@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -68,7 +69,11 @@ public class TypicalTransactions {
     public static AddressBook getTypicalAddressBook() {
         AddressBook ab = new AddressBook();
         for (Transaction transaction : getTypicalTransactions()) {
-            ab.addTransaction(transaction);
+            try {
+                ab.addTransaction(transaction);
+            } catch (CommandException ce) {
+                System.out.println(ce.getMessage());
+            }
         }
         return ab;
     }

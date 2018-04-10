@@ -1,14 +1,12 @@
 package seedu.address.model;
 
 import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayee;
-import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayer;
 
 import java.util.HashMap;
 
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
-import seedu.address.model.transaction.TransactionType;
 
 /**
  * Stores all the debts between the persons in SmartSplit.

@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
-import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Creditor;
@@ -284,7 +283,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Update each payer and payee(s) balance whenever each new transaction is added
+     * Update each payer and payee(s) balance whenever each new transaction is added or deleted
      */
     public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction) {
         updatePayerBalance(isAddingTransaction, transaction);
