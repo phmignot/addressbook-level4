@@ -206,7 +206,8 @@ public class ModelManager extends ComponentManager implements Model {
     //@@author phmignot
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException, PersonNotFoundException {
-        addressBook.updatePayerAndPayeesBalance(false, target);
+        addressBook.updatePayerAndPayeesBalance(false, target,
+                findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
         addressBook.removeTransaction(target);
         updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
         updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);

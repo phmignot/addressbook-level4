@@ -39,12 +39,14 @@ public class DeleteTransactionCommand extends UndoableCommand {
 
 
     @Override
-    public CommandResult executeUndoableCommand() throws CommandException, PersonNotFoundException {
+    public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(transactionToDelete);
         try {
             model.deleteTransaction(transactionToDelete);
         } catch (TransactionNotFoundException tnfe) {
             throw new AssertionError("The target transaction cannot be missing");
+        } catch (PersonNotFoundException e) {
+            throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
         }
         return new CommandResult(String.format(MESSAGE_DELETE_TRANSACTION_SUCCESS, transactionToDelete));
     }

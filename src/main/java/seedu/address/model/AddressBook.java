@@ -295,24 +295,6 @@ public class AddressBook implements ReadOnlyAddressBook {
             updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
         }
     }
-    /**
-     * Update each payer and payee(s) balance whenever each new transaction is added or deleted
-     */
-    public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction) {
-        updatePayerBalance(isAddingTransaction, transaction);
-        for (int i = 0; i < transaction.getPayees().asObservableList().size(); i++) {
-            Person payee = transaction.getPayees().asObservableList().get(i);
-            Integer splitMethodValuesListIndex = i + 1;
-            updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
-        }
-    }
-    /**
-     * Update payer balance whenever a new transaction is added or deleted
-     */
-    private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction) {
-        transaction.getPayer().addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
-                transaction));
-    }
 
     /**
      * Update payer balance whenever a new transaction is added or deleted
