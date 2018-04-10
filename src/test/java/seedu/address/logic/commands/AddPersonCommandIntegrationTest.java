@@ -41,8 +41,9 @@ public class AddPersonCommandIntegrationTest {
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() throws PersonNotFoundException {
-        Person personInList = model.getAddressBook().getPersonList().get(0);
-        assertCommandFailure(prepareCommand(personInList, model), model, AddPersonCommand.MESSAGE_DUPLICATE_PERSON);
+        Person personInList = model.getAddressBook().getPersonList().get(6);
+        assertCommandFailure(prepareCommand(personInList, model), model,
+                AddPersonCommand.MESSAGE_PERSON_EXISTS_IN_TRANSACTION);
     }
 
     /**
