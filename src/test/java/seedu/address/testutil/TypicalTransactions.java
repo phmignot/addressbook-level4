@@ -1,8 +1,5 @@
 package seedu.address.testutil;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,7 +38,7 @@ public class TypicalTransactions {
     private static UniquePersonList payeeGeorge = new UniquePersonList();
     private static UniquePersonList payeeFiona = new UniquePersonList();
 
-    private static Date date;
+    private static Date date = new Date();
 
     private static SplitMethod splitEvenly = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
     private static SplitMethod splitByUnits = new SplitMethod(SplitMethod.SPLIT_METHOD_UNITS);
@@ -63,18 +60,18 @@ public class TypicalTransactions {
                     .withSplitMethod(splitEvenly).build();
             t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
                     .withDescription("Food for barbecue").withPayees(payee4)
-                    .withSplitMethod(splitByUnits).withUnits(unitsList).build();
+                    .withSplitMethod(splitByUnits).withUnits(unitsList).withDate(date).build();
             t3 = new TransactionBuilder().withPayer(person5).withAmount("0.00")
                     .withDescription("Open air concert").withPayees(payee6)
-                    .withSplitMethod(splitByPercentage).withPercentages(percentagesList).build();
+                    .withSplitMethod(splitByPercentage).withPercentages(percentagesList).withDate(date).build();
             t4 = new TransactionBuilder().withPayer(TypicalPersons.GEORGE).withAmount("0.00")
                     .withDescription("Transport")
                     .withPayees(payeeFiona)
-                    .withSplitMethod(splitEvenly).build();
+                    .withSplitMethod(splitEvenly).withDate(date).build();
             t5 = new TransactionBuilder().withPayer(TypicalPersons.FIONA)
                     .withAmount("0.00").withDescription("Dinner")
-                    .withPayees(payeeFiona)
-                    .withSplitMethod(splitEvenly).build();
+                    .withPayees(payeeFiona).withDate(date)
+                    .withSplitMethod(splitEvenly).withDate(date).build();
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         }
