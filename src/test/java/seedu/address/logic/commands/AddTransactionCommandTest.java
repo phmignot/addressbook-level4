@@ -169,9 +169,7 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public boolean addTransaction(Transaction transaction) {
-            return true;
-        }
+        public void addTransaction(Transaction transaction) {}
 
         @Override
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
@@ -207,10 +205,9 @@ public class AddTransactionCommandTest {
         final ArrayList<Transaction> transactionsAdded = new ArrayList<>();
 
         @Override
-        public boolean addTransaction(Transaction transaction) {
+        public void addTransaction(Transaction transaction) {
             requireNonNull(transaction);
             transactionsAdded.add(transaction);
-            return true;
         }
 
         @Override

@@ -241,7 +241,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.logic.util.BalanceCalculationUtil;
+import seedu.address.logic.util.CalculationUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
