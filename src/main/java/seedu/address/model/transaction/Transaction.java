@@ -42,24 +42,6 @@ public class Transaction {
         initializeSplitMethodListValues(units, percentages);
     }
 
-    /**
-     * Constructor for XmlAdaptedTransaction to use when converting to the model's Transaction object.
-     * Initializes units and percentages to empty lists since they are not stored.
-     */
-    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, UniquePersonList payees, SplitMethod splitMethod) {
-        this.transactionType = transactionType;
-        this.dateTime = dateTime;
-        this.id = lastTransactionId++;
-        this.payer = payer;
-        this.amount = amount;
-        this.description = description;
-        this.payees = payees;
-        this.splitMethod = splitMethod;
-        this.units = new ArrayList<>();
-        this.percentages = new ArrayList<>();
-    }
-
     public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
                        Date dateTime, Set<Person> payeesToAdd, SplitMethod splitMethod,
                        List<Integer> units, List<Integer> percentages) {
@@ -90,12 +72,15 @@ public class Transaction {
      * or initializes the split method percentages list if the split method is by percentage.
      */
     private void initializeSplitMethodListValues(List<Integer> units, List<Integer> percentages) {
-        if (this.splitMethod.equals(SplitMethod.SPLIT_METHOD_UNITS)) {
+        if (this.splitMethod.toString().equals(SplitMethod.SPLIT_METHOD_UNITS)) {
             this.units = new ArrayList<>(units);
             this.percentages = new ArrayList<>();
-        } else if (this.splitMethod.equals(SplitMethod.SPLIT_METHOD_PERCENTAGE)) {
+        } else if (this.splitMethod.toString().equals(SplitMethod.SPLIT_METHOD_PERCENTAGE)) {
             this.units = new ArrayList<>();
             this.percentages = new ArrayList<>(percentages);
+        } else {
+            this.units = new ArrayList<>();
+            this.percentages = new ArrayList<>();
         }
     }
 
@@ -131,11 +116,11 @@ public class Transaction {
         return splitMethod;
     }
 
-    public ArrayList<Integer> getUnits() {
+    public List<Integer> getUnits() {
         return units;
     }
 
-    public ArrayList<Integer> getPercentages() {
+    public List<Integer> getPercentages() {
         return percentages;
     }
 
@@ -175,11 +160,13 @@ public class Transaction {
                 .append("\n Description: ")
                 .append(getDescription().toString())
                 .append("\n Payees: ")
-                .append(getPayees().asObservableList().toString());
-        if (!splitMethod.method.equals(SplitMethod.Method.NOT_APPLICABLE)) {
-            builder.append("\n Split method: ")
-                    .append(getSplitMethod());
-        }
+                .append(getPayees().asObservableList().toString())
+                .append("\n Split method: ")
+                .append(getSplitMethod().toString())
+                .append("\n Units list: ")
+                .append(getUnits().toString())
+                .append("\n Percentages list: ")
+                .append(getPercentages().toString());
         return builder.toString();
     }
 

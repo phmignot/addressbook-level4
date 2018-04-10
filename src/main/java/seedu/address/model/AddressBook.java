@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
+import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Creditor;
@@ -28,6 +29,7 @@ import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
+import seedu.address.model.transaction.TransactionType;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 /**
@@ -268,13 +270,17 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Adds a {@code transaction} to the list of transactions.
      */
-    public boolean addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        if (debtsTable.updateDebts(transaction, true)) {
-            debtsTable.display();
-            return true;
+    public void addTransaction(Transaction transaction) throws CommandException {
+        if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            Person payeeToFind = transaction.getPayees().asObservableList().get(0);
+            if (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
+                    || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0) {
+                throw new CommandException("Payee(s) is not owed any debt");
+            }
         }
-        return false;
+        transactions.add(transaction);
+        debtsTable.updateDebts(transaction, true);
+        debtsTable.display();
     }
 
     /**
@@ -309,14 +315,10 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Removes {@code target} from the list of transactions.
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
      */
-    public boolean removeTransaction(Transaction target) throws TransactionNotFoundException {
+    public void removeTransaction(Transaction target) throws TransactionNotFoundException {
+        transactions.remove(target);
         debtsTable.updateDebts(target, false);
         debtsTable.display();
-        if (transactions.remove(target)) {
-            return true;
-        } else {
-            throw new TransactionNotFoundException();
-        }
     }
 
 }

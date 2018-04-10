@@ -32,8 +32,8 @@ public class DebtsList extends HashMap<Person, Balance> {
      * Displays the content of DebtsList in the terminal.
      */
     public void display() {
-        System.out.print("dl =");
+        System.out.print("dl = ");
         this.forEach(((person, balance) -> System.out.print(person.getName().fullName
-            + " : " + balance.toString())));
+            + ": " + balance.toString() + " ")));
     }
 }

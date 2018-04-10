@@ -55,7 +55,7 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_PAYEE + "Bernice Yu "
             + PREFIX_SPLIT_METHOD + "percentage "
             + PREFIX_SPLIT_BY_PERCENTAGE + "40, 40, 20 \n"
-            + "Example 2: " + COMMAND_WORD + " "
+            + "Example 3: " + COMMAND_WORD + " "
             + PREFIX_TRANSACTION_TYPE + "payment "
             + PREFIX_PAYER + "Bernice Yu "
             + PREFIX_AMOUNT + "35.00 "
@@ -64,7 +64,7 @@ public class AddTransactionCommand extends UndoableCommand {
             + PREFIX_PAYEE + "John Doe "
             + PREFIX_SPLIT_METHOD + "units "
             + PREFIX_SPLIT_BY_UNITS + "4, 2, 1 \n"
-            + "Example 3: " + COMMAND_WORD + " "
+            + "Example 4: " + COMMAND_WORD + " "
             + PREFIX_TRANSACTION_TYPE + "paydebt "
             + PREFIX_PAYER + "Bernice Yu "
             + PREFIX_AMOUNT + "40.00 "
@@ -92,9 +92,7 @@ public class AddTransactionCommand extends UndoableCommand {
     public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(model);
         try {
-            if (!model.addTransaction(toAdd)) {
-                throw new CommandException("Payee(s) has no debt");
-            }
+            model.addTransaction(toAdd);
             return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);

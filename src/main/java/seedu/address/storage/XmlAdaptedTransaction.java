@@ -60,7 +60,8 @@ public class XmlAdaptedTransaction {
      * Constructs an {@code XmlAdaptedTransaction} with the given person details.
      */
     public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
-                                 UniquePersonList payees, SplitMethod splitMethod) {
+                                 UniquePersonList payees, SplitMethod splitMethod, List<Integer> unitsList,
+                                 List<Integer> percentagesList) {
         this.payer = new XmlAdaptedPerson(payer);
         this.transactionType = transactionType;
         this.amount = amount;
@@ -72,6 +73,12 @@ public class XmlAdaptedTransaction {
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         this.payees = payeesToStore;
         this.splitMethod = splitMethod.toString();
+        if (!unitsList.isEmpty()) {
+            this.unitsList = buildIntegerListString(unitsList);
+        }
+        if (!percentagesList.isEmpty()) {
+            this.percentagesList = buildIntegerListString(percentagesList);
+        }
         //@@author
     }
 
@@ -92,6 +99,12 @@ public class XmlAdaptedTransaction {
         source.getPayees().asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         payees = payeesToStore;
         splitMethod = source.getSplitMethod().toString();
+        if (!source.getUnits().isEmpty()) {
+            unitsList = buildIntegerListString(source.getUnits());
+        }
+        if (!source.getPercentages().isEmpty()) {
+            percentagesList = buildIntegerListString(source.getPercentages());
+        }
         //@@author
     }
 
@@ -140,6 +153,12 @@ public class XmlAdaptedTransaction {
         final TransactionType transactionType = new TransactionType(this.transactionType);
 
         //@@author steven-jia
+        if (this.dateTime == null) {
+            throw new IllegalValueException(String.format
+                    (MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName()));
+        }
+        final Date dateTime = this.dateTime;
+
         if (this.payees == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
@@ -162,8 +181,24 @@ public class XmlAdaptedTransaction {
         }
         final SplitMethod splitMethod = new SplitMethod(this.splitMethod);
 
+        final List<Integer> units = new ArrayList<>();
+        if (this.unitsList != null) {
+            String[] unitsArray = this.unitsList.split(",");
+            for (String unit: unitsArray) {
+                units.add(Integer.valueOf(unit.trim()));
+            }
+        }
+
+        final List<Integer> percentages = new ArrayList<>();
+        if (this.percentagesList != null) {
+            String[] percentagesArray = this.percentagesList.split(",");
+            for (String percentage: percentagesArray) {
+                percentages.add(Integer.valueOf(percentage.trim()));
+            }
+        }
+
         return new Transaction(transactionType, payer, amount, description, dateTime, payees,
-                splitMethod);
+                splitMethod, units, percentages);
     }
 
     //@@author steven-jia
@@ -217,6 +252,21 @@ public class XmlAdaptedTransaction {
                 && Objects.equals(payees, otherTransaction.payees)
                 && Objects.equals(transactionType, otherTransaction.transactionType)
                 && Objects.equals(splitMethod, otherTransaction.splitMethod);
+    }
+
+    /**
+     * Converts integersList into a comma-separated string for storage
+     * @param integersList
+     */
+    private String buildIntegerListString(List<Integer> integersList) {
+        String integersListString = "";
+        for (int i = 0; i < integersList.size(); i++) {
+            integersListString += String.valueOf(integersList.get(i));
+            if (i != integersList.size() - 1) {
+                integersListString += ", ";
+            }
+        }
+        return integersListString;
     }
 
 }

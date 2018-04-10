@@ -89,7 +89,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
-        if (findTransactionsWithPayer(person) & findTransactionsWithPayee(person)) {
+        if (findTransactionsWithPayer(person) && findTransactionsWithPayee(person)) {
             addressBook.addPerson(person);
         }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -191,33 +191,29 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredCreditors);
     }
     @Override
-    public boolean addTransaction(Transaction transaction) {
-        if (addressBook.addTransaction(transaction)) {
-            addressBook.updatePayerAndPayeesBalance(true, transaction);
-            updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
-            updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
-            updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-            updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-            updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-            indicateAddressBookChanged();
-            return true;
-        }
-        return false;
+    public void addTransaction(Transaction transaction) throws CommandException {
+        addressBook.addTransaction(transaction);
+        addressBook.updatePayerAndPayeesBalance(true, transaction);
+        updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        indicateAddressBookChanged();
     }
-
 
     //@@author phmignot
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
-        if (addressBook.removeTransaction(target)) {
-            addressBook.updatePayerAndPayeesBalance(false, target);
-            updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
-            updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-            updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
-            updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-            indicateAddressBookChanged();
-        }
+        addressBook.updatePayerAndPayeesBalance(false, target);
+        addressBook.removeTransaction(target);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
+        updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        indicateAddressBookChanged();
     }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
@@ -228,7 +224,6 @@ public class ModelManager extends ComponentManager implements Model {
     public ObservableList<Person> getFilteredPersonList() {
         return FXCollections.unmodifiableObservableList(filteredPersons);
     }
-
 
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {

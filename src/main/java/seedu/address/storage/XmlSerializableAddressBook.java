@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 
@@ -61,9 +62,12 @@ public class XmlSerializableAddressBook {
             addressBook.addPerson(p.toModelType());
         }
         for (XmlAdaptedTransaction tr : transactions) {
-            addressBook.addTransaction(tr.toModelType());
+            try {
+                addressBook.addTransaction(tr.toModelType());
+            } catch (CommandException e) {
+                e.printStackTrace();
+            }
         }
-
 
         return addressBook;
     }
