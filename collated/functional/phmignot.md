@@ -109,6 +109,8 @@ public class TransactionCard extends UiPart<Region> {
     @FXML
     private Label description;
     @FXML
+    private Label transactionType;
+    @FXML
     private FlowPane payees;
     @FXML
     private Label date;
@@ -120,9 +122,16 @@ public class TransactionCard extends UiPart<Region> {
         payerName.setText(transaction.getPayer().getName().fullName);
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
-        for (Person payee : transaction.getPayees()) {
+        transactionType.setText(transaction.getTransactionType().toString().substring(0, 1).toUpperCase()
+                + transaction.getTransactionType().toString().substring(1));
+
+        int numPayees = transaction.getPayees().asObservableList().size();
+        for (int i = 0; i < numPayees; i++) {
+            Person payee = transaction.getPayees().asObservableList().get(i);
             payees.getChildren().add(new Label(payee.getName().fullName));
-            payees.getChildren().add(new Label(", "));
+            if (i != numPayees - 1) {
+                payees.getChildren().add(new Label(", "));
+            }
         }
         date.setText(String.valueOf(transaction.getDateTime()));
     }
@@ -232,26 +241,26 @@ public class DebtsList extends HashMap<Person, Balance> {
     }
 
     /**
-     * Updates the debt with a person. If the person has no previous debt, then the person
+     * Updates the debt of a person. If the person has no previous debt, then the person
      * is added to the HashMap.
      * @param person that owes or is owed money.
-     * @param debt to add to the old debt.
+     * @param debtToAdd to add to the old debt.
      */
-    public void updateDebt(Person person, Balance debt) {
+    public void updateDebt(Person person, Balance debtToAdd) {
         if (!this.containsKey(person)) {
             this.put(person, new Balance("0.00"));
         }
         Balance oldDebts = this.get(person);
-        this.replace(person, oldDebts.add(debt));
+        this.replace(person, oldDebts.add(debtToAdd));
     }
 
     /**
      * Displays the content of DebtsList in the terminal.
      */
     public void display() {
-        System.out.print("dl =");
+        System.out.print("dl = ");
         this.forEach(((person, balance) -> System.out.print(person.getName().fullName
-            + " : " + balance.toString())));
+            + ": " + balance.toString() + " ")));
     }
 }
 ```
@@ -259,18 +268,15 @@ public class DebtsList extends HashMap<Person, Balance> {
 ``` java
     @Override
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
-        String transactionType = DeleteTransactionCommand.COMMAND_WORD;
-        try {
-            addressBook.updatePayerAndPayeesDebt(transactionType , target.getAmount(),
-                    findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
-        }   catch (PersonNotFoundException e) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
-        }
+        addressBook.updatePayerAndPayeesBalance(false, target);
         addressBook.removeTransaction(target);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
@@ -282,11 +288,21 @@ public class DebtsList extends HashMap<Person, Balance> {
         return FXCollections.unmodifiableObservableList(filteredPersons);
     }
 
-
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+    @Override
+    public void updateDebtorList(Predicate<Debtor> predicate) {
+        requireNonNull(predicate);
+        filteredDebtors.setPredicate(predicate);
+    }
+
+    @Override
+    public void updateCreditorList(Predicate<Creditor> predicate) {
+        requireNonNull(predicate);
+        filteredCreditors.setPredicate(predicate);
     }
 
 ```
@@ -294,7 +310,7 @@ public class DebtsList extends HashMap<Person, Balance> {
 ``` java
 public class DebtsTable extends HashMap<Person, DebtsList> {
 
-    private final ObservableList internalList = FXCollections.observableArrayList();
+    private DebtsTable internalList;
 
     public DebtsTable() {
         super();
@@ -306,23 +322,25 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
      * payerDebt is a positive {@Code Balance} value, because the payer is owed.
      * @param transaction to register the table.
      */
-    public void updateDebts(String typeOfTransaction, Transaction transaction) {
+    public void updateDebts(Transaction transaction, Boolean isAddingTransaction) {
         Person payer = transaction.getPayer();
         if (!this.containsKey(payer)) {
             this.add(payer);
             System.out.println("Adding payer " + payer.getName().fullName);
         }
-        DebtsList payerDebtsLit = this.get(payer);
-        Balance payerDebt = calculatePayeeDebt(typeOfTransaction, transaction.getAmount(), transaction.getPayees());
-        Balance payeeDebt = payerDebt.getInverse();
-        for (Person payee: transaction.getPayees()) {
+        DebtsList payerDebtsList = this.get(payer);
+        for (int i = 0; i < transaction.getPayees().asObservableList().size(); i++) {
+            Person payee = transaction.getPayees().asObservableList().get(i);
             if (!this.containsKey(payee)) {
                 this.add(payee);
                 System.out.println("Adding payee " + payee.getName().fullName);
             }
-            DebtsList payeeDebtsLit = this.get(payee);
-            payerDebtsLit.updateDebt(payee, payeeDebt);
-            payeeDebtsLit.updateDebt(payer, payerDebt);
+            Balance payerDebtToAdd = calculateAmountToAddForPayee(isAddingTransaction,
+                    i + 1, transaction);
+            Balance payeeDebtToAdd = payerDebtToAdd.getInverse();
+            DebtsList payeeDebtsList = this.get(payee);
+            payerDebtsList.updateDebt(payee, payeeDebtToAdd);
+            payeeDebtsList.updateDebt(payer, payerDebtToAdd);
         }
     }
 
@@ -330,21 +348,17 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
         this.putIfAbsent(personToAdd, new DebtsList());
     }
 
-    public ObservableList asObservableList() {
-        return FXCollections.unmodifiableObservableList(internalList);
+    public DebtsTable asObservableList() {
+        return internalList;
     }
 
-    public void setDebtsTable(DebtsTable debtsTable) {
-        requireAllNonNull(debtsTable);
-        internalList.setAll(debtsTable);
-    }
     /**
      * Displays the content of the Debts Table in the terminal.
      */
     public void display() {
         System.out.println("DEBTS TABLE : ");
         this.forEach(((person, debtsList) -> {
-            System.out.println(person.getName().fullName + " : ");
+            System.out.println(person.getName().fullName + ": ");
             debtsList.display();
             System.out.println();
         }));
@@ -358,5 +372,14 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
 ``` java
     /** Deletes the given person. */
     void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException;
+
+    ObservableList<Debtor> getFilteredDebtors();
+
+    ObservableList<Creditor> getFilteredCreditors();
+
+    void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors);
+
+    void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors);
+
 }
 ```
