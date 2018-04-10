@@ -80,6 +80,7 @@ public class AddTransactionCommand extends UndoableCommand {
     //@@author ongkc
     public static final String MESSAGE_SUCCESS = "New transaction added";
 
+
     private final Transaction toAdd;
 
     /**

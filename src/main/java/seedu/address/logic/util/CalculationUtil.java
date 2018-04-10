@@ -35,8 +35,10 @@ public class CalculationUtil {
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
-            return null;
+            assert false : transaction.getTransactionType().value;
+            ;
         }
+        return null;
     }
 
     /**
@@ -56,8 +58,9 @@ public class CalculationUtil {
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAmountToAddForPayeeForPaydebtTransaction(transaction);
         default:
-            return null;
+            assert false : transaction.getTransactionType().value;
         }
+        return null;
     }
 
     //@@author ongkc

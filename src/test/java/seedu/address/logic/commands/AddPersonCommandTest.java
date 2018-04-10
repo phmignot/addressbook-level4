@@ -163,6 +163,7 @@ public class AddPersonCommandTest {
 
         @Override
         public ObservableList<Transaction> getFilteredTransactionList() {
+            fail("This method should not be called.");
             return null;
         }
 
@@ -173,10 +174,9 @@ public class AddPersonCommandTest {
 
         @Override
         public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
-
+            fail("This method should not be called.");
         }
 
-        @Override
         public void addTransaction(Transaction transaction) {}
 
         @Override
@@ -184,22 +184,24 @@ public class AddPersonCommandTest {
 
         @Override
         public ObservableList<Debtor> getFilteredDebtors() {
+            fail("This method should not be called.");
             return null;
         }
 
         @Override
         public ObservableList<Creditor> getFilteredCreditors() {
+            fail("This method should not be called.");
             return null;
         }
 
         @Override
         public void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors) {
-
+            fail("This method should not be called.");
         }
 
         @Override
         public void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors) {
-
+            fail("This method should not be called.");
         }
     }
 
@@ -227,7 +229,7 @@ public class AddPersonCommandTest {
         final ArrayList<Person> personsAdded = new ArrayList<>();
 
         @Override
-        public void addPerson(Person person) throws DuplicatePersonException {
+        public void addPerson(Person person) {
             requireNonNull(person);
             personsAdded.add(person);
         }
