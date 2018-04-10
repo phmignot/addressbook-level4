@@ -4,7 +4,9 @@ package seedu.address.testutil;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -31,6 +33,8 @@ public class TransactionBuilder {
     private UniquePersonList payees;
     private TransactionType transactionType;
     private SplitMethod splitMethod;
+    private List<Integer> unitsList;
+    private List<Integer> percentagesList;
 
     public TransactionBuilder() {
         transactionType = new TransactionType("payment");
@@ -48,7 +52,9 @@ public class TransactionBuilder {
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
         payees = samplePayees;
-        splitMethod = new SplitMethod("1");
+        splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+        unitsList = Collections.emptyList();
+        percentagesList = Collections.emptyList();
     }
 
     /**
@@ -62,6 +68,8 @@ public class TransactionBuilder {
         payees = transactionToCopy.getPayees();
         transactionType = transactionToCopy.getTransactionType();
         splitMethod = transactionToCopy.getSplitMethod();
+        unitsList = transactionToCopy.getUnits();
+        percentagesList = transactionToCopy.getPercentages();
     }
 
     /**
@@ -119,10 +127,26 @@ public class TransactionBuilder {
     }
 
     /**
+     * Sets the units {@code List<Integer>} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withUnits(List<Integer> unitsList) {
+        this.unitsList = unitsList;
+        return this;
+    }
+
+    /**
+     * Sets the percentages {@code List<Integer>} of the {@code Transaction} that we are building.
+     */
+    public TransactionBuilder withPercentages(List<Integer> percentagesList) {
+        this.percentagesList = percentagesList;
+        return this;
+    }
+
+    /**
      * Builds a new {@code Transaction}.
      */
     public Transaction build() {
         return new Transaction(transactionType, payer, amount, description, dateTime,
-                payees, splitMethod);
+                payees, splitMethod, unitsList, percentagesList);
     }
 }

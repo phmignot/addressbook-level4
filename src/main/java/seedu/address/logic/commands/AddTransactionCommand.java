@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_BY_PERCENTAGE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_METHOD;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TRANSACTION_TYPE;
 
@@ -29,18 +30,39 @@ public class AddTransactionCommand extends UndoableCommand {
             + "[" + PREFIX_PAYEE + "PAYEE NAME] "
             + PREFIX_SPLIT_METHOD + "SPLIT METHOD...\n"
             + "The transaction type options are: \"payment\" or \"paydebt\". \n"
-            + "Only add a split method if you are recording a payment. \n"
-            + "Your split method options are: \"evenly\", \"units\", or \"percentage\". \n"
-            + "Example: " + COMMAND_WORD + " "
+            + "Only add a split method if you are recording a payment (i.e. the transaction type is \"payment\"). \n"
+            + "The split method options are: \"evenly\", \"units\", or \"percentage\". \n"
+            + "Units and percentages must be entered as a comma-separated list. "
+            + "The first number in the list is associated with the payer "
+            + "and subsequent numbers are associated with each payee in the order in which they are listed. \n"
+            + "Example 1: " + COMMAND_WORD + " "
             + PREFIX_TRANSACTION_TYPE + "payment "
             + PREFIX_PAYER + "John Doe "
-            + PREFIX_AMOUNT + "100.00 "
+            + PREFIX_AMOUNT + "120.00 "
             + PREFIX_DESCRIPTION + "Taxi ride to NUS "
             + PREFIX_PAYEE + "Alex Yeoh "
             + PREFIX_PAYEE + "Bernice Yu "
-            + PREFIX_SPLIT_METHOD + "evenly";
+            + PREFIX_SPLIT_METHOD + "evenly \n"
+            + "Example 2: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "payment "
+            + PREFIX_PAYER + "Alex Yeoh "
+            + PREFIX_AMOUNT + "50.00 "
+            + PREFIX_DESCRIPTION + "Team dinner "
+            + PREFIX_PAYEE + "John Doe "
+            + PREFIX_PAYEE + "Bernice Yu "
+            + PREFIX_SPLIT_METHOD + "percentage"
+            + PREFIX_SPLIT_BY_PERCENTAGE + "40, 40, 20 \n"
+            + "Example 3: " + COMMAND_WORD + " "
+            + PREFIX_TRANSACTION_TYPE + "paydebt "
+            + PREFIX_PAYER + "Bernice Yu "
+            + PREFIX_AMOUNT + "40.00 "
+            + PREFIX_DESCRIPTION + "Amount owed for taxi ride "
+            + PREFIX_PAYEE + "John Doe";
 
     public static final String MESSAGE_SUCCESS = "New transaction added";
+    public static final String MESSAGE_INVALID_NUMBER_OF_VALUES = "The number of %1$s values does not match"
+            + " the number of persons involved. Remember to include the payer in the count.";
+    public static final String MESSAGE_INVALID_PERCENTAGE_VALUES = "The sum of the percentages does not equal 100.";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
     public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
 
@@ -58,7 +80,6 @@ public class AddTransactionCommand extends UndoableCommand {
     public CommandResult executeUndoableCommand() throws CommandException {
         requireNonNull(model);
         try {
-
             if (!model.addTransaction(toAdd)) {
                 throw new CommandException("Payee(s) has no debt");
             }

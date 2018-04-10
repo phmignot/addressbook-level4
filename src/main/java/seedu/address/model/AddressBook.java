@@ -2,8 +2,8 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.commands.DeletePersonCommand.MESSAGE_DEBT_NOT_PAID;
-import static seedu.address.logic.util.CalculationUtil.calculatePayeeDebt;
-import static seedu.address.logic.util.CalculationUtil.calculatePayerDebt;
+import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayee;
+import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +28,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
 import seedu.address.model.transaction.Amount;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
@@ -283,23 +284,30 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Update each payer and payee(s) balance whenever each new transaction is added
      */
-    public void updatePayerAndPayeesDebt(String transactionType, Amount amount, Person payer,
-                                            UniquePersonList payees) {
-        updatePayerDebt(transactionType, amount, payer, payees);
+    public void updatePayerAndPayeesBalance(String transactionType, Amount amount, Person payer,
+                                            UniquePersonList payees, SplitMethod splitMethod,
+                                            List<Integer> units, List<Integer> percentages) {
+        updatePayerBalance(transactionType, amount, payer, payees, splitMethod, units, percentages);
         for (Person payee: payees) {
-            updatePayeeDebt(transactionType, amount, payee, payees); }
+            updatePayeeBalance(transactionType, amount, payee, payees, splitMethod, units, percentages);
+        }
     }
     /**
      * Update payer balance whenever each new transaction is added
      */
-    private void updatePayerDebt(String transactionType, Amount amount, Person payer, UniquePersonList payees) {
-        payer.addToBalance(calculatePayerDebt(transactionType, amount, payees));
+    private void updatePayerBalance(String transactionType, Amount amount, Person payer,
+                                    UniquePersonList payees, SplitMethod splitMethod,
+                                    List<Integer> units, List<Integer> percentages) {
+        payer.addToBalance(calculateAmountToAddForPayer(transactionType, amount, payees,
+                splitMethod, units, percentages));
     }
     /**
      * Update payee balance whenever each new transaction is added
      */
-    private void updatePayeeDebt(String transactionType, Amount amount, Person payee, UniquePersonList payees) {
-        payee.addToBalance(calculatePayeeDebt(transactionType, amount, payees));
+    private void updatePayeeBalance(String transactionType, Amount amount, Person payee, UniquePersonList payees,
+                                    SplitMethod splitMethod, List<Integer> units, List<Integer> percentages) {
+        payee.addToBalance(calculateAmountToAddForPayee(transactionType, amount, payees,
+                splitMethod, units, percentages));
     }
     /**
      * Removes {@code target} from the list of transactions.

@@ -197,8 +197,9 @@ public class ModelManager extends ComponentManager implements Model {
         String transactionType = transaction.getTransactionType().toString();
 
         if (addressBook.addTransaction(transaction)) {
-            addressBook.updatePayerAndPayeesDebt(transactionType, transaction.getAmount(),
-                    transaction.getPayer(), transaction.getPayees());
+            addressBook.updatePayerAndPayeesBalance(transactionType, transaction.getAmount(),
+                    transaction.getPayer(), transaction.getPayees(), transaction.getSplitMethod(),
+                    transaction.getUnits(), transaction.getPercentages());
             updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
             updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
             updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
@@ -216,8 +217,9 @@ public class ModelManager extends ComponentManager implements Model {
     public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
         String transactionType = DeleteTransactionCommand.COMMAND_WORD;
         try {
-            addressBook.updatePayerAndPayeesDebt(transactionType, target.getAmount(),
-                    findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
+            addressBook.updatePayerAndPayeesBalance(transactionType, target.getAmount(),
+                    findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()),
+                    target.getSplitMethod(), target.getUnits(), target.getPercentages());
         } catch (PersonNotFoundException e) {
             throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
         }

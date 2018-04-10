@@ -1,19 +1,25 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_INVALID_NUMBER_OF_VALUES;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_INVALID_PERCENTAGE_VALUES;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYER;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_BY_PERCENTAGE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_BY_UNITS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SPLIT_METHOD;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TRANSACTION_TYPE;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -36,6 +42,8 @@ import seedu.address.model.transaction.TransactionType;
 public class AddTransactionCommandParser implements Parser<AddTransactionCommand> {
     private TransactionType transactionType;
     private SplitMethod splitMethod;
+    private List<Integer> units = Collections.emptyList();
+    private List<Integer> percentages = Collections.emptyList();
 
     /**
      * Parses the given {@code String} of arguments in the context of the AddTransactionCommand
@@ -45,7 +53,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
     public AddTransactionCommand parse(String args, Model model) throws ParseException, CommandException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
-                        PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD);
+                        PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS,
+                        PREFIX_SPLIT_BY_PERCENTAGE);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
                 PREFIX_DESCRIPTION, PREFIX_PAYEE)
@@ -64,15 +73,17 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
 
         if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
             try {
-                splitMethod = ParserUtil.parseSplitMethod(argMultimap.getAllValues(PREFIX_SPLIT_METHOD));
+                splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
                 switch (splitMethod.method) {
-                    case EVENLY:
-                        break;
-                    case UNITS:
-                        break;
-                    case PERCENTAGE:
-                        break;
-                    default:
+                case EVENLY:
+                    break;
+                case UNITS:
+                    units = ParserUtil.parseUnitsList(argMultimap.getValue(PREFIX_SPLIT_BY_UNITS));
+                    break;
+                case PERCENTAGE:
+                    percentages = ParserUtil.parsePercentagesList(argMultimap.getValue(PREFIX_SPLIT_BY_PERCENTAGE));
+                    break;
+                default:
                 }
             } catch (IllegalValueException ive) {
                 throw new ParseException(ive.getMessage(), ive);
@@ -88,16 +99,44 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             UniquePersonList payees = model.getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
 
-            if (payees.contains(payer)) {
-                throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
-            }
+            validatePayees(payer, payees);
+            validateSplitMethodValues(payees, splitMethod, units, percentages);
+
             Transaction transaction = new Transaction(transactionType, payer, amount, description, dateTime,
-                    payees, splitMethod);
+                    payees, splitMethod, units, percentages);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
             throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
+        }
+    }
+    /**
+     * Checks list of units and list of percentages for validity
+     */
+    private void validateSplitMethodValues(UniquePersonList payees, SplitMethod splitMethod,
+                                           List<Integer> units, List<Integer> percentages) throws CommandException {
+        if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
+            if (units.size() != payees.asObservableList().size() + 1) {
+                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+            }
+        } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
+            if (percentages.size() != payees.asObservableList().size() + 1) {
+                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+            }
+            Integer total = 0;
+            for (Integer percentage: percentages) {
+                total += percentage;
+            }
+            if (total != 100) {
+                throw new CommandException(MESSAGE_INVALID_PERCENTAGE_VALUES);
+            }
+        }
+    }
+
+    private void validatePayees(Person payer, UniquePersonList payees) throws CommandException {
+        if (payees.contains(payer)) {
+            throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
         }
     }
 

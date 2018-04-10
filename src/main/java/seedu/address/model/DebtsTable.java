@@ -1,7 +1,6 @@
 package seedu.address.model;
 
-import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
-import static seedu.address.logic.util.CalculationUtil.calculatePayeeDebt;
+import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayee;
 
 import java.util.HashMap;
 
@@ -42,16 +41,17 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
                 }
             }
         }
-        Balance payerDebt = calculatePayeeDebt(typeOfTransaction, transaction.getAmount(), transaction.getPayees());
-        Balance payeeDebt = payerDebt.getInverse();
+        Balance payerDebtToAdd = calculateAmountToAddForPayee(typeOfTransaction, transaction.getAmount(),
+                transaction.getPayees());
+        Balance payeeDebtToAdd = payerDebtToAdd.getInverse();
         for (Person payee: transaction.getPayees()) {
             if (!this.containsKey(payee)) {
                 this.add(payee);
                 System.out.println("Adding payee " + payee.getName().fullName);
             }
             DebtsList payeeDebtsList = this.get(payee);
-            payerDebtsList.updateDebt(payee, payeeDebt);
-            payeeDebtsList.updateDebt(payer, payerDebt);
+            payerDebtsList.updateDebt(payee, payeeDebtToAdd);
+            payeeDebtsList.updateDebt(payer, payerDebtToAdd);
         }
         return true;
     }

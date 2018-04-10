@@ -61,9 +61,9 @@ public class SplitMethod {
      */
     public static boolean isValidSplitMethod(String test) {
         return test.matches(SPLIT_METHOD_EVENLY)
-        || test.matches(SPLIT_METHOD_UNITS)
-        || test.matches(SPLIT_METHOD_PERCENTAGE)
-        || test.matches(SPLIT_METHOD_NOT_APPLICABLE);
+            || test.matches(SPLIT_METHOD_UNITS)
+            || test.matches(SPLIT_METHOD_PERCENTAGE)
+            || test.matches(SPLIT_METHOD_NOT_APPLICABLE);
     }
 
     @Override

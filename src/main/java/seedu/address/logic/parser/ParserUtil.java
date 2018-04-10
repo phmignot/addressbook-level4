@@ -2,8 +2,11 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -194,25 +197,6 @@ public class ParserUtil {
         return description.isPresent() ? Optional.of(parseDescription(description.get())) : Optional.empty();
     }
 
-    //@@author steven-jia
-    /**
-     * Parses a {@code String splitMethod} into a {@code SplitMethod}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws IllegalValueException if the given {@code splitMethod} is invalid.
-     */
-    public static SplitMethod parseSplitMethod(Collection<String> splitMethod) throws IllegalValueException {
-        requireNonNull(splitMethod);
-        if (splitMethod.isEmpty()) {
-            return new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
-        }
-        String trimmedSplitMethod = splitMethod.iterator().next().trim();
-        if (!SplitMethod.isValidSplitMethod(trimmedSplitMethod)) {
-            throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
-        }
-        return new SplitMethod(trimmedSplitMethod);
-    }
-
     //@@author ongkc
     /**
      * Parses {@code Collection<String> TransactionType} into a {@code Set<TransactionType>}.
@@ -225,4 +209,86 @@ public class ParserUtil {
         }
         return new TransactionType(trimmedType);
     }
+
+    //@@author steven-jia
+    /**
+     * Parses a {@code String splitMethod} into a {@code SplitMethod}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code splitMethod} is invalid.
+     */
+    public static SplitMethod parseSplitMethod(String splitMethod) throws IllegalValueException {
+        requireNonNull(splitMethod);
+        String trimmedSplitMethod = splitMethod.trim();
+        if (!SplitMethod.isValidSplitMethod(trimmedSplitMethod)) {
+            throw new IllegalValueException(SplitMethod.MESSAGE_SPLIT_METHOD_CONSTRAINTS);
+        }
+        return new SplitMethod(trimmedSplitMethod);
+    }
+
+    /**
+     * Parses {@code String splitMethod} into a {@code SplitMethod}.
+     */
+    public static SplitMethod parseSplitMethod(Optional<String> splitMethod) throws IllegalValueException {
+        requireNonNull(splitMethod);
+        return splitMethod.isPresent() ? parseSplitMethod(splitMethod.get())
+                : new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+    }
+
+    /**
+     * Parses a {@code String unitsList} into a {@code List<Integer>}.
+     * Leading and trailing whitespaces between values will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
+    public static List<Integer> parseUnitsList(String unitsList) throws IllegalValueException {
+        requireNonNull(unitsList);
+        ArrayList<Integer> trimmedUnitsList = new ArrayList<>();
+        if (unitsList.matches("[0-9]+(,( )?[0-9]+)*")) {
+            String[] unitsArray = unitsList.split(",");
+            for (String unit: unitsArray) {
+                trimmedUnitsList.add(Integer.valueOf(unit.trim()));
+            }
+        } else {
+            throw new IllegalValueException("List of units can only take comma-separated integers");
+        }
+        return trimmedUnitsList;
+    }
+
+    /**
+     * Parses {@code Collection<String> unitsList} into a {@code List<Integer>}.
+     */
+    public static List<Integer> parseUnitsList(Optional<String> unitsList) throws IllegalValueException {
+        requireNonNull(unitsList);
+        return unitsList.isPresent() ? parseUnitsList(unitsList.get()) : Collections.emptyList();
+    }
+
+    /**
+     * Parses a {@code String percentagesList} into a {@code List<Integer>}.
+     * Leading and trailing whitespaces between values will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
+    public static List<Integer> parsePercentagesList(String percentagesList) throws IllegalValueException {
+        requireNonNull(percentagesList);
+        ArrayList<Integer> trimmedPercentagesList = new ArrayList<>();
+        if (percentagesList.matches("[0-9]+(,( )?[0-9]+)*")) {
+            String[] percentagesArray = percentagesList.split(",");
+            for (String percentage: percentagesArray) {
+                trimmedPercentagesList.add(Integer.valueOf(percentage.trim()));
+            }
+        } else {
+            throw new IllegalValueException("List of percentages can only take comma-separated integers");
+        }
+        return trimmedPercentagesList;
+    }
+
+    /**
+     * Parses {@code Collection<String> percentagesList} into a {@code List<Integer>}.
+     */
+    public static List<Integer> parsePercentagesList(Optional<String> percentagesList) throws IllegalValueException {
+        requireNonNull(percentagesList);
+        return percentagesList.isPresent() ? parsePercentagesList(percentagesList.get()) : Collections.emptyList();
+    }
+
 }

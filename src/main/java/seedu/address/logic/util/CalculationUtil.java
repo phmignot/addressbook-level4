@@ -3,11 +3,13 @@ package seedu.address.logic.util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.Amount;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.TransactionType;
 
 /**
@@ -19,35 +21,36 @@ public class CalculationUtil {
 
     //@@author steven-jia
     /**
-     * Returns the debt that a {@code payee} owes to the payer.
+     * Returns the amount to add to the balance of a payer.
      */
-    public static Balance calculatePayerDebt(String transactionType, Amount amount,
-                                             UniquePersonList payees) {
+    public static Balance calculateAmountToAddForPayer(String transactionType, Amount amount,
+                                                       UniquePersonList payees, SplitMethod splitMethod,
+                                                       List<Integer> units, List<Integer> percentages) {
         switch (transactionType) {
         case TransactionType.TRANSACTION_TYPE_PAYMENT:
-            return calculateAddTransactionPaymentTypePayerDebt(amount, payees);
+            return calculateAmountToAddForPayerForPaymentTransaction(amount, payees, splitMethod, units, percentages);
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
-            return calculateAddTransactionPayDebtTypePayerDebt(amount);
+            return calculateAmountToAddForPayerForPaydebtTransaction(amount);
         case DeleteTransactionCommand.COMMAND_WORD:
-            return calculateDeleteTransactionPayerDebt(amount, payees);
+            return calculateAmountToAddForPayerForDeleteTransaction(amount, payees);
         default:
             return null;
         }
     }
 
-
     /**
-     * Returns an updated balance for {@code payee}
+     * Returns the amount to add to the balance or debt of a payee.
      */
-    public static Balance calculatePayeeDebt(String transactionType, Amount amount,
-                                             UniquePersonList payees) {
+    public static Balance calculateAmountToAddForPayee(String transactionType, Amount amount,
+                                                       UniquePersonList payees, SplitMethod splitMethod,
+                                                       List<Integer> units, List<Integer> percentages) {
         switch (transactionType) {
         case TransactionType.TRANSACTION_TYPE_PAYMENT:
-            return calculateAddTransactionPaymentTypePayeeDebt(amount, payees);
+            return calculateAmountToAddForPayeeForPaymentTransaction(amount, payees, splitMethod, units, percentages);
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
-            return calculateAddTransactionPayDebtTypePayeeDebt(amount, payees);
+            return calculateAmountToAddForPayeeForPaydebtTransaction(amount, payees);
         case DeleteTransactionCommand.COMMAND_WORD:
-            return calculateDeleteTransactionPayeeDebt(amount, payees);
+            return calculateAmountToAddForPayeeForDeleteTransaction(amount, payees);
         default:
             return null;
         }
@@ -55,73 +58,108 @@ public class CalculationUtil {
 
     //@@author ongkc
     /**
-     * Calculate debt of payer after a new paydebt transaction is added
+     * Calculate amount to add to the payer's balance after a new paydebt transaction is added.
+     * Returned amount will be positive.
      */
-    private static Balance calculateAddTransactionPayDebtTypePayerDebt(Amount amount) {
+    private static Balance calculateAmountToAddForPayerForPaydebtTransaction(Amount amount) {
         Double debt = Double.valueOf(amount.value);
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+        return getRoundedFormattedBalance(debt);
     }
+
     /**
-     * Calculate debt of payee(s) after a new paydebt transaction is added
+     * Calculate amount to add to the payee's balance after a new paydebt transaction is added.
+     * Returned amount will be negative.
      */
-    private static Balance calculateAddTransactionPayDebtTypePayeeDebt(Amount amount, UniquePersonList payees) {
+    private static Balance calculateAmountToAddForPayeeForPaydebtTransaction(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
         Double debt = -Double.valueOf(amount.value) / (numberOfInvolvedPersons - 1);
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+        return getRoundedFormattedBalance(debt);
     }
     /**
-     * Calculate debt of payee(s) after a new payment transaction is added
+     * Calculate amount to add to the payer's balance after a new payment transaction is added.
+     * Returned amount will be positive.
      */
-    public static Balance calculateAddTransactionPaymentTypePayeeDebt(Amount amount, UniquePersonList payees) {
+    public static Balance calculateAmountToAddForPayerForPaymentTransaction(Amount amount, UniquePersonList payees,
+                                                                            SplitMethod splitMethod,
+                                                                            List<Integer> units,
+                                                                            List<Integer> percentages) {
+        switch (splitMethod.method) {
+            case UNITS:
+                Integer numberOfUnitsForPayer = units.get(0);
+                int totalNumberOfUnits = 0;
+                for (Integer unit: units) {
+                    totalNumberOfUnits += unit;
+                }
+                Double amountToAdd = Double.valueOf(amount.value) * (totalNumberOfUnits - numberOfUnitsForPayer)
+                        / totalNumberOfUnits;
+                return getRoundedFormattedBalance(amountToAdd);
+
+                break;
+            case PERCENTAGE:
+
+
+
+                break;
+            case EVENLY:
+            default:
+                int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
+                Double amountToAdd = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
+                    / numberOfInvolvedPersons;
+                return getRoundedFormattedBalance(amountToAdd);
+                break;
+        }
+    }
+
+    /**
+     * Calculate amount to add to the payee's balance after a new payment transaction is added.
+     * Returned amount will be negative.
+     */
+    public static Balance calculateAmountToAddForPayeeForPaymentTransaction(Amount amount, UniquePersonList payees,
+                                                                            SplitMethod splitMethod,
+                                                                            List<Integer> units,
+                                                                            List<Integer> percentages) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+        Double amountToAdd = -Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        return getRoundedFormattedBalance(amountToAdd);
     }
     /**
-     * Calculate debt of payer after a new payment transaction is added
+     * Calculate amount to add to the payer's balance after a transaction is deleted.
+     * Returned amount will be negative.
      */
-    public static Balance calculateAddTransactionPaymentTypePayerDebt(Amount amount, UniquePersonList payees) {
+    public static Balance calculateAmountToAddForPayerForDeleteTransaction(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
+        Double amountToAdd = -Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
                 / numberOfInvolvedPersons;
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+        return getFormattedBalance(amountToAdd);
     }
     /**
-     * Calculate new payer balance a transaction is deleted
+     * Calculate amount to add to the payee's balance after a transaction is deleted.
+     * Returned amount will be positive.
      */
-    public static Balance calculateDeleteTransactionPayerDebt(Amount amount, UniquePersonList payees) {
+    public static Balance calculateAmountToAddForPayeeForDeleteTransaction(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = -Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1)
-                / numberOfInvolvedPersons;
-        DecimalFormat formatter = new DecimalFormat("#.00");
-        return new Balance(String.valueOf(formatter.format(debt)));
+        Double amountToAdd = Double.valueOf(amount.value) / numberOfInvolvedPersons;
+        return getRoundedFormattedBalance(amountToAdd);
     }
-    /**
-     * Calculate new payee(s) balance after a transaction is deleted
-     */
-    public static Balance calculateDeleteTransactionPayeeDebt(Amount amount, UniquePersonList payees) {
-        int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        Double debt = Double.valueOf(amount.value) / numberOfInvolvedPersons;
-        debt = round(debt, NUMBER_OF_DECIMAL_PLACES);
+
+    //@@author steven-jia
+    private static Balance getFormattedBalance(Double debt) {
         DecimalFormat formatter = new DecimalFormat("#.00");
         return new Balance(String.valueOf(formatter.format(debt)));
     }
 
-    //@@author steven-jia
+    private static Balance getRoundedFormattedBalance(Double amountToAdd) {
+        amountToAdd = round(amountToAdd, NUMBER_OF_DECIMAL_PLACES);
+        return getFormattedBalance(amountToAdd);
+    }
+
     /**
-     * Calculate the number of people involved in a transaction
+     * Calculates the total number of people involved in a transaction
      */
     public static int calculateNumberOfInvolvedPersons(UniquePersonList payees) {
         return payees.asObservableList().size() + 1;
     }
+
     private static double round(double value, int places) {
         BigDecimal amount = new BigDecimal(value);
         amount = amount.setScale(places, RoundingMode.HALF_UP);

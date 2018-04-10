@@ -31,6 +31,8 @@ public class XmlAdaptedTransaction {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
 
     @XmlElement(required = true)
+    private String transactionType;
+    @XmlElement(required = true)
     private XmlAdaptedPerson payer;
     @XmlElement(required = true)
     private String amount;
@@ -39,11 +41,14 @@ public class XmlAdaptedTransaction {
     @XmlElement(required = true)
     private Date dateTime;
     @XmlElement(required = true)
-    private String transactionType;
+    private List<XmlAdaptedPerson> payees = new ArrayList<>();
     @XmlElement(required = true)
     private String splitMethod;
-    @XmlElement(required = true)
-    private List<XmlAdaptedPerson> payees = new ArrayList<>();
+
+    @XmlElement
+    private String unitsList;
+    @XmlElement
+    private String percentagesList;
 
     /**
      * Constructs an XmlAdaptedTransaction.
@@ -157,7 +162,8 @@ public class XmlAdaptedTransaction {
         }
         final SplitMethod splitMethod = new SplitMethod(this.splitMethod);
 
-        return new Transaction(transactionType, payer, amount, description, dateTime, payees, splitMethod);
+        return new Transaction(transactionType, payer, amount, description, dateTime, payees,
+                splitMethod);
     }
 
     //@@author steven-jia
