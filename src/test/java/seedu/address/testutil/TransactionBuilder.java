@@ -52,6 +52,7 @@ public class TransactionBuilder {
      * Initializes the TransactionBuilder with the data of {@code transactionToCopy}.
      */
     public TransactionBuilder(Transaction transactionToCopy) {
+        transactionType = transactionToCopy.getTransactionType();
         payer = transactionToCopy.getPayer();
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
@@ -69,9 +70,10 @@ public class TransactionBuilder {
     }
     /**
      * Sets the {@code payer} of the {@code Transaction} that we are building.
+     * @param transactionType
      */
-    public TransactionBuilder withTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public TransactionBuilder withTransactionType(String transactionType) {
+        this.transactionType = new TransactionType(transactionType);
         return this;
     }
     /**

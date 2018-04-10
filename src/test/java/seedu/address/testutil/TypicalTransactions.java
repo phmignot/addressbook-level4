@@ -43,16 +43,16 @@ public class TypicalTransactions {
             payeeGeorge.add(TypicalPersons.GEORGE);
             payeeFiona.add(TypicalPersons.FIONA);
 
-            t1 = new TransactionBuilder().withPayer(person1).withAmount("0.00")
+            t1 = new TransactionBuilder().withTransactionType("payment").withPayer(person1).withAmount("0.00")
                     .withDescription("Boat trip").withPayees(payee2).build();
-            t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
+            t2 = new TransactionBuilder().withTransactionType("paydebt").withPayer(person3).withAmount("0.00")
                     .withDescription("Food for barbecue").withPayees(payee4).build();
-            t3 = new TransactionBuilder().withPayer(person5).withAmount("0.00")
+            t3 = new TransactionBuilder().withTransactionType("payment").withPayer(person5).withAmount("0.00")
                     .withDescription("Open air concert").withPayees(payee6).build();
-            t4 = new TransactionBuilder().withPayer(TypicalPersons.GEORGE).withAmount("0.00")
+            t4 = new TransactionBuilder().withTransactionType("payment").withPayer(TypicalPersons.GEORGE).withAmount("0.00")
                     .withDescription("Transport")
                     .withPayees(payeeFiona).build();
-            t5 = new TransactionBuilder().withPayer(TypicalPersons.FIONA)
+            t5 = new TransactionBuilder().withTransactionType("payment").withPayer(TypicalPersons.FIONA)
                     .withAmount("0.00").withDescription("Dinner")
                     .withPayees(payeeFiona).build();
         } catch (DuplicatePersonException dpe) {

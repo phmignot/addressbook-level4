@@ -3,7 +3,6 @@ package seedu.address.model.transaction;
 
 import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 
 import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.person.Person;
@@ -25,18 +24,7 @@ public class Transaction extends BalanceCalculationUtil {
     private final TransactionType transactionType;
 
     public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, UniquePersonList payees) {
-        this.transactionType = transactionType;
-        this.dateTime = dateTime;
-        this.id = lastTransactionId++;
-        this.payer = payer;
-        this.amount = amount;
-        this.description = description;
-        this.payees = payees;
-    }
-
-    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, Set<Person> payeesToAdd) {
+                       Date dateTime, UniquePersonList payeesToAdd) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {

@@ -31,8 +31,9 @@ public class BalanceCalculationUtil {
         case DeleteTransactionCommand.COMMAND_WORD:
             return calculateDeleteTransactionPayerDebt(amount, payees);
         default:
-            return null;
+            assert false : transactionType;
         }
+        return null;
     }
 
 

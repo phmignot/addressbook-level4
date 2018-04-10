@@ -37,6 +37,7 @@ public class AddTransactionCommand extends UndoableCommand {
     public static final String MESSAGE_SUCCESS = "New transaction added";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
     public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
+    public static final String MESSAGE_PAYEE_HAS_NO_DEBT = "one or more payees has no debt";
 
     private final Transaction toAdd;
 
@@ -54,7 +55,7 @@ public class AddTransactionCommand extends UndoableCommand {
         try {
 
             if (!model.addTransaction(toAdd)) {
-                throw new CommandException("Payee(s) has no debt");
+                throw new CommandException(MESSAGE_PAYEE_HAS_NO_DEBT);
             }
             return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
         } catch (PersonNotFoundException pnfe) {
