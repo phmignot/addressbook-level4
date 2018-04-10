@@ -380,12 +380,23 @@ Why it is implemented that way
 
 Instead of saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
 
+// tag::selectfeature[]
 ===  Select feature
+
+There are two ways to triggered the `Select` feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
+The second one directly through the user interface, by clicking on a `Person card`. +
+These two interactions will result in raising the same events. +
+
+`SelectCommand` is not a undoable command.
+
 ==== Select Command Implementation
+
 .Component interactions for `select` command
 image::SelectCommandDiagram.png[width="800"]
-From the diagram above, when users enter the command select INDEX to select the first person in the persons list, SelectCommandParser will parse the argument, and return SelectCommand.
-Next, SelectCommand will call its method execute(). After select command is executed, an JumpToListRequestEvent is raised.
+
+From the diagram above when users enter the command `select INDEX` to select one of the person from the persons list,
+`SelectCommandParser` will parse the argument, and return `SelectCommand`.
+Next, SelectCommand will call its method `execute()`. After SelectCommand is executed, an *JumpToListRequestEvent* is raised.
 
 
 ==== JumpToListRequest Event process
@@ -394,23 +405,35 @@ image::JumpToListRequestEventDiagram.png[width="800"]
 With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
 
 ==== PersonPanelSelectionChanged Event process
-There are two ways to raise this event. The first one is by using this select command, the second one is by directly clicking on the PersonCard in the Addressbook.
+There are two ways to raise this event. The first one is by using this select command, the second one is by
+directly clicking on the `PersonCard` in the `PersonListPanel`.
+
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelSelectionChanged event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep only transactions related with the person selected.
-The FilteredTransactionList will be updated, the UI will display the new list.
+
+With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep only transactions related with the person selected. +
+The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== PersonPanelNoSelection Event process
-In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type another command that will clear the selection, such as the `find` command, or by directly deselecting a selected PersonCard using "Ctrl + Clic".
+In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
+another command that will clear the selection, such as the `find` command, or by directly deselecting a selected
+`PersonCard` using "*Ctrl + Clic*".
 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelNoSelection event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep every transactions.
-The FilteredTransactionList will be updated, the UI will display the new list.
+
+With reference to the diagram above, the `PersonPanelNoSelection` event is handled by the `Model`, that will call
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep every transactions.
+The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== Why it is implemented that way
 
-This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed. That implementation saves the application from wasting of resource by un.
+This implementation can satisfy both user that are used and unused to deal with Command Line.
+This implementation uses events that are raised if needed, so there is no need to check regularly if the selection has changed.
+This implementation saves the application from wasting of computing resource.
+
+// end::selectfeature[]
 
 === [Proposed] Pay Debt feature
 ==== Pay Debt Command Implementation
@@ -858,7 +881,7 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 *Paul Henri Mignot*
 
 * Major feature: Update the User Interface to display the list of transactions.
-* Minor feature: Allow user to delete their transactions
+* Minor feature: Allow user to delete their transactions.
 
 *Wen Qin Jia*
 
