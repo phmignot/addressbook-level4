@@ -28,7 +28,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.FindPersonCommand;
 import seedu.address.logic.commands.ListPersonsCommand;
-import seedu.address.logic.commands.SelectCommand;
+import seedu.address.logic.commands.SelectPersonCommand;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.testutil.AddressBookBuilder;
@@ -142,7 +142,7 @@ public abstract class AddressBookSystemTest {
      * Selects the person at {@code index} of the displayed list.
      */
     protected void selectPerson(Index index) {
-        executeCommand(SelectCommand.COMMAND_WORD + " " + index.getOneBased());
+        executeCommand(SelectPersonCommand.COMMAND_WORD + " " + index.getOneBased());
         assertEquals(index.getZeroBased(), getPersonListPanel().getSelectedCardIndex());
     }
 
