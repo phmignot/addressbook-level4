@@ -18,7 +18,6 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Creditor;
 import seedu.address.model.person.Debtor;
-import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniqueCreditorList;
 import seedu.address.model.person.UniqueDebtorList;
@@ -287,11 +286,10 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Update each payer and payee(s) balance whenever each new transaction is added or deleted
      */
-    public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction)
-            throws PersonNotFoundException {
+    public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction) {
         updatePayerBalance(isAddingTransaction, transaction);
         for (int i = 0; i < transaction.getPayees().asObservableList().size(); i++) {
-            Person payee = findPersonByName(transaction.getPayees().asObservableList().get(i).getName());
+            Person payee = transaction.getPayees().asObservableList().get(i);
             Integer splitMethodValuesListIndex = i + 1;
             updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
         }
@@ -299,25 +297,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Update payer balance whenever a new transaction is added or deleted
      */
-    private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction)
-            throws PersonNotFoundException {
-        findPersonByName(transaction.getPayer().getName()).addToBalance(calculateAmountToAddForPayer(
-                isAddingTransaction,
+    private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction) {
+        transaction.getPayer().addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
                 transaction));
     }
-    //@@author steven-jia
-    public Person findPersonByName(Name name) throws PersonNotFoundException {
-        Set<Person> matchingPersons = getPersonList()
-                .stream()
-                .filter(person -> person.getName().equals(name))
-                .collect(Collectors.toSet());
 
-        if (!matchingPersons.isEmpty()) {
-            return matchingPersons.iterator().next();
-        } else {
-            throw new PersonNotFoundException();
-        }
-    }
     /**
      * Update payee balance whenever a new transaction is added or deleted
      */
