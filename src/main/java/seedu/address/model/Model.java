@@ -30,6 +30,7 @@ public interface Model {
     Predicate<Creditor> PREDICATE_SHOW_ALL_CREDITORS =  unused -> true;
     /** {@code Predicate} that always evaluate to false */
     Predicate<Debtor> PREDICATE_SHOW_NO_DEBTORS =  unused -> false;
+    /** {@code Predicate} that always evaluate to false */
     Predicate<Creditor> PREDICATE_SHOW_NO_CREDITORS =  unused -> false;
     /** {@code Predicate} that always evaluate to false */
     Predicate<Person> PREDICATE_SHOW_NO_PERSON =  unused -> false;
@@ -92,7 +93,7 @@ public interface Model {
      */
     void updateFilteredTransactionList(Predicate<Transaction> predicate);
 
-    void addTransaction(Transaction transaction) throws PersonNotFoundException;
+    void addTransaction(Transaction transaction) throws PersonNotFoundException, CommandException;
 
     //@@author phmignot
     /** Deletes the given person. */

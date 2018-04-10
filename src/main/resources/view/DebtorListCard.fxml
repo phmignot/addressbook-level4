@@ -40,7 +40,7 @@
           </GridPane>
           <VBox prefHeight="70.0" prefWidth="98.0">
               <children>
-                  <Label text="Debt">
+                  <Label text="Owes">
                       <VBox.margin>
                           <Insets />
                       </VBox.margin>

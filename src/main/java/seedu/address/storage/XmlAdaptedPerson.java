@@ -81,6 +81,7 @@ public class XmlAdaptedPerson {
         for (XmlAdaptedTag tag : tagged) {
             personTags.add(tag.toModelType());
         }
+        final Set<Tag> tags = new HashSet<>(personTags);
 
         if (this.name == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
@@ -117,7 +118,6 @@ public class XmlAdaptedPerson {
         final Balance balance = new Balance(this.balance);
         //@@author
 
-        final Set<Tag> tags = new HashSet<>(personTags);
         return new Person(name, phone, email, balance, tags);
     }
 
