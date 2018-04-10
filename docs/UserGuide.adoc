@@ -145,6 +145,7 @@ Deletes the 2nd person in the list of persons if the person has no debts owing.
 `deletePerson 1` +
 Deletes the 1st person in the results of the `findPerson` command, if the person has no debts owing.
 
+// tag::select[]
 === Selecting a person : `selectPerson`
 
 Selects the person identified by the index number used in the last person listing. +
@@ -172,13 +173,15 @@ Selects the 1st person in the results of the `findPerson` command.
 By clicking on a person on the person panel list, the person can be selected.
 All transactions that are relevant to that person will be displayed on the
 transaction panel list.
-In the debtors panel, any persons who owe the selected person will appear with
+In the debtors panel, any person who owes the selected person will appear with
 the amount that they owe.
-In the creditors panel, any persons who are owed by the selected person will
+In the creditors panel, any person who is owed by the selected person will
 appear with the amount that they are owed.
 
 To de-select the person, press 'control' + click (for Mac/Linux: 'command' + click) on the person.
 All transactions will be re-displayed and the debtors panel and creditors panel will be cleared.
+
+// end::select[]
 
 === Adding a transaction: `addTransaction` `[Since v1.2]` `[Updated for v1.5rc]`
 
@@ -374,9 +377,11 @@ e.g. `deletePerson 3`
 * *SelectPerson* : `selectPerson INDEX` +
 e.g.`selectPerson 2`
 * *AddTransaction* `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]...` +
-e.g. `addTransaction r/John Doe a/3456.00 d/for dinner meal e/Tom Riddle e/Becky Simmons`
-* *AddTransaction* `deleteTransaction INDEX` +
-e.g. `addTransaction r/John Doe a/3456.00 d/for dinner meal e/Tom Riddle e/Becky Simmons`
+e.g. `addTransaction payer/John Doe a/3456.00 d/for dinner meal payee/Tom Riddle e/Becky Simmons`
+* *DeleteTransaction* `deleteTransaction INDEX` +
+e.g. `deleteTransaction 1`
+* *FindTransaction* `findTransaction KEYWORD [MORE_KEYWORDS]` +
+e.g. `findTransaction taxi bangkok`
 * *Clear* : `clear`
 * *Undo* : `undo`
 * *Redo* : `redo`

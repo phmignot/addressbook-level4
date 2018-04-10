@@ -383,19 +383,13 @@ Instead of saving each transaction details to every person involved, a new trans
 // tag::selectfeature[]
 ===  Select feature
 
-There are two ways to triggered the Select feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
+There are two ways to triggered the `Select` feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
 The second one directly through the user interface, by clicking on a `Person card`. +
-These two interactions will result in the same raising Events.
+These two interactions will result in raising the same events. +
 
-undo/redo mechanism is facilitated by an `UndoRedoStack`, which resides inside `LogicManager`. It supports undoing and redoing of commands that modifies the state of the address book (e.g. `add`, `edit`). Such commands will inherit from `UndoableCommand`.
-
-`UndoRedoStack` only deals with `UndoableCommands`. Commands that cannot be undone will inherit from `Command` instead. The following diagram shows the inheritance diagram for commands:
+`SelectCommand` is not a undoable command.
 
 ==== Select Command Implementation
-
-
-As you can see from the diagram, `UndoableCommand` adds an extra layer between the abstract `Command` class and concrete commands that can be undone, such as the `DeleteCommand`. Note that extra tasks need to be done when executing a command in an _undoable_ way, such as saving the state of the address book before execution. `UndoableCommand` contains the high-level algorithm for those extra tasks while the child classes implements the details of how to execute the specific command. Note that this technique of putting the high-level algorithm in the parent class and lower-level steps of the algorithm in child classes is also known as the https://www.tutorialspoint.com/design_pattern/template_pattern.htm[template pattern].
-
 
 .Component interactions for `select` command
 image::SelectCommandDiagram.png[width="800"]
@@ -411,25 +405,36 @@ image::JumpToListRequestEventDiagram.png[width="800"]
 With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
 
 ==== PersonPanelSelectionChanged Event process
-There are two ways to raise this event. The first one is by using this select command, the second one is by directly clicking on the PersonCard in the Addressbook.
+There are two ways to raise this event. The first one is by using this select command, the second one is by 
+directly clicking on the `PersonCard` in the `PersonListPanel`.
+ 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelSelectionChanged event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep only transactions related with the person selected.
-The FilteredTransactionList will be updated, the UI will display the new list.
+
+With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call 
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep only transactions related with the person selected. +
+The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== PersonPanelNoSelection Event process
-In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type another command that will clear the selection, such as the `find` command, or by directly deselecting a selected PersonCard using "Ctrl + Clic".
+In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type 
+another command that will clear the selection, such as the `find` command, or by directly deselecting a selected 
+`PersonCard` using "*Ctrl + Clic*".
 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelNoSelection event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep every transactions.
-The FilteredTransactionList will be updated, the UI will display the new list.
+
+With reference to the diagram above, the `PersonPanelNoSelection` event is handled by the `Model`, that will call 
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep every transactions.
+The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== Why it is implemented that way
 
-This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed. That implementation saves the application from wasting of resource by un.
+This implementation can satisfy both user that are used and unused to deal with Command Line. 
+This implementation uses events that are raised if needed, so there is no need to check regularly if the selection has changed. 
+This implementation saves the application from wasting of computing resource.
 
 // end::selectfeature[]
+
 === [Proposed] Pay Debt feature
 ==== Pay Debt Command Implementation
 When users enter the command payDebt c/ Creditor d/ Debtor /a Amount to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.

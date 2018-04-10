@@ -15,45 +15,56 @@ The user interacts with it using a Command Line Interface or its Graphical User 
 
 == Summary of contributions
 
-****
-* *Major enhancement*:
 
-** `What it does`: 
+=== *Major enhancement*:
 
-** `Justification`: This feature improves the product significantly because a user can make mistakes in commands and the app should provide a convenient way to rectify them.
-** `Highlights`: This enhancement affects existing commands and commands to be added in future. It required an in-depth analysis of design alternatives. The implementation too was challenging as it required changes to existing commands.
-** `Credits`: _{mention here if you reused any code/ideas from elsewhere or if a third-party library is heavily used in the feature so that a reader can make a more accurate judgement of how much effort went into the feature}_
-****
+** *Select/Unselect*
 
-****
-* *Minor enhancements*: 
+*** `What it does`: Can select and unselect any person in the `PersonList`, and displays its transactions, creditors and debtors.  
+
+*** `Justification`: This enhancement makes the application more user friendly, by improving User Interface, and adding more interaction with the user.
+*** `Highlights`: This enhancement affects existing events, and creates new ones, that can be handled in the future by other classes for extended applications. 
+
+*** `Credits`: This enhancement was based on the `SelectCommand` of the *AddressBook-level4* 
+which displayed the Url page of the person selected.
+
+** *DebtTable*
+
+*** `What it does`:  Implements a table that collects the debts between every person.
+*** `Justification`: This feature simplified the calculation, the storing and the retrieving of every debts between the persons added.
+*** `Highlights`: This `DebtTable` is updated when a transaction is added or removed. +
+The design was challenging since it has to be flexible with adding, editing or removing any person or transaction. +
+The `DebtTable` is a dictionary of every person's `DebtsList`, which are dictionaries of all persons that have debts with its owner. 
+
+
+=== *Minor enhancements*: 
+
 - Update the *User Interface* to *display the list of transactions*.
-- Allow user to delete their transactions.
-- Implement a table that collects the debts between every person, called DebtsTable.
-****
+- Insert in the *User Interface* two panels 
+- Allow the user to delete their transactions.
 
-* *Code contributed*: [https://github.com/CS2103JAN2018-W10-B1/main/blob/master/collated/functional/phmignot.md[Functional code]] 
-[https://github.com/CS2103JAN2018-W10-B1/main/blob/master/collated/test/phmignot.md[Test code]] _{give links to collated code files}_
 
-* *Other contributions*:
+=== *Code contributed*: 
+
+[https://github.com/CS2103JAN2018-W10-B1/main/blob/master/collated/functional/phmignot.md[Functional code]] +
+
+[https://github.com/CS2103JAN2018-W10-B1/main/blob/master/collated/test/phmignot.md[Test code]] +
+
+=== *Other contributions*:
 
 ** Project management:
-*** Managed releases `v1.3` - `v1.5rc` (3 releases) on GitHub
-** Enhancements to existing features:
-*** Updated the GUI color scheme (Pull requests https://github.com[#33], https://github.com[#34])
-*** Wrote additional tests for existing features to increase coverage from 88% to 92% (Pull requests https://github.com[#36], https://github.com[#38])
-** Documentation:
-*** Did cosmetic tweaks to existing contents of the User Guide: https://github.com[#14]
+*** Managed releases `v1.0` - `v1.5rc` (6 releases) on GitHub.
+** Removing existing features:
+*** Remove the `BrowserPanel` and the test associated, being replaced by Deptor and Creditor list. 
+(Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/80[#80], https://github.com/CS2103JAN2018-W10-B1/main/pull/82[#82])
 ** Community:
-*** PRs reviewed (with non-trivial review comments): https://github.com[#12], https://github.com[#32], https://github.com[#19], https://github.com[#42]
-*** Contributed to forum discussions (examples:  https://github.com[1], https://github.com[2], https://github.com[3], https://github.com[4])
-*** Reported bugs and suggestions for other teams in the class (examples:  https://github.com[1], https://github.com[2], https://github.com[3])
-*** Some parts of the history feature I added was adopted by several other class mates (https://github.com[1], https://github.com[2])
-** Tools:
-*** Integrated a third party library (Natty) to the project (https://github.com[#42])
-*** Integrated a new Github plugin (CircleCI) to the team repo
+*** PRs reviewed (with non-trivial review comments):  
+https://github.com/CS2103JAN2018-W10-B1/main/pull/81[#81], 
+https://github.com/CS2103JAN2018-W10-B1/main/pull/129[#129],
+https://github.com/CS2103JAN2018-W10-B1/main/pull/103[#103], 
+https://github.com/CS2103JAN2018-W10-B1/main/pull/21[#21]
+*** Helping others students in the addressBook version 2 (https://github.com/nus-cs2103-AY1718S2/addressbook-level2/pull/618[exemple])
 
-_{you can add/remove categories in the list above}_
 
 == Contributions to the User Guide
 
@@ -62,9 +73,7 @@ _{you can add/remove categories in the list above}_
 |_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=undoredo]
-
-include::../UserGuide.adoc[tag=dataencryption]
+include::../UserGuide.adoc[tag=select]
 
 == Contributions to the Developer Guide
 
@@ -73,12 +82,3 @@ include::../UserGuide.adoc[tag=dataencryption]
 |===
 
 include::../DeveloperGuide.adoc[tag=selectfeature]
-
-include::../DeveloperGuide.adoc[tag=dataencryption]
-
-
-== PROJECT: PowerPointLabs
-
----
-
-_{Optionally, you may include other projects in your portfolio.}_
