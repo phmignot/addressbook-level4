@@ -394,7 +394,7 @@ These two interactions will result in raising the same events. +
 .Component interactions for `select` command
 image::SelectCommandDiagram.png[width="800"]
 
-From the diagram above when users enter the command `select INDEX` to select one of the person from the persons list, 
+From the diagram above when users enter the command `select INDEX` to select one of the person from the persons list,
 `SelectCommandParser` will parse the argument, and return `SelectCommand`.
 Next, SelectCommand will call its method `execute()`. After SelectCommand is executed, an *JumpToListRequestEvent* is raised.
 
@@ -405,32 +405,32 @@ image::JumpToListRequestEventDiagram.png[width="800"]
 With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
 
 ==== PersonPanelSelectionChanged Event process
-There are two ways to raise this event. The first one is by using this select command, the second one is by 
+There are two ways to raise this event. The first one is by using this select command, the second one is by
 directly clicking on the `PersonCard` in the `PersonListPanel`.
- 
+
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
 
-With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call 
+With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call
 the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep only transactions related with the person selected. +
 The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== PersonPanelNoSelection Event process
-In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type 
-another command that will clear the selection, such as the `find` command, or by directly deselecting a selected 
+In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
+another command that will clear the selection, such as the `find` command, or by directly deselecting a selected
 `PersonCard` using "*Ctrl + Clic*".
 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
 
-With reference to the diagram above, the `PersonPanelNoSelection` event is handled by the `Model`, that will call 
+With reference to the diagram above, the `PersonPanelNoSelection` event is handled by the `Model`, that will call
 the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep every transactions.
 The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== Why it is implemented that way
 
-This implementation can satisfy both user that are used and unused to deal with Command Line. 
-This implementation uses events that are raised if needed, so there is no need to check regularly if the selection has changed. 
+This implementation can satisfy both user that are used and unused to deal with Command Line.
+This implementation uses events that are raised if needed, so there is no need to check regularly if the selection has changed.
 This implementation saves the application from wasting of computing resource.
 
 // end::selectfeature[]
