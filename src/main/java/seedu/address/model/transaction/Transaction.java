@@ -1,21 +1,21 @@
 //@@author steven-jia
 package seedu.address.model.transaction;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.logic.util.BalanceCalculationUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * Represents a Transaction in SmartSplit.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
-public class Transaction extends BalanceCalculationUtil {
+public class Transaction {
     private static Integer lastTransactionId = 0;
     private final Integer id;
     private final Date dateTime;
@@ -23,18 +23,29 @@ public class Transaction extends BalanceCalculationUtil {
     private final Amount amount;
     private final Description description;
     private UniquePersonList payees;
+    private final UniquePersonList payees;
+    private final TransactionType transactionType;
+    private final SplitMethod splitMethod;
+    private ArrayList<Integer> units;
+    private ArrayList<Integer> percentages;
 
-    public Transaction(Person payer, Amount amount, Description description, Date dateTime, UniquePersonList payees) {
+    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
+                       Date dateTime, UniquePersonList payees, SplitMethod splitMethod, List<Integer> units,
+                       List<Integer> percentages) {
+        this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
-
+        this.splitMethod = splitMethod;
+        initializeSplitMethodListValues(units, percentages);
     }
 
-    public Transaction(Person payer, Amount amount, Description description, Date dateTime, Set<Person> payeesToAdd) {
+    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
+                       Date dateTime, Set<Person> payeesToAdd, SplitMethod splitMethod,
+                       List<Integer> units, List<Integer> percentages) {
         UniquePersonList payees = new UniquePersonList();
         for (Person p: payeesToAdd) {
             try {
@@ -44,12 +55,34 @@ public class Transaction extends BalanceCalculationUtil {
             }
         }
 
+        this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
         this.payer = payer;
         this.amount = amount;
         this.description = description;
         this.payees = payees;
+        this.splitMethod = splitMethod;
+        initializeSplitMethodListValues(units, percentages);
+    }
+
+    /**
+     * @param units
+     * @param percentages
+     * Initializes the split method units list if the split method is by units
+     * or initializes the split method percentages list if the split method is by percentage.
+     */
+    private void initializeSplitMethodListValues(List<Integer> units, List<Integer> percentages) {
+        if (this.splitMethod.toString().equals(SplitMethod.SPLIT_METHOD_UNITS)) {
+            this.units = new ArrayList<>(units);
+            this.percentages = new ArrayList<>();
+        } else if (this.splitMethod.toString().equals(SplitMethod.SPLIT_METHOD_PERCENTAGE)) {
+            this.units = new ArrayList<>();
+            this.percentages = new ArrayList<>(percentages);
+        } else {
+            this.units = new ArrayList<>();
+            this.percentages = new ArrayList<>();
+        }
     }
 
     public Integer getId() {
@@ -76,24 +109,6 @@ public class Transaction extends BalanceCalculationUtil {
         return payees;
     }
 
-    public void setPayer(Person payer) {
-        this.payer = payer;
-    }
-
-    public void setPayees(UniquePersonList payees) {
-        this.payees = payees;
-    }
-
-    public Transaction setPerson(Person person, Person editedPerson)
-            throws DuplicatePersonException, PersonNotFoundException {
-        if (this.getPayer().equals(person)) {
-            this.setPayer(editedPerson);
-        } else if (this.getPayees().contains(person)) {
-            UniquePersonList payees = this.getPayees();
-            payees.setPerson(person, editedPerson);
-        }
-        return this;
-    }
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -110,7 +125,8 @@ public class Transaction extends BalanceCalculationUtil {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, payer, amount, description, payees);
+        return Objects.hash(id, transactionType, dateTime, payer, amount,
+                description, payees, splitMethod, units, percentages);
     }
 
     @Override
@@ -118,16 +134,24 @@ public class Transaction extends BalanceCalculationUtil {
         final StringBuilder builder = new StringBuilder();
         builder.append(" Transaction id: ")
                 .append(getId())
+                .append("\n Transaction Type: ")
+                .append(getTransactionType())
                 .append("\n Created on: ")
                 .append(getDateTime())
                 .append("\n Transaction paid by: ")
                 .append(getPayer().getName())
                 .append("\n Amount: ")
                 .append(getAmount().toString())
-                .append("\r\n Description: ")
+                .append("\n Description: ")
                 .append(getDescription().toString())
                 .append("\n Payees: ")
-                .append(getPayees().asObservableList().toString());
+                .append(getPayees().asObservableList().toString())
+                .append("\n Split method: ")
+                .append(getSplitMethod().toString())
+                .append("\n Units list: ")
+                .append(getUnits().toString())
+                .append("\n Percentages list: ")
+                .append(getPercentages().toString());
         return builder.toString();
     }
 
@@ -140,4 +164,5 @@ public class Transaction extends BalanceCalculationUtil {
     public boolean isImplied(Person person) {
         return (payer.equals(person) || payees.contains(person));
     }
+
 }

@@ -1,3 +1,4 @@
+//@@author phmignot
 package seedu.address.ui;
 
 import javafx.fxml.FXML;
@@ -8,7 +9,6 @@ import javafx.scene.layout.Region;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 
-//@@author phmignot
 /**
  * An UI component that displays information of a {@code Transaction}.
  */
@@ -29,6 +29,8 @@ public class TransactionCard extends UiPart<Region> {
     @FXML
     private Label description;
     @FXML
+    private Label transactionType;
+    @FXML
     private FlowPane payees;
     @FXML
     private Label date;
@@ -40,9 +42,16 @@ public class TransactionCard extends UiPart<Region> {
         payerName.setText(transaction.getPayer().getName().fullName);
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
-        for (Person payee : transaction.getPayees()) {
+        transactionType.setText(transaction.getTransactionType().toString().substring(0, 1).toUpperCase()
+                + transaction.getTransactionType().toString().substring(1));
+
+        int numPayees = transaction.getPayees().asObservableList().size();
+        for (int i = 0; i < numPayees; i++) {
+            Person payee = transaction.getPayees().asObservableList().get(i);
             payees.getChildren().add(new Label(payee.getName().fullName));
-            payees.getChildren().add(new Label(", "));
+            if (i != numPayees - 1) {
+                payees.getChildren().add(new Label(", "));
+            }
         }
         date.setText(String.valueOf(transaction.getDateTime()));
     }

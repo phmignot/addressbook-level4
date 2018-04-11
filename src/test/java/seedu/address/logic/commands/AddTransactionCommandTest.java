@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,10 +19,13 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -46,8 +50,8 @@ public class AddTransactionCommandTest {
 
     @Test
     public void execute_transactionAcceptedByModel_addSuccessful() throws Exception {
-        AddTransactionCommandTest.ModelStubAcceptingTransactionAdded modelStub =
-                new AddTransactionCommandTest.ModelStubAcceptingTransactionAdded();
+        ModelStubAcceptingTransactionAdded modelStub =
+                new ModelStubAcceptingTransactionAdded();
         Transaction validTransaction = new TransactionBuilder().build();
 
         CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
@@ -56,6 +60,17 @@ public class AddTransactionCommandTest {
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
 
+    @Test
+    public void execute_payerOrPayeeIsPayerOrPayee_throwsCommandException() throws Exception {
+        ModelStub modelStub =
+                new ModelStubThrowingPayerIsPayeeException();
+        Transaction validTransaction = new TransactionBuilder().build();
+
+        thrown.expect(CommandException.class);
+        thrown.expectMessage(AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER);
+
+        getAddTransactionCommand(validTransaction, modelStub).execute();
+    }
 
     @Test
     public void equals() {
@@ -134,11 +149,6 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-
-        }
-
-        @Override
         public ObservableList<Person> getFilteredPersonList() {
             fail("This method should not be called.");
             return null;
@@ -172,19 +182,41 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) {}
+        public void addTransaction(Transaction transaction) throws CommandException {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
+        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
+        }
+
+        @Override
+        public ObservableList<Debtor> getFilteredDebtors() {
+            return null;
+        }
+
+        @Override
+        public ObservableList<Creditor> getFilteredCreditors() {
+            return null;
+        }
+
+        @Override
+        public void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors) {
+
+        }
+
+        @Override
+        public void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors) {
+
+        }
     }
 
-    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub { }
+    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub {
+    }
 
 
     /**
-     * A Model stub that always accept the person being added.
+     * A Model stub that always accept the transaction being added.
      */
-    private class ModelStubAcceptingTransactionAdded extends AddTransactionCommandTest.ModelStub {
+    private class ModelStubAcceptingTransactionAdded extends ModelStub {
         final ArrayList<Transaction> transactionsAdded = new ArrayList<>();
 
         @Override
@@ -192,10 +224,25 @@ public class AddTransactionCommandTest {
             requireNonNull(transaction);
             transactionsAdded.add(transaction);
         }
-
         @Override
         public ReadOnlyAddressBook getAddressBook() {
             return new AddressBook();
         }
     }
+
+    private class ModelStubThrowingPayerIsPayeeException extends ModelStub {
+        @Override
+        public void addTransaction(Transaction transaction) throws CommandException {
+            throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
+        }
+
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            return new AddressBook();
+        }
+
+    }
+
+
 }

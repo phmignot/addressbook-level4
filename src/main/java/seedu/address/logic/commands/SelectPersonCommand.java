@@ -10,11 +10,11 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
 
 /**
- * Selects a person identified using it's last displayed index from the address book.
+ * Selects a person identified using its last displayed index from the SmartSplit addressbook.
  */
-public class SelectCommand extends Command {
+public class SelectPersonCommand extends Command {
 
-    public static final String COMMAND_WORD = "select";
+    public static final String COMMAND_WORD = "selectPerson";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Selects the person identified by the index number used in the last person listing.\n"
@@ -25,7 +25,7 @@ public class SelectCommand extends Command {
 
     private final Index targetIndex;
 
-    public SelectCommand(Index targetIndex) {
+    public SelectPersonCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
     }
 
@@ -46,7 +46,7 @@ public class SelectCommand extends Command {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof SelectCommand // instanceof handles nulls
-                && this.targetIndex.equals(((SelectCommand) other).targetIndex)); // state check
+                || (other instanceof SelectPersonCommand // instanceof handles nulls
+                && this.targetIndex.equals(((SelectPersonCommand) other).targetIndex)); // state check
     }
 }

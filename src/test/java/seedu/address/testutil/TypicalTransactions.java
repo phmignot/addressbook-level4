@@ -2,15 +2,18 @@ package seedu.address.testutil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.util.SampleDataUtil;
-//@author ongkc
+//@@author ongkc
 /**
  * A utility class containing a list of {@code Transaction} objects to be used in tests.
  */
@@ -35,6 +38,14 @@ public class TypicalTransactions {
     private static UniquePersonList payeeGeorge = new UniquePersonList();
     private static UniquePersonList payeeFiona = new UniquePersonList();
 
+    private static Date date = new Date();
+
+    private static SplitMethod splitEvenly = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
+    private static SplitMethod splitByUnits = new SplitMethod(SplitMethod.SPLIT_METHOD_UNITS);
+    private static SplitMethod splitByPercentage = new SplitMethod(SplitMethod.SPLIT_METHOD_PERCENTAGE);
+    private static List<Integer> unitsList = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
+    private static List<Integer> percentagesList = new ArrayList<Integer>(Arrays.asList(25, 30, 45));
+
     static {
         try {
             payee2.add(person2);
@@ -43,18 +54,24 @@ public class TypicalTransactions {
             payeeGeorge.add(TypicalPersons.GEORGE);
             payeeFiona.add(TypicalPersons.FIONA);
 
+
             t1 = new TransactionBuilder().withPayer(person1).withAmount("0.00")
-                    .withDescription("Boat trip").withPayees(payee2).build();
+                    .withDescription("Boat trip").withPayees(payee2).withDate(date)
+                    .withSplitMethod(splitEvenly).build();
             t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
-                    .withDescription("Food for barbecue").withPayees(payee4).build();
+                    .withDescription("Food for barbecue").withPayees(payee4)
+                    .withSplitMethod(splitByUnits).withUnits(unitsList).withDate(date).build();
             t3 = new TransactionBuilder().withPayer(person5).withAmount("0.00")
-                    .withDescription("Open air concert").withPayees(payee6).build();
+                    .withDescription("Open air concert").withPayees(payee6)
+                    .withSplitMethod(splitByPercentage).withPercentages(percentagesList).withDate(date).build();
             t4 = new TransactionBuilder().withPayer(TypicalPersons.GEORGE).withAmount("0.00")
                     .withDescription("Transport")
-                    .withPayees(payeeFiona).build();
+                    .withPayees(payeeFiona)
+                    .withSplitMethod(splitEvenly).withDate(date).build();
             t5 = new TransactionBuilder().withPayer(TypicalPersons.FIONA)
                     .withAmount("0.00").withDescription("Dinner")
-                    .withPayees(payeeFiona).build();
+                    .withPayees(payeeFiona).withDate(date)
+                    .withSplitMethod(splitEvenly).withDate(date).build();
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         }
@@ -68,7 +85,11 @@ public class TypicalTransactions {
     public static AddressBook getTypicalAddressBook() {
         AddressBook ab = new AddressBook();
         for (Transaction transaction : getTypicalTransactions()) {
-            ab.addTransaction(transaction);
+            try {
+                ab.addTransaction(transaction);
+            } catch (CommandException ce) {
+                System.out.println(ce.getMessage());
+            }
         }
         return ab;
     }

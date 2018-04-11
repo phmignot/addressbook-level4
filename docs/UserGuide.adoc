@@ -17,7 +17,7 @@ By: `Kok Cong, Wen Qin, Paul Henri`      Since: `March 2018`      Licence: `MIT`
 
 == Introduction
 
-SmartSplit is a desktop app for managing share expenses between your contacts*. More importantly, SmartSplit is *optimized for those who prefer to work with a Command Line Interface* (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, SmartSplit can get your shared expense management tasks done faster than traditional GUI apps. Interested? Jump to the <<Quick Start>> to get started. Enjoy!
+SmartSplit is a desktop app for managing shared expenses between contacts. More importantly, SmartSplit is *optimized for those who prefer to work with a Command Line Interface* (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, SmartSplit can get your shared expense management tasks done faster than traditional GUI apps. Interested? Jump to the <<Quick Start>> to get started. Enjoy!
 
 == Quick Start
 
@@ -39,8 +39,9 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 * *`list`* : lists all contacts
 * **`addPerson`**`n/John Doe p/98765432 e/johnd@example.com : adds a contact named `John Doe` to SmartSplit.
-* **`delete`**`3` : deletes the 3rd contact shown in the current list
-* **`addTransaction`**`r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle` : adds a transaction payed by John Doe costing 3456.78$ for a dinner meal with Tom Riddle.
+* **`deletePerson`**`3` : deletes the 3rd contact shown in the current person list
+* **`addTransaction`**`payer/John Doe a/100.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu` : adds a transaction payed by John Doe costing $100.00 for a taxi ride split with Alex Yeoh and Bernice Yu.
+* **`deleteTransaction`**`2` : deletes the 2nd transaction shown in the current transaction list
 * *`exit`* : exits the app
 
 .  Refer to <<Features>> for details of each command.
@@ -63,7 +64,7 @@ Format: `help`
 
 === Adding a person: `addPerson`
 
-Adds a person to SmartSplit +
+Adds a person to the SmartSplit addressbook +
 Format: `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...`
 
 [TIP]
@@ -74,15 +75,15 @@ Examples:
 * `addPerson n/John Doe p/98765432 e/johnd@example.com`
 * `addPerson n/Betsy Crowe t/friend e/betsycrowe@example.com p/1234567 t/criminal`
 
-=== Listing all persons : `list`
+=== Listing all persons : `listPersons`
 
 Shows a list of all persons in SmartSplit. +
-Format: `list`
+Format: `listPersons`
 
-=== Editing a person : `edit`
+=== Editing a person : `editPerson`
 
 Edits an existing person in SmartSplit. +
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [t/TAG]...`
+Format: `editPerson INDEX [n/NAME] [p/PHONE] [e/EMAIL] [t/TAG]...`
 
 ****
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
@@ -92,17 +93,21 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [t/TAG]...`
 * You can remove all the person's tags by typing `t/` without specifying any tags after it.
 ****
 
+[WARNING]
+This feature is not yet properly handled by Transaction command,
+so the user should avoid to edit a person implied in any transaction.
+
 Examples:
 
-* `edit 1 p/91234567 e/johndoe@example.com` +
+* `editPerson 1 p/91234567 e/johndoe@example.com` +
 Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-* `edit 2 n/Betsy Crower t/` +
+* `editPerson 2 n/Betsy Crower t/` +
 Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-=== Locating persons by name: `find`
+=== Finding a person by name: `findPerson`
 
 Finds persons whose names contain any of the given keywords. +
-Format: `find KEYWORD [MORE_KEYWORDS]`
+Format: `findPerson KEYWORD [MORE_KEYWORDS]`
 
 ****
 * The search is case insensitive. e.g `hans` will match `Hans`
@@ -114,38 +119,42 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 
 Examples:
 
-* `find John` +
+* `findPerson John` +
 Returns `john` and `John Doe`
-* `find Betsy Tim John` +
+* `findPerson Betsy Tim John` +
 Returns any person having names `Betsy`, `Tim`, or `John`
 
-=== Deleting a person : `delete`
+=== Deleting a person : `deletePerson` `[Updated for v1.4]`
 
-Deletes the specified person from SmartSplit. +
+Deletes the specified person from SmartSplit if the person is cleared from any debts. +
 Format: `delete INDEX`
 
 ****
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
+* The person must have no debts owing.
 ****
 
 Examples:
 
 * `list` +
-`delete 2` +
-Deletes the 2nd person in SmartSplit.
-* `find Betsy` +
-`delete 1` +
-Deletes the 1st person in the results of the `find` command.
+`deletePerson 2` +
+Deletes the 2nd person in the list of persons if the person has no debts owing.
+* `findPerson Betsy` +
+`deletePerson 1` +
+Deletes the 1st person in the results of the `findPerson` command, if the person has no debts owing.
 
-=== Selecting a person : `select`
+// tag::select[]
+=== Selecting a person : `selectPerson`
 
 Selects the person identified by the index number used in the last person listing. +
-Format: `select INDEX`
+Format: `selectPerson INDEX`
 
 ****
-* Selects the person and loads the Google search page the person at the specified `INDEX`.
+* Selects the person.
+* Displays the transactions in which this person is involved.
+* Displays the person's debtors and creditors, if any.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* `1, 2, 3, ...`
 ****
@@ -153,31 +162,86 @@ Format: `select INDEX`
 Examples:
 
 * `list` +
-`select 2` +
+`selectPerson 2` +
 Selects the 2nd person in SmartSplit.
-* `find Betsy` +
-`select 1` +
-Selects the 1st person in the results of the `find` command.
+* `findPerson Betsy` +
+`selectPerson 1` +
+Selects the 1st person in the results of the `findPerson` command.
 
-=== Adding a transaction: `addTransaction` `[since v1.2]`
+=== Listing all transactions related to the person: `[Since v1.3]`
 
-Adds a transaction between one payer to one/mutiple payees
-Format: `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME`
-Format: `addTransaction payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME payee/PAYEE NAME`
+By clicking on a person on the person panel list, the person can be selected.
+All transactions that are relevant to that person will be displayed on the
+transaction panel list.
+In the debtors panel, any person who owes the selected person will appear with
+the amount that they owe.
+In the creditors panel, any person who is owed by the selected person will
+appear with the amount that they are owed.
 
+To de-select the person, press 'control' + click (for Mac/Linux: 'command' + click) on the person.
+All transactions will be re-displayed and the debtors panel and creditors panel will be cleared.
+// end::select[]
+
+// tag::addTransaction[]
+=== Adding a transaction: `addTransaction` `[Since v1.2]` `[Updated for v1.5rc]`
+
+Adds a transaction between one payer and one or multiple payees. +
+Format with 1 Payee: `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]` +
+Format with more than 1 Payee: `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]`
+
+****
+* The options for transaction type are: *payment* and *paydebt*.
+** *payment* is for recording a transaction that was paid by a person on behalf of himself/herself and other persons.
+** *paydebt* is for recording a transaction that reduces an existing debt owed to another person. *Only 1 payee is allowed.*
+* The options for split method are: *evenly*, *units*, and *percentage*. If no method is specified, the transaction will default to split evenly.
+** Only specify a split method if the transaction type is *payment*.
+** If *units* is selected as the split method, a list of integers representing the units must be entered as a comma-separated list. The first integer is the number of units
+associated with the payer. Each subsequent integer is associated with each payee in the order in which they are specified in the command. The amount that each involved
+person owes is calculated by the following: +
+Amount Owed = Transaction Amount * (Units for the Person / Total Number of Units)
+** If *percentage* is selected as the split method, a list of integers representing the percentages must be entered as a comma-separated list. The first integer is the percentage
+associated with the payer. Each subsequent integer is associated with each payee in the order in which they are specified in the command. *The percentages must add up to 100*.
+The amount that each involved person owes is calculated by the following: +
+Amount Owed = Transaction Amount * (Percentage for the Person / 100)
+* The names for the payer and payee(s) used in the transaction must be in the SmartSplit addressbook.
+* At least one payee is required. There is no limit to how many unique payees that may be added as long as they exist in the SmartSplit addressbook.
+* A payee cannot be the payer.
+* The amount must be a positive number with exactly two decimals.
+* The description must not be empty.
+****
 Examples:
 
-* `addTransaction payer/John Doe a/3456.78 d/for dinner meal payee/Tom Riddle`
-* `addTransaction payer/Betsy Crowe a/10.00 d/paying bus for the stadium payee/John Doe payee/Bernice Yu`
-=== Listing all transactions related to the person [since v1.3]
+1. `addTransaction type/payment payer/John Doe a/1000.00 d/Fancy dinner payee/Tom Riddle`
+* Adds a transaction where John Doe paid $1000.00. This is split evenly by default with Tom Riddle.
+Thus, John Doe's balance will increase by 500.00 since he can expect to get much back from Tom Riddle.
+Tom Riddle's balance will decrease by 500.00 (reflected as -500.00) since that is the amount he owes.
 
-By clicking on the person on the person panel list, transactions that are relevant to that person
-will be displayed on the transaction panel list.
+2. `addTransaction type/payment payer/Betsy Crowe a/30.00 d/Team T-shirts payee/John Doe payee/Bernice Yu m/units units/1, 2, 3`
+* Adds a transaction where Betsy Crowe paid $30.00 for team t-shirts. The split method is by units with a split of
+"1, 2, 3". The total number of units is 6. Thus, Betsy Crowe is responsible for 30.00 * (1/6) = 5.00. Similarly, John Doe
+is responsible for 10.00 and Bernice Yu is responsible for 15.00. Since Betsy Crowe paid for the transaction, her
+balance will increase by 25.00 since that is the sum of what she is owed. John Doe's balance will decrease by 10.00 (reflected as -10.00)
+and Bernice Yu's balance will decrease by 15.00 (reflected as -15.00).
 
-To de-select the person, press 'control' + a click on the person selected concurrently,
-and all history of transactions will be re-displayed
+3. `addTransaction type/payment payer/Steven Jia a/50.00 d/Taxi ride payee/Paul Mignot payee/Kok Cong Ong m/percentage percentage/50, 10, 10`
+* The *addTransaction* command fails because the sum of the percentages is not 100.
 
-=== Deleting a transaction : `deleteTransaction`[since v1.2]
+4. `addTransaction type/payment payer/Steven Jia a/50.00 d/Taxi ride payee/Paul Mignot payee/Kok Cong Ong m/percentage percentage/38, 28, 34`
+* Adds a transaction where Steven Jia paid $50.00 for a shared taxi ride. The split method is by percentage with a split of
+"38, 28, 34". Thus, Steven Jia is responsible for 50.00 * (38/100) = 19.00. Similarly, Paul Mignot
+is responsible for 14.00 and Kok Cong Ong is responsible for 17.00. Since Steven Jia paid for the transaction, his
+balance will increase by 31.00 since that is the sum of what he is owed. Paul Mignot's balance will decrease by 14.00 (reflected as -14.00)
+and Kok Cong Ong's balance will decrease by 17.00 (reflected as -17.00).
+
+5. `addTransaction type/paydebt payer/Tom Riddle a/500.00 d/Pay John for last night's dinner payee/John Doe
+* Adds a transaction where Tom Riddle paid John Doe $500.00. Tom Riddle's balance increases by 500.00 since
+he no longer owes that amount. John Doe's balance decreases by 500.00 since he is no longer owed that amount.
+
+6. `addTransaction type/paydebt payer/Bernice Yu a/15.00 d/Pay Betsy for last night's dinner payee/Betsy Crowe payee/John Doe
+* The *addTransaction* command fails because the there is more than 1 payee when the transaction type is *paydebt*.
+
+// end::addTransaction[]
+=== Deleting a transaction : `deleteTransaction` `[Since v1.2]`
 
 Deletes the specified transaction from SmartSplit. +
 Format: `deleteTransaction INDEX`
@@ -186,19 +250,15 @@ Format: `deleteTransaction INDEX`
 * Deletes the transaction at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
+* All persons involved in the transaction must still be in the SmartSplit addressbook.
 ****
 
-Examples:
+Example:
 
-`deleteTransaction 2` +
-Deletes the 2nd transaction in SmartSplit.
+* `deleteTransaction 2` +
+Deletes the 2nd transaction in the SmartSplit transactions list.
 
-=== Listing all transactions : `listTransactions`[coming v1.4]
-
-Shows a list of all transactions in SmartSplit. +
-Format: `listTransactions`
-
-=== Locating transactions by name: `findTransaction`[coming v1.4]
+=== Locating transactions by name: `findTransaction` `[Coming in v2.0]`
 
 Finds transactions whose property values contain any of the given keywords. +
 Format: `findTransaction KEYWORD [MORE_KEYWORDS]`
@@ -208,7 +268,8 @@ Format: `findTransaction KEYWORD [MORE_KEYWORDS]`
 * The order of the keywords does not matter. e.g. `Rent Monthly` will match `Monthly Rent`
 * All fields are searched.
 * Only full words or numbers will be matched e.g. `Month` will not match `Monthly`
-* Transactions matching at least one keyword will be returned (i.e. `OR` search). e.g. `Monthly` will return `Monthly Rent`, `Monthly Netflix Subscription`
+* Transactions matching at least one keyword will be returned (i.e. `OR` search).
+e.g. `Monthly` will return transactions with descriptions such as `Monthly Rent`, `Monthly Netflix Subscription`
 ****
 
 Examples:
@@ -216,7 +277,7 @@ Examples:
 * `findTransaction Groceries` +
 Returns `FairPrice groceries` and `Cheers groceries`
 * `find 90.25 Jonathan Food` +
-Returns any transaction having fields with the values `90.25`, `Jonathan`, or `Food`
+Returns any transaction with fields that have the values `90.25`, `Jonathan`, or `Food`
 
 === Listing entered commands : `history`
 
@@ -236,24 +297,29 @@ Format: `undo`
 
 [NOTE]
 ====
-Undoable commands: those commands that modify SmartSplit's content (`addPerson`, `delete`, `addTransaction`, `deleteTransaction`, `edit` and `clear`).
+Undoable commands: those commands that modify SmartSplit's content (`addPerson`, `deletePerson`, `addTransaction`, `deleteTransaction`, `editPerson` and `clear`).
 ====
 
 Examples:
 
-* `delete 1` +
-`list` +
-`undo` (reverses the `delete 1` command) +
+* `deletePerson 1` +
+`listPersons` +
+`undo` (reverses the `deletePerson 1` command) +
 
-* `select 1` +
-`list` +
+* `selectPerson 1` +
+`listPersons` +
 `undo` +
 The `undo` command fails as there are no undoable commands executed previously.
 
-* `delete 1` +
+* `deletePerson 1` +
 `clear` +
 `undo` (reverses the `clear` command) +
-`undo` (reverses the `delete 1` command) +
+`undo` (reverses the `deletePerson 1` command) +
+
+* `addTransaction payer/John Doe a/100.00 d/Taxi ride to NUS payee/Alex Yeoh splitMethod/evenly` +
+`deleteTransaction 1` +
+`undo` (reverses the `deleteTransaction 1` command) +
+`undo` (reverses the `addTransaction...` command)
 
 === Redoing the previously undone command : `redo`
 
@@ -262,15 +328,15 @@ Format: `redo`
 
 Examples:
 
-* `delete 1` +
-`undo` (reverses the `delete 1` command) +
-`redo` (reapplies the `delete 1` command) +
+* `deletePerson 1` +
+`undo` (reverses the `deletePerson 1` command) +
+`redo` (reapplies the `deletePerson 1` command) +
 
-* `delete 1` +
+* `deletePerson 1` +
 `redo` +
 The `redo` command fails as there are no `undo` commands executed previously.
 
-* `delete 1` +
+* `deletePerson 1` +
 `clear` +
 `undo` (reverses the `clear` command) +
 `undo` (reverses the `delete 1` command) +
@@ -293,12 +359,6 @@ Format: `exit`
 SmartSplit data is saved in the hard disk automatically after any command that changes the data. +
 There is no need to save manually.
 
-// tag::dataencryption[]
-=== Encrypting data files `[coming in v2.0]`
-
-_{explain how the user can enable/disable data encryption}_
-// end::dataencryption[]
-
 == FAQ
 
 *Q*: How do I transfer my data to another Computer? +
@@ -308,19 +368,23 @@ _{explain how the user can enable/disable data encryption}_
 
 * *AddPerson* `addPerson n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]...` +
 e.g. `addPerson n/James Ho p/22224444 e/jamesho@example.com t/friend t/colleague`
-* *AddTransaction* `r/PAYER NAME a/AMOUNT d/DESCRIPTION [e/PAYEE NAME]...` +
-e.g. `addTransaction r/John Doe a/3456.78 d/for dinner meal e/Tom Riddle e/Becky Simmons`
+* *ListPersons* : `listPersons`
+* *EditPerson* : `editPerson INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]...` +
+e.g. `editPerson 2 n/James Lee e/jameslee@example.com`
+* *FindPerson* : `findPerson KEYWORD [MORE_KEYWORDS]` +
+e.g. `findPerson James Jake`
+* *DeletePerson* : `deletePerson INDEX` +
+e.g. `deletePerson 3`
+* *SelectPerson* : `selectPerson INDEX` +
+e.g.`selectPerson 2`
+* *AddTransaction* `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]...` +
+e.g. `addTransaction type/payment payer/John Doe a/3456.00 d/for dinner meal payee/Tom Riddle e/Becky Simmons`
+* *DeleteTransaction* `deleteTransaction INDEX` +
+e.g. `deleteTransaction 1`
+* *FindTransaction* `findTransaction KEYWORD [MORE_KEYWORDS]` +
+e.g. `findTransaction taxi bangkok`
 * *Clear* : `clear`
-* *Delete* : `delete INDEX` +
-e.g. `delete 3`
-* *Edit* : `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]...` +
-e.g. `edit 2 n/James Lee e/jameslee@example.com`
-* *Find* : `find KEYWORD [MORE_KEYWORDS]` +
-e.g. `find James Jake`
-* *List* : `list`
-* *Help* : `help`
-* *Select* : `select INDEX` +
-e.g.`select 2`
-* *History* : `history`
 * *Undo* : `undo`
 * *Redo* : `redo`
+* *History* : `history`
+* *Help* : `help`

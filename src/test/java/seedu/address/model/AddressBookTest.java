@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.transaction.Transaction;
@@ -107,6 +108,21 @@ public class AddressBookTest {
         @Override
         public DebtsTable getDebtsTable() {
             return null;
+        }
+
+        @Override
+        public ObservableList<Debtor> getDebtorsList() {
+            return null;
+        }
+
+        @Override
+        public void setDebtors(DebtsList debtsList) {
+
+        }
+
+        @Override
+        public void setCreditors(DebtsList debtsList) {
+
         }
     }
 

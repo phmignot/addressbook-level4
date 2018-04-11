@@ -38,6 +38,8 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private TransactionListPanel transactionListPanel;
     private PersonListPanel personListPanel;
+    private DebtorListPanel personDebtorListPanel;
+    private CreditorListPanel personCreditorListPanel;
     private Config config;
     private UserPrefs prefs;
 
@@ -52,6 +54,12 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane personListPanelPlaceholder;
+
+    @FXML
+    private StackPane personDebtorListPanelPlaceholder;
+
+    @FXML
+    private StackPane personCreditorListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -121,6 +129,12 @@ public class MainWindow extends UiPart<Stage> {
 
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+
+        personDebtorListPanel = new DebtorListPanel(logic.getFilteredDebtorsList());
+        personDebtorListPanelPlaceholder.getChildren().add(personDebtorListPanel.getRoot());
+
+        personCreditorListPanel = new CreditorListPanel(logic.getFilteredCreditorsList());
+        personCreditorListPanelPlaceholder.getChildren().add(personCreditorListPanel.getRoot());
 
         transactionListPanel = new TransactionListPanel(logic.getFilteredTransactionList());
         transactionListPanelPlaceholder.getChildren().add(transactionListPanel.getRoot());
@@ -198,11 +212,15 @@ public class MainWindow extends UiPart<Stage> {
     private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList(event.getNewSelection().person);
+        logic.updateDebtorsList(event.getNewSelection().person);
+        logic.updateCreditorsList(event.getNewSelection().person);
     }
 
     @Subscribe
     private void handlePersonPanelNoSelectionEvent(PersonPanelNoSelectionEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList();
+        logic.updateDebtorsList();
+        logic.updateCreditorsList();
     }
 }

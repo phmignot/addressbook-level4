@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
-//@author ongkc
+//@@author ongkc
 /**
  * Recard all transactions to the list.
  *
@@ -54,7 +54,7 @@ public class TransactionList implements Iterable<Transaction> {
         return internalList.hashCode();
     }
 
-    //phmignot
+    //@@author phmignot
     /**
      * Removes the equivalent transaction from the list of transactions.
      *
@@ -68,7 +68,6 @@ public class TransactionList implements Iterable<Transaction> {
         }
         return transactionFoundAndDeleted;
     }
-    //@phmignot
     /**
      * Replaces the list of transactions by a input list of transaction.
      * @param transactions that will be the new transactions' list.

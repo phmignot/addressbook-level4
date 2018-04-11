@@ -2,8 +2,8 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.commands.DeletePersonCommand.MESSAGE_DEBT_NOT_PAID;
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayeeDebt;
-import static seedu.address.logic.util.BalanceCalculationUtil.calculatePayerDebt;
+import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayee;
+import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,19 +14,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
-import seedu.address.logic.commands.AddTransactionCommand;
-import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Balance;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.UniqueCreditorList;
+import seedu.address.model.person.UniqueDebtorList;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
-import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.TransactionList;
+import seedu.address.model.transaction.TransactionType;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 /**
@@ -38,6 +40,8 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons;
     private final UniqueTagList tags;
     private final TransactionList transactions;
+    private UniqueDebtorList debtors;
+    private UniqueCreditorList creditors;
     private DebtsTable debtsTable;
 
     /*
@@ -51,6 +55,8 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons = new UniquePersonList();
         tags = new UniqueTagList();
         transactions = new TransactionList();
+        debtors = new UniqueDebtorList();
+        creditors = new UniqueCreditorList();
         debtsTable = new DebtsTable();
     }
 
@@ -61,7 +67,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public AddressBook(ReadOnlyAddressBook toBeCopied) {
         this();
-        this.debtsTable = toBeCopied.getDebtsTable();
         resetData(toBeCopied);
     }
 
@@ -71,6 +76,12 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.persons.setPersons(persons);
     }
 
+    public void setDebtors(DebtsList debtsList)  {
+        this.debtors.setDebtors(debtsList);
+    }
+
+    public void setCreditors(DebtsList debtsList) {
+        this.creditors.setCreditors(debtsList); }
     public void setTransactions(List<Transaction> transactions) {
         this.transactions.setTransactions(transactions);
     }
@@ -80,7 +91,13 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     public void setDebtsTable(DebtsTable debtsTable) {
-        this.debtsTable.setDebtsTable(debtsTable);
+        final DebtsTable replacement = new DebtsTable();
+        for (DebtsTable.Entry<Person, DebtsList> entry : debtsTable.entrySet()) {
+            DebtsList debtsList = new DebtsList();
+            debtsList.putAll(entry.getValue());
+            replacement.put(entry.getKey(), debtsList);
+        }
+        this.debtsTable = replacement;
     }
     /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
@@ -98,7 +115,7 @@ public class AddressBook implements ReadOnlyAddressBook {
             setTransactions(syncedTransactionList);
             setDebtsTable(syncedDebtsTable);
         } catch (DuplicatePersonException e) {
-            throw new AssertionError("AddressBooks should not have duplicate persons");
+            throw new AssertionError("SmartSplit should not have duplicate persons");
         }
     }
 
@@ -228,6 +245,13 @@ public class AddressBook implements ReadOnlyAddressBook {
         return transactions.asObservableList();
     }
 
+    public ObservableList<Debtor> getDebtorsList() {
+        return debtors.asObservableList();
+    }
+
+    public ObservableList<Creditor> getCreditorsList() {
+        return creditors.asObservableList();
+    }
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
@@ -243,49 +267,61 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * add a new transaction
+     * Adds a {@code transaction} to the list of transactions.
      */
-    public void addTransaction(Transaction transaction) {
-        String typeOfTransaction = AddTransactionCommand.COMMAND_WORD;
+    public void addTransaction(Transaction transaction) throws CommandException {
+        if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            Person payeeToFind = transaction.getPayees().asObservableList().get(0);
+            if (debtsTable.size() != 0
+                    && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
+                    || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0)) {
+                throw new CommandException("Payee(s) is not owed any debt");
+            }
+        }
         transactions.add(transaction);
-        debtsTable.updateDebts(typeOfTransaction, transaction);
+        debtsTable.updateDebts(transaction, true);
         debtsTable.display();
     }
 
     /**
-     * Update each payer and payee(s) balance whenever each new transaction is added
+     * Update each payer and payee(s) balance whenever each new transaction is added or deleted
      */
-    public void updatePayerAndPayeesDebt(String transactionType, Amount amount, Person payer,
+    public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction, Person payer,
                                             UniquePersonList payees) {
-        updatePayerDebt(transactionType, amount, payer, payees);
-        for (Person payee: payees) {
-            updatePayeeDebt(transactionType, amount, payee, payees); }
+        updatePayerBalance(isAddingTransaction, transaction, payer);
+        for (int i = 0; i < payees.asObservableList().size(); i++) {
+            Person payee = payees.asObservableList().get(i);
+            Integer splitMethodValuesListIndex = i + 1;
+            updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
+        }
     }
+
     /**
-     * Update payer balance whenever each new transaction is added
+     * Update payer balance whenever a new transaction is added or deleted
      */
-    private void updatePayerDebt(String transactionType, Amount amount, Person payer, UniquePersonList payees) {
-        payer.addToBalance(calculatePayerDebt(transactionType, amount, payees));
+    private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction, Person payer) {
+        payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
+                transaction));
     }
+
     /**
-     * Update payee balance whenever each new transaction is added
+     * Update payee balance whenever a new transaction is added or deleted
      */
-    private void updatePayeeDebt(String transactionType, Amount amount, Person payee, UniquePersonList payees) {
-        payee.addToBalance(calculatePayeeDebt(transactionType, amount, payees));
+    private void updatePayeeBalance(Person payee,
+                                    Boolean isAddingTransaction,
+                                    Integer splitMethodValuesListIndex,
+                                    Transaction transaction) {
+        payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
+                splitMethodValuesListIndex, transaction));
     }
     /**
      * Removes {@code target} from the list of transactions.
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
      */
-    public boolean removeTransaction(Transaction target) throws TransactionNotFoundException {
-        String typeOfTransaction = DeleteTransactionCommand.COMMAND_WORD;
-        debtsTable.updateDebts(typeOfTransaction, target);
+    public void removeTransaction(Transaction target) throws TransactionNotFoundException {
+        transactions.remove(target);
+        debtsTable.updateDebts(target, false);
         debtsTable.display();
-        if (transactions.remove(target)) {
-            return true;
-        } else {
-            throw new TransactionNotFoundException();
-        }
     }
 
 }

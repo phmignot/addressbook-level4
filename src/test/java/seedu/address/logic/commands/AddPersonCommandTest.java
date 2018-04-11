@@ -23,6 +23,8 @@ import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -142,11 +144,6 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-
-        }
-
-        @Override
         public ObservableList<Person> getFilteredPersonList() {
             fail("This method should not be called.");
             return null;
@@ -166,6 +163,7 @@ public class AddPersonCommandTest {
 
         @Override
         public ObservableList<Transaction> getFilteredTransactionList() {
+            fail("This method should not be called.");
             return null;
         }
 
@@ -176,14 +174,35 @@ public class AddPersonCommandTest {
 
         @Override
         public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
-
+            fail("This method should not be called.");
         }
 
-        @Override
         public void addTransaction(Transaction transaction) {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {}
+        public void deleteTransaction(Transaction transaction) {}
+
+        @Override
+        public ObservableList<Debtor> getFilteredDebtors() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public ObservableList<Creditor> getFilteredCreditors() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors) {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors) {
+            fail("This method should not be called.");
+        }
     }
 
     public class ModelStubImpl extends ModelStub { }
@@ -210,7 +229,7 @@ public class AddPersonCommandTest {
         final ArrayList<Person> personsAdded = new ArrayList<>();
 
         @Override
-        public void addPerson(Person person) throws DuplicatePersonException {
+        public void addPerson(Person person) {
             requireNonNull(person);
             personsAdded.add(person);
         }

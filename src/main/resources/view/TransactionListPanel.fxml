@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
   <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <GridPane hgap="20" prefHeight="30.0" prefWidth="800.0" HBox.hgrow="ALWAYS">
       <columnConstraints>
         <ColumnConstraints maxWidth="143.19998168945312" minWidth="10.0" prefWidth="32.20001220703125" />
-        <ColumnConstraints maxWidth="214.39999389648438" minWidth="10.0" prefWidth="86.79998779296875" />
+        <ColumnConstraints maxWidth="214.39999389648438" minWidth="10.0" prefWidth="89.60000610351562" />
         <ColumnConstraints maxWidth="179.60003662109375" minWidth="73.20001220703125" prefWidth="73.20001220703125" />
-        <ColumnConstraints maxWidth="274.79998779296875" minWidth="204.39996337890625" prefWidth="250.20001220703125" />
+        <ColumnConstraints maxWidth="274.79998779296875" minWidth="179.0" prefWidth="179.0" />
         <ColumnConstraints maxWidth="255.60003662109375" minWidth="135.20001220703125" prefWidth="157.39996337890625" />
-        <ColumnConstraints maxWidth="264.00006103515625" minWidth="204.800048828125" prefWidth="238.60003662109375" />
+        <ColumnConstraints maxWidth="255.60003662109375" minWidth="102" prefWidth="122" />
+        <ColumnConstraints maxWidth="264.00006103515625" minWidth="140.60003662109375" prefWidth="185.0" />
       </columnConstraints>
       <padding>
         <Insets bottom="5" left="15" right="5" top="5" />
@@ -28,7 +29,8 @@
       <Label text="Amount" GridPane.columnIndex="2" />
       <Label text="Description" GridPane.columnIndex="3" />
       <Label text="Payee" GridPane.columnIndex="4" />
-      <Label text="Date &amp; Time" GridPane.columnIndex="5" />
+      <Label text="Transaction Type" GridPane.columnIndex="5" />
+      <Label text="Date &amp; Time" GridPane.columnIndex="6" />
       <rowConstraints>
         <RowConstraints maxHeight="36.600006103515625" minHeight="10.0" prefHeight="21.5999755859375" />
         <RowConstraints maxHeight="33.399993896484375" minHeight="10.399993896484375" prefHeight="25.4000244140625" />

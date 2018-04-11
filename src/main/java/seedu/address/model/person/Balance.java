@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 
 //@@author steven-jia
 /**
- * Represents a Person's balance in SmartSplit.
+ * Represents a Person's balance or debt in SmartSplit.
  * Guarantees: immutable; is valid as declared in {@link #isValidBalance(String)}
  */
 public class Balance {

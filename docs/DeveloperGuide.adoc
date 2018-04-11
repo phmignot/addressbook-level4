@@ -380,13 +380,23 @@ Why it is implemented that way
 
 Instead of saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
 
+// tag::selectfeature[]
 ===  Select feature
+
+There are two ways to triggered the `Select` feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
+The second one directly through the user interface, by clicking on a `Person card`. +
+These two interactions will result in raising the same events. +
+
+`SelectCommand` is not a undoable command.
+
 ==== Select Command Implementation
+
 .Component interactions for `select` command
 image::SelectCommandDiagram.png[width="800"]
-From the diagram above, when users enter the command select INDEX to select the first person in the persons list, SelectCommandParser will parse the argument, and return SelectCommand.
-Next, SelectCommand will call its method execute(). After select command is executed, an JumpToListRequestEvent is raised.
 
+From the diagram above when users enter the command `select INDEX` to select one of the person from the persons list,
+`SelectCommandParser` will parse the argument, and return `SelectCommand`.
+Next, SelectCommand will call its method `execute()`. After SelectCommand is executed, an *JumpToListRequestEvent* is raised.
 
 ==== JumpToListRequest Event process
 .Component interactions for `JumpToListRequest` event
@@ -394,35 +404,59 @@ image::JumpToListRequestEventDiagram.png[width="800"]
 With reference to the diagram above, the JumpToListRequest event is handled by the UI,with PersonListPanel, that will display a frame around the selected person, status bar of the UI will be updated, and then the UI raise a PersonPanelSelectionChanged event.
 
 ==== PersonPanelSelectionChanged Event process
-There are two ways to raise this event. The first one is by using this select command, the second one is by directly clicking on the PersonCard in the Addressbook.
+There are two ways to raise this event. The first one is by using this select command, the second one is by
+directly clicking on the `PersonCard` in the `PersonListPanel`.
+
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelSelectionChanged event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep only transactions related with the person selected.
-The FilteredTransactionList will be updated, the UI will display the new list.
+
+With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep only transactions related with the person selected. +
+The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== PersonPanelNoSelection Event process
-In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type another command that will clear the selection, such as the `find` command, or by directly deselecting a selected PersonCard using "Ctrl + Clic".
+In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
+another command that will clear the selection, such as the `find` command, or by directly deselecting a selected
+`PersonCard` using "*Ctrl + Clic*".
 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
-With reference to the diagram above, the PersonPanelNoSelection event is handled by the Model, that will call the UpdateFilteredTransactionList method in the addressbook, with the predicate to keep every transactions.
-The FilteredTransactionList will be updated, the UI will display the new list.
+
+With reference to the diagram above, the `PersonPanelNoSelection` event is handled by the `Model`, that will call
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep every transactions.
+The `FilteredTransactionList` will be updated, the UI will display the new list.
 
 ==== Why it is implemented that way
 
-This implementation can satisfy both user used and unused to Command Line. This implementation used events that are raised if needed, so there is no need to check regularly if the selection has changed. That implementation saves the application from wasting of resource by un.
+This implementation can satisfy both user that are used and unused to deal with Command Line.
+This implementation uses events that are raised if needed, so there is no need to check regularly if the selection has changed.
+This implementation saves the application from wasting of computing resource.
 
+// end::selectfeature[]
+
+// tag::payDebt[]
 === [Proposed] Pay Debt feature
 ==== Pay Debt Command Implementation
-When users enter the command payDebt c/ Creditor d/ Debtor /a Amount to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
-Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a payDebt() method will be called.
+When users enter the payDebt command to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
+Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a calculateUpdatedBalance() method will be called.
 
 ==== Pay Debt Event process
 After the payDebt method is executed, the PayDebtCommandParser, as part of the Logic component, will subtract the amount from the balance of the debtor and record
-the event as a transaction.
-An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
-The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
+the event as a transaction of type "paydebt".
+An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the storage file.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person that was involved in the transaction.
 
+==== Design Considerations
+===== Aspect: Implementation of `payDebtCommand`
+
+* **Alternative 1 (current choice):** Add a `transactionType` parameter that allows for a transaction to be added as a transaction of type "payDebt"
+** Pros: `addTransactionCommand` already works well and would simply need to include another parameter.
+** Cons: Increases the length of CLI input required from the user and adds complexity to the command by increasing the number of parameter combinations.
+* **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
+** Pros: Easier for users to understand. Allows for the use of a clearer and more obvious command word (i.e. "payDebt").
+** Cons: Very similar to addTransaction and will likely re-use a lot of the same code. As a new command, `payDebtCommand` would also require new tests for coverage.
+
+// end::payDebt[]
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
@@ -858,12 +892,12 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 *Paul Henri Mignot*
 
 * Major feature: Update the User Interface to display the list of transactions.
-* Minor feature: Allow user to delete their transactions
+* Minor feature: Allow user to delete their transactions.
 
 *Wen Qin Jia*
 
-* Major feature: Allow users to settle their balance by recording a payment via a "record payment" command
-* Minor feature: Allow users to split their expenses using evenly, by percentage, and by units
+* Major feature: Allow users to split their expenses using evenly, by units, and by percentage
+* Minor feature: Calculate and display a net balance for every user based on all their transactions
 
 [appendix]
 == User Stories

@@ -2,7 +2,6 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
-import static seedu.address.logic.commands.DeleteTransactionCommand.MESSAGE_NONEXISTENT_PAYER_PAYEES;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
 
 import java.util.List;
@@ -18,11 +17,11 @@ import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.commands.AddTransactionCommand;
-import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ParserUtil;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -42,6 +41,8 @@ public class ModelManager extends ComponentManager implements Model {
     private final AddressBook addressBook;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Transaction> filteredTransactions;
+    private final FilteredList<Debtor> filteredDebtors;
+    private final FilteredList<Creditor> filteredCreditors;
 
 
     /**
@@ -56,6 +57,8 @@ public class ModelManager extends ComponentManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredTransactions = new FilteredList<>(this.addressBook.getTransactionList());
+        filteredDebtors = new FilteredList<>(this.addressBook.getDebtorsList());
+        filteredCreditors = new FilteredList<>(this.addressBook.getCreditorsList());
     }
 
     public ModelManager() {
@@ -86,7 +89,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
-        if (isTransactionsWithPayer(person) & isTransactionsWithPayee(person)) {
+        if (findTransactionsWithPayer(person) && findTransactionsWithPayee(person)) {
             addressBook.addPerson(person);
         }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -116,7 +119,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author steven-jia
     public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model)
             throws PersonNotFoundException, IllegalValueException {
         UniquePersonList payees = new UniquePersonList();
@@ -145,20 +147,9 @@ public class ModelManager extends ComponentManager implements Model {
 
         return payees;
     }
-
+    //@@author ongkc
     @Override
-    public void findPersonInTransaction(Name name) throws PersonNotFoundException {
-        Set<Person> matchingPersons = addressBook.getPersonList()
-                .stream()
-                .filter(person -> person.getName().equals(name))
-                .collect(Collectors.toSet());
-        if (matchingPersons.isEmpty()) {
-            throw new PersonNotFoundException();
-        }
-    }
-
-    @Override
-    public boolean isTransactionsWithPayer(Person person) throws PersonFoundException {
+    public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -172,7 +163,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean isTransactionsWithPayee(Person person) throws PersonFoundException {
+    public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))
@@ -185,25 +176,6 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    @Override
-    public List<Transaction> replaceTransactionsWithPayer(Person person, Person editedPerson)
-            throws DuplicatePersonException, PersonNotFoundException  {
-        List<Transaction> matchingTransactions = addressBook.getTransactionList()
-                .stream()
-                .map(transaction -> transaction.setPerson(person, editedPerson))
-                .collect(Collectors.toList());
-        return matchingTransactions;
-    }
-
-    @Override
-    public List<Transaction> listTransactionsWithPayee(Person person) throws PersonFoundException {
-        List<Transaction> matchingTransactions = addressBook.getTransactionList()
-                .stream()
-                .filter(transaction -> transaction.getPayees().contains(person))
-                .collect(Collectors.toList());
-        return matchingTransactions;
-    }
-
     //@@author ongkc
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
@@ -213,14 +185,21 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredTransactions);
     }
 
-    //@@author ongkc
+    public ObservableList<Debtor> getFilteredDebtors() {
+        return FXCollections.unmodifiableObservableList(filteredDebtors);
+    }
+
+    public ObservableList<Creditor> getFilteredCreditors() {
+        return FXCollections.unmodifiableObservableList(filteredCreditors);
+    }
     @Override
-    public void addTransaction(Transaction transaction) {
-        String transactionType = AddTransactionCommand.COMMAND_WORD;
+    public void addTransaction(Transaction transaction) throws CommandException, PersonNotFoundException {
         addressBook.addTransaction(transaction);
-        addressBook.updatePayerAndPayeesDebt(transactionType , transaction.getAmount(),
-                transaction.getPayer(), transaction.getPayees());
+        addressBook.updatePayerAndPayeesBalance(true, transaction, findPersonByName(
+                transaction.getPayer().getName()), getPayeesList(transaction.getPayees()));
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
@@ -228,15 +207,12 @@ public class ModelManager extends ComponentManager implements Model {
 
     //@@author phmignot
     @Override
-    public void deleteTransaction(Transaction target) throws TransactionNotFoundException, CommandException {
-        String transactionType = DeleteTransactionCommand.COMMAND_WORD;
-        try {
-            addressBook.updatePayerAndPayeesDebt(transactionType , target.getAmount(),
-                    findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
-        }   catch (PersonNotFoundException e) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PAYER_PAYEES);
-        }
+    public void deleteTransaction(Transaction target) throws TransactionNotFoundException, PersonNotFoundException {
+        addressBook.updatePayerAndPayeesBalance(false, target,
+                findPersonByName(target.getPayer().getName()), getPayeesList(target.getPayees()));
         addressBook.removeTransaction(target);
+        updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
         updateFilteredPersonList(PREDICATE_SHOW_NO_PERSON);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
@@ -252,14 +228,24 @@ public class ModelManager extends ComponentManager implements Model {
         return FXCollections.unmodifiableObservableList(filteredPersons);
     }
 
-
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
     }
+    @Override
+    public void updateDebtorList(Predicate<Debtor> predicate) {
+        requireNonNull(predicate);
+        filteredDebtors.setPredicate(predicate);
+    }
 
-    //@author ongkc
+    @Override
+    public void updateCreditorList(Predicate<Creditor> predicate) {
+        requireNonNull(predicate);
+        filteredCreditors.setPredicate(predicate);
+    }
+
+    //@@author ongkc
     @Override
     public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
         requireNonNull(predicate);

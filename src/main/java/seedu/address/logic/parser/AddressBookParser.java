@@ -12,14 +12,14 @@ import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.DeletePersonCommand;
 import seedu.address.logic.commands.DeleteTransactionCommand;
-import seedu.address.logic.commands.EditCommand;
+import seedu.address.logic.commands.EditPersonCommand;
 import seedu.address.logic.commands.ExitCommand;
-import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindPersonCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.HistoryCommand;
-import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.ListPersonsCommand;
 import seedu.address.logic.commands.RedoCommand;
-import seedu.address.logic.commands.SelectCommand;
+import seedu.address.logic.commands.SelectPersonCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -35,7 +35,6 @@ public class AddressBookParser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
 
-    //@@author steven-jia
     private final Model model;
 
     public AddressBookParser(Model model) {
@@ -66,10 +65,10 @@ public class AddressBookParser {
         case AddTransactionCommand.COMMAND_WORD:
             return new AddTransactionCommandParser().parse(arguments, model);
 
-        case EditCommand.COMMAND_WORD:
+        case EditPersonCommand.COMMAND_WORD:
             return new EditCommandParser().parse(arguments, model);
 
-        case SelectCommand.COMMAND_WORD:
+        case SelectPersonCommand.COMMAND_WORD:
             return new SelectCommandParser().parse(arguments, model);
 
         case DeletePersonCommand.COMMAND_WORD:
@@ -81,11 +80,11 @@ public class AddressBookParser {
         case ClearCommand.COMMAND_WORD:
             return new ClearCommand();
 
-        case FindCommand.COMMAND_WORD:
+        case FindPersonCommand.COMMAND_WORD:
             return new FindCommandParser().parse(arguments, model);
 
-        case ListCommand.COMMAND_WORD:
-            return new ListCommand();
+        case ListPersonsCommand.COMMAND_WORD:
+            return new ListPersonsCommand();
 
         case HistoryCommand.COMMAND_WORD:
             return new HistoryCommand();

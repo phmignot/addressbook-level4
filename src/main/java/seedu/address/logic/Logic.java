@@ -4,7 +4,10 @@ import javafx.collections.ObservableList;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 
 /**
@@ -18,7 +21,7 @@ public interface Logic {
      * @throws CommandException If an error occurs during command execution.
      * @throws ParseException If an error occurs during parsing.
      */
-    CommandResult execute(String commandText) throws CommandException, ParseException;
+    CommandResult execute(String commandText) throws CommandException, ParseException, PersonNotFoundException;
 
     /** Returns an unmodifiable view of the filtered list of persons */
     ObservableList<Person> getFilteredPersonList();
@@ -40,4 +43,14 @@ public interface Logic {
      */
     void updateFilteredTransactionList(Person person);
 
+    ObservableList<Debtor> getFilteredDebtorsList();
+
+    ObservableList<Creditor> getFilteredCreditorsList();
+
+    void updateDebtorsList(Person person);
+
+    void updateDebtorsList();
+    void updateCreditorsList(Person person);
+
+    void updateCreditorsList();
 }
