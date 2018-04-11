@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,7 +181,7 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) throws CommandException {}
+        public void addTransaction(Transaction transaction) throws CommandException, PersonNotFoundException {}
 
         @Override
         public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
@@ -235,11 +234,10 @@ public class AddTransactionCommandTest {
      */
     private class ModelStubThrowingPersonNotFoundException extends ModelStub {
         @Override
-        public void addTransaction(Transaction transaction) throws CommandException {
-            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
+        public void addTransaction(Transaction transaction) throws PersonNotFoundException {
+            throw new PersonNotFoundException();
+
         }
-
-
         @Override
         public ReadOnlyAddressBook getAddressBook() {
             return new AddressBook();
