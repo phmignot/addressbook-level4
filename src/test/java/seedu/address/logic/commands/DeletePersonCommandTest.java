@@ -149,6 +149,7 @@ public class DeletePersonCommandTest {
         assertCommandSuccess(redoCommand, model, RedoCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
+
     @Test
     public void equals() throws Exception {
         DeletePersonCommand deleteFirstCommand = prepareCommand(INDEX_FIRST_PERSON);

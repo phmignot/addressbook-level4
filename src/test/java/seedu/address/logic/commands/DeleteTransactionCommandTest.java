@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.prepareRedoCommand;
@@ -11,21 +12,41 @@ import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TRANSACTION;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TRANSACTION;
 
-import org.junit.Test;
+import java.util.function.Predicate;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import javafx.collections.ObservableList;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
+import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.ArgumentMultimap;
+import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
+import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 public class DeleteTransactionCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void execute_validIndexUnfilteredList_success() throws Exception {
@@ -142,6 +163,28 @@ public class DeleteTransactionCommandTest {
     }
 
     @Test
+    public void execute_payerOrPayeesDoNotExist_throwsCommandException() throws CommandException,
+            PersonNotFoundException, TransactionNotFoundException {
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Transaction transactionToDelete = model.getAddressBook().getTransactionList().get(0);
+
+        thrown.expect(CommandException.class);
+        thrown.expectMessage(DeleteTransactionCommand.MESSAGE_NONEXISTENT_PAYER_PAYEES);
+
+        getDeleteTransactionCommand(transactionToDelete, expectedModel).execute();
+    }
+
+    @Test
+    public void execute_emptyTransactionList_throwsCommandException() throws CommandException,
+            PersonNotFoundException, TransactionNotFoundException {
+        Model expectedModel = new ModelManager(new AddressBook(), new UserPrefs());
+        thrown.expect(CommandException.class);
+        thrown.expectMessage(Messages.MESSAGE_EMPTY_TRANSACTION_LIST);
+
+        getDeleteTransactionCommand(expectedModel).execute();
+    }
+
+    @Test
     public void equals() throws Exception {
         DeleteTransactionCommand deleteFirstCommand = prepareCommand(INDEX_FIRST_TRANSACTION);
         DeleteTransactionCommand deleteSecondCommand = prepareCommand(INDEX_SECOND_TRANSACTION);
@@ -166,7 +209,124 @@ public class DeleteTransactionCommandTest {
         // different transaction -> returns false
         assertFalse(deleteFirstCommand.equals(deleteSecondCommand));
     }
+    /**
+     * A default model stub that have all of the methods failing.
+     */
+    private class ModelStub implements Model {
+        @Override
+        public void addPerson(Person person) throws DuplicatePersonException {
+            fail("This method should not be called.");
+        }
 
+        @Override
+        public void resetData(ReadOnlyAddressBook newData) {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public void deletePerson(Person target)  {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public void updatePerson(Person target, Person editedPerson) {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public Person findPersonByName(Name name) {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) throws PersonNotFoundException,
+                IllegalValueException {
+            return null;
+        }
+
+        @Override
+        public ObservableList<Person> getFilteredPersonList() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public boolean findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
+            fail("This method should not be called.");
+            return true;
+        }
+
+        @Override
+        public boolean findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
+            fail("This method should not be called.");
+            return true;
+        }
+
+        @Override
+        public ObservableList<Transaction> getFilteredTransactionList() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public void updateFilteredPersonList(Predicate<Person> predicate) {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
+            fail("This method should not be called.");
+        }
+
+        public void addTransaction(Transaction transaction) {}
+
+        @Override
+        public void deleteTransaction(Transaction transaction) throws PersonNotFoundException {}
+
+        @Override
+        public ObservableList<Debtor> getFilteredDebtors() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public ObservableList<Creditor> getFilteredCreditors() {
+            fail("This method should not be called.");
+            return null;
+        }
+
+        @Override
+        public void updateDebtorList(Predicate<Debtor> predicateShowNoDebtors) {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public void updateCreditorList(Predicate<Creditor> predicateShowAllCreditors) {
+            fail("This method should not be called.");
+        }
+    }
+
+    /**
+     * A Model stub that always throw a DuplicatePersonException when trying to add a person.
+     */
+    private class ModelStubThrowingPayerOrPayeesDonotExistException extends ModelStub {
+        @Override
+        public void deleteTransaction(Transaction transaction) throws PersonNotFoundException {
+            throw new PersonNotFoundException();
+        }
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            return new AddressBook();
+        }
+    }
     /**
      * Returns a {@code DeleteCommand} with the parameter {@code index}.
      */
@@ -175,7 +335,24 @@ public class DeleteTransactionCommandTest {
         deleteTransactionCommand.setData(model, new CommandHistory(), new UndoRedoStack());
         return deleteTransactionCommand;
     }
+    /**
+     * Generates a new AddPersonCommand with the details of the given person.
+     */
+    private DeleteTransactionCommand getDeleteTransactionCommand(Transaction transaction, Model model) throws TransactionNotFoundException, PersonNotFoundException, CommandException {
+        DeleteTransactionCommand command = new DeleteTransactionCommand(INDEX_FIRST_TRANSACTION);
+        model.deletePerson(transaction.getPayer());
+        command.setData(model, new CommandHistory(), new UndoRedoStack());
+        return command;
+    }
 
+    /**
+     * Generates a new AddPersonCommand with the details of the given person.
+     */
+    private DeleteTransactionCommand getDeleteTransactionCommand(Model model) throws TransactionNotFoundException, PersonNotFoundException, CommandException {
+        DeleteTransactionCommand command = new DeleteTransactionCommand(INDEX_FIRST_TRANSACTION);
+        command.setData(model, new CommandHistory(), new UndoRedoStack());
+        return command;
+    }
     /**
      * Updates {@code model}'s filtered list to show no one.
      */
