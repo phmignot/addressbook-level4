@@ -47,7 +47,7 @@ public interface Model {
     /** Deletes the given person. */
     void deletePerson(Person target) throws PersonNotFoundException, CommandException;
     /** Adds the given person */
-    void addPerson(Person person) throws DuplicatePersonException, PersonFoundException;
+    void addPerson(Person person) throws DuplicatePersonException;
 
     /**
      * Replaces the given person {@code target} with {@code editedPerson}.

@@ -88,10 +88,8 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
-        if (findTransactionsWithPayer(person) && findTransactionsWithPayee(person)) {
+    public synchronized void addPerson(Person person) throws DuplicatePersonException {
             addressBook.addPerson(person);
-        }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
