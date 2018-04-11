@@ -89,7 +89,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
-        if (findTransactionsWithPayer(person) && findTransactionsWithPayee(person)) {
+        if (isTransactionsWithPayer(person) && isTransactionsWithPayee(person)) {
             addressBook.addPerson(person);
         }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -103,6 +103,31 @@ public class ModelManager extends ComponentManager implements Model {
 
         addressBook.updatePerson(target, editedPerson);
         indicateAddressBookChanged();
+    }
+
+    /**
+     * Update the Person profile in the TransactionList.
+     * @param target actual profile
+     * @param editedPerson edited profile
+     * @throws DuplicatePersonException if the edited profile is already present.
+     */
+    public void updatePersonInTransactionList(Person target, Person editedPerson) throws DuplicatePersonException,
+            PersonNotFoundException {
+        List<Transaction> transactionListPayer = findTransactionsWithPayer(target);
+        for (Transaction transaction: transactionListPayer) {
+            if (transaction.getPayees().contains(editedPerson)) {
+                throw new DuplicatePersonException();
+            }
+            transaction.setPayer(editedPerson);
+        }
+        List<Transaction> transactionListPayee = findTransactionsWithPayee(target);
+        for (Transaction transaction: transactionListPayee) {
+            if (transaction.getPayer().equals(editedPerson)) {
+                throw new DuplicatePersonException();
+            }
+            UniquePersonList payees = transaction.getPayees();
+            payees.setPerson(target, editedPerson);
+        }
     }
     //@@author steven-jia
     @Override
@@ -149,7 +174,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
     //@@author ongkc
     @Override
-    public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
+    public boolean isTransactionsWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -163,7 +188,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
+    public boolean isTransactionsWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))
@@ -176,7 +201,19 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
-    //@@author ongkc
+    @Override
+    public List<Transaction> findTransactionsWithPayer(Person person) {
+        List<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .filtered(transaction -> transaction.getPayer().equals(person));
+        return matchingTransactions;
+    }
+
+    @Override
+    public List<Transaction> findTransactionsWithPayee(Person person) {
+        List<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .filtered(transaction -> transaction.getPayees().contains(person));
+        return matchingTransactions;
+    }
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */

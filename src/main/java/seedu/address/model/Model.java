@@ -1,5 +1,6 @@
 package seedu.address.model;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
@@ -37,6 +38,9 @@ public interface Model {
 
     /** {@code Predicate} that always evaluate to true */
     Predicate<Transaction> PREDICATE_SHOW_ALL_TRANSACTIONS = unused -> true;
+
+    /** {@code Predicate} that always evaluate to false */
+    Predicate<Transaction> PREDICATE_SHOW_NO_TRANSACTION = unused -> false;
 
     /** Clears existing backing model and replaces with the provided new data. */
     void resetData(ReadOnlyAddressBook newData);
@@ -76,6 +80,13 @@ public interface Model {
 
     /** Returns a set of transactions that have {@code person} as a payee */
     boolean isTransactionsWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
+
+    //@@author phmignot
+    /** Returns a set of transactions that have {@code person} as the payer */
+    List<Transaction> findTransactionsWithPayer(Person person);
+
+    /** Returns a set of transactions that have {@code person} as a payee */
+    List<Transaction> findTransactionsWithPayee(Person person);
 
     //@@author
     /** Returns an unmodifiable view of the filtered transaction list */

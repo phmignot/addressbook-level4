@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
-
 /**
  * DebtsList of a Person, contains every person matched with the amount is owed or owes.
  */
@@ -26,6 +25,13 @@ public class DebtsList extends HashMap<Person, Balance> {
         }
         Balance oldDebts = this.get(person);
         this.replace(person, oldDebts.add(debtToAdd));
+    }
+
+    public void setPerson(Person target, Person editedPerson) {
+        if (this.containsKey(target)) {
+            Balance targetBalance = this.remove(target);
+            this.put(editedPerson, targetBalance);
+        }
     }
 
     /**

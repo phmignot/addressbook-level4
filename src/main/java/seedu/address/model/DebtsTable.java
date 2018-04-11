@@ -1,11 +1,14 @@
 package seedu.address.model;
 
+import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayee;
 
 import java.util.HashMap;
 
 import seedu.address.model.person.Balance;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 
 /**
@@ -50,6 +53,29 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
         this.putIfAbsent(personToAdd, new DebtsList());
     }
 
+
+    /**
+     * Replaces the person {@code target} in the list with {@code editedPerson}.
+     *
+     */
+    public void setPerson(Person target, Person editedPerson) throws PersonNotFoundException, DuplicatePersonException {
+        requireNonNull(editedPerson);
+        requireNonNull(target);
+        if (!this.containsKey(target)) {
+            throw new PersonNotFoundException();
+        }
+        if (this.containsKey(editedPerson)) {
+            throw new DuplicatePersonException();
+        }
+        DebtsList targetDebtsList = this.remove(target);
+        this.put(editedPerson, targetDebtsList);
+        this.replaceAll(((person, debtsList) -> {
+            debtsList.setPerson(target, editedPerson);
+            return debtsList;
+        }));
+
+    }
+
     /**
      * Displays the content of the Debts Table in the terminal.
      */
@@ -61,7 +87,5 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
             System.out.println();
         }));
     }
-
-
 }
 

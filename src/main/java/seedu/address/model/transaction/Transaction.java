@@ -23,7 +23,6 @@ public class Transaction {
     private final Amount amount;
     private final Description description;
     private UniquePersonList payees;
-    private final UniquePersonList payees;
     private final TransactionType transactionType;
     private final SplitMethod splitMethod;
     private ArrayList<Integer> units;
@@ -97,6 +96,10 @@ public class Transaction {
         return payer;
     }
 
+    public void setPayer(Person payer) {
+        this.payer = payer;
+    }
+
     public Amount getAmount() {
         return amount;
     }
@@ -107,6 +110,26 @@ public class Transaction {
 
     public UniquePersonList getPayees() {
         return payees;
+    }
+
+    public void setPayees(UniquePersonList payees) {
+        this.payees = payees;
+    }
+
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public SplitMethod getSplitMethod() {
+        return splitMethod;
+    }
+
+    public List<Integer> getUnits() {
+        return units;
+    }
+
+    public List<Integer> getPercentages() {
+        return percentages;
     }
 
     @Override

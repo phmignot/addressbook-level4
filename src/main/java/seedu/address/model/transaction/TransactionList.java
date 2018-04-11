@@ -10,6 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 //@@author ongkc
 /**
@@ -77,22 +79,22 @@ public class TransactionList implements Iterable<Transaction> {
         internalList.setAll(transactions);
     }
 
-    /**
-     * Replaces the person {@code target} in the list with {@code editedPerson}.
-     *
-     */
-    public void setPerson(Person target, Person editedPerson) {
-        /* TO DO 
-        requireNonNull(editedPerson);
-
-        int index = internalList.indexOf(target);
-        if (index == -1) {
+    public void setPerson(Person target, Person editedPerson) throws DuplicatePersonException, PersonNotFoundException {
+        for (Transaction transaction : internalList) {
+            Person payer = transaction.getPayer();
+            UniquePersonList payees = transaction.getPayees();
+            if (payees.contains(editedPerson) || payer.equals(editedPerson)) {
+                throw new DuplicatePersonException();
+            }
+            if (payees.contains(target) && payer.equals(target)) {
+                throw new DuplicatePersonException();
+            }
+            if (payer.equals(target)) {
+                transaction.setPayer(editedPerson);
+            }
+            if (payees.contains(target)) {
+                payees.setPerson(target, editedPerson);
+            }
         }
-
-        if (!target.equals(editedPerson) && internalList.contains(editedPerson)) {
-        }
-
-        internalList.set(index, editedPerson);
-        */
     }
 }

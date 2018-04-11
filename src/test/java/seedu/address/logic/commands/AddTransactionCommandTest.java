@@ -9,6 +9,7 @@ import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_I
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.Rule;
@@ -164,6 +165,16 @@ public class AddTransactionCommandTest {
         public boolean isTransactionsWithPayee(Person person) throws TransactionNotFoundException {
             fail("This method should not be called.");
             return true;
+        }
+
+        @Override
+        public List<Transaction> findTransactionsWithPayer(Person person) {
+            return null;
+        }
+
+        @Override
+        public List<Transaction> findTransactionsWithPayee(Person person) {
+            return null;
         }
 
         @Override
