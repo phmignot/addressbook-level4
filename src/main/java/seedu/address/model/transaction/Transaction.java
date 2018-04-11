@@ -65,6 +65,18 @@ public class Transaction {
         initializeSplitMethodListValues(units, percentages);
     }
 
+    public Transaction(Transaction transaction) {
+        this.transactionType = transaction.getTransactionType();
+        this.dateTime = transaction.getDateTime();
+        this.id = transaction.getId();
+        this.payer = transaction.getPayer();
+        this.amount = transaction.getAmount();
+        this.description = transaction.getDescription();
+        this.payees = transaction.getPayees();
+        this.splitMethod = transaction.getSplitMethod();
+        this.units = transaction.getUnits();
+        this.percentages = transaction.getPercentages();
+    }
     /**
      * @param units
      * @param percentages
@@ -124,11 +136,11 @@ public class Transaction {
         return splitMethod;
     }
 
-    public List<Integer> getUnits() {
+    public ArrayList<Integer> getUnits() {
         return units;
     }
 
-    public List<Integer> getPercentages() {
+    public ArrayList<Integer> getPercentages() {
         return percentages;
     }
 

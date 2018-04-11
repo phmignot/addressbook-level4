@@ -80,9 +80,12 @@ public class TransactionList implements Iterable<Transaction> {
     }
 
     public void setPerson(Person target, Person editedPerson) throws DuplicatePersonException, PersonNotFoundException {
-        for (Transaction transaction : internalList) {
+        for (Transaction transaction : this.asObservableList()) {
             Person payer = transaction.getPayer();
             UniquePersonList payees = transaction.getPayees();
+            Transaction editedTransaction = new Transaction(transaction);
+            UniquePersonList editedpayees = new UniquePersonList();
+            editedpayees.setPersons(payees);
             if (payees.contains(editedPerson) || payer.equals(editedPerson)) {
                 throw new DuplicatePersonException();
             }
@@ -90,11 +93,13 @@ public class TransactionList implements Iterable<Transaction> {
                 throw new DuplicatePersonException();
             }
             if (payer.equals(target)) {
-                transaction.setPayer(editedPerson);
+                editedTransaction.setPayer(editedPerson);
             }
             if (payees.contains(target)) {
-                payees.setPerson(target, editedPerson);
+                editedpayees.setPerson(target, editedPerson);
+                editedTransaction.setPayees(editedpayees);
             }
+            internalList.set(internalList.indexOf(transaction), editedTransaction);
         }
     }
 }
