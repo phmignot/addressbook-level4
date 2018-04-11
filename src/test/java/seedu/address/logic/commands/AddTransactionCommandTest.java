@@ -61,7 +61,7 @@ public class AddTransactionCommandTest {
     }
 
     @Test
-    public void execute_PersonNotFound_throwsCommandException() throws Exception {
+    public void execute_personNotFound_throwsCommandException() throws Exception {
         ModelStub modelStub =
                 new ModelStubThrowingPersonNotFoundException();
         Transaction validTransaction = new TransactionBuilder().build();
