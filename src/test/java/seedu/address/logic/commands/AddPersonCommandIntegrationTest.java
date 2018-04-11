@@ -1,6 +1,5 @@
 package seedu.address.logic.commands;
 
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 
@@ -13,7 +12,6 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.testutil.PersonBuilder;
 
 /**
@@ -37,13 +35,6 @@ public class AddPersonCommandIntegrationTest {
 
         assertCommandSuccess(prepareCommand(validPerson, model), model,
                 String.format(AddPersonCommand.MESSAGE_SUCCESS, validPerson), expectedModel);
-    }
-
-    @Test
-    public void execute_duplicatePerson_throwsCommandException() throws PersonNotFoundException {
-        Person personInList = model.getAddressBook().getPersonList().get(6);
-        assertCommandFailure(prepareCommand(personInList, model), model,
-                AddPersonCommand.MESSAGE_PERSON_EXISTS_IN_TRANSACTION);
     }
 
     /**

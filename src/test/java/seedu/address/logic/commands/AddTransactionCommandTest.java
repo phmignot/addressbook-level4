@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,13 +61,13 @@ public class AddTransactionCommandTest {
     }
 
     @Test
-    public void execute_payerOrPayeeIsPayerOrPayee_throwsCommandException() throws Exception {
+    public void execute_personNotFound_throwsCommandException() throws Exception {
         ModelStub modelStub =
-                new ModelStubThrowingPayerIsPayeeException();
+                new ModelStubThrowingPersonNotFoundException();
         Transaction validTransaction = new TransactionBuilder().build();
 
         thrown.expect(CommandException.class);
-        thrown.expectMessage(AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER);
+        thrown.expectMessage(AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON);
 
         getAddTransactionCommand(validTransaction, modelStub).execute();
     }
@@ -110,7 +110,7 @@ public class AddTransactionCommandTest {
      */
     private class ModelStub implements Model {
         @Override
-        public void addPerson(Person person) throws DuplicatePersonException {
+        public void addPerson(Person person) {
             fail("This method should not be called.");
         }
 
@@ -230,10 +230,13 @@ public class AddTransactionCommandTest {
         }
     }
 
-    private class ModelStubThrowingPayerIsPayeeException extends ModelStub {
+    /**
+     * A Model stub that throw PersonNotFound except the transaction being added.
+     */
+    private class ModelStubThrowingPersonNotFoundException extends ModelStub {
         @Override
         public void addTransaction(Transaction transaction) throws CommandException {
-            throw new CommandException(MESSAGE_PAYEE_IS_PAYER);
+            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
         }
 
 
