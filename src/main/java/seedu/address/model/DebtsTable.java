@@ -64,7 +64,7 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
         if (!this.containsKey(target)) {
             throw new PersonNotFoundException();
         }
-        if (this.containsKey(editedPerson)) {
+        if (!target.equals(editedPerson) && this.containsKey(editedPerson)) {
             throw new DuplicatePersonException();
         }
         DebtsList targetDebtsList = this.remove(target);

@@ -161,7 +161,7 @@ public class AddPersonCommandTest {
             fail("This method should not be called.");
             return true;
         }
-        
+
         @Override
         public List<Transaction> findTransactionsWithPayer(Person person) {
             fail("This method should not be called.");

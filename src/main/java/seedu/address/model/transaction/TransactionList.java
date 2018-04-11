@@ -86,7 +86,7 @@ public class TransactionList implements Iterable<Transaction> {
             Transaction editedTransaction = new Transaction(transaction);
             UniquePersonList editedpayees = new UniquePersonList();
             editedpayees.setPersons(payees);
-            if (payees.contains(editedPerson) || payer.equals(editedPerson)) {
+            if (!target.equals(editedPerson) && (payees.contains(editedPerson) || payer.equals(editedPerson))) {
                 throw new DuplicatePersonException();
             }
             if (payees.contains(target) && payer.equals(target)) {
