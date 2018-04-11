@@ -76,10 +76,10 @@ public interface Model {
 
     //@@author steven-jia
     /** Returns a set of transactions that have {@code person} as the payer */
-    boolean isTransactionsWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
+    boolean isNoTransactionWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
 
     /** Returns a set of transactions that have {@code person} as a payee */
-    boolean isTransactionsWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
+    boolean isNoTransactionWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
 
     //@@author phmignot
     /** Returns a set of transactions that have {@code person} as the payer */

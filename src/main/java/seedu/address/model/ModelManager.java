@@ -89,9 +89,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
-        if (isTransactionsWithPayer(person) && isTransactionsWithPayee(person)) {
-            addressBook.addPerson(person);
-        }
+        addressBook.addPerson(person);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
@@ -173,7 +171,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
     //@@author ongkc
     @Override
-    public boolean isTransactionsWithPayer(Person person) throws PersonFoundException {
+    public boolean isNoTransactionWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -187,7 +185,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean isTransactionsWithPayee(Person person) throws PersonFoundException {
+    public boolean isNoTransactionWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))
