@@ -43,10 +43,9 @@ import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 
 public class DeleteTransactionCommandTest {
 
-    private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
     public void execute_validIndexUnfilteredList_success() throws Exception {
@@ -338,7 +337,8 @@ public class DeleteTransactionCommandTest {
     /**
      * Generates a new AddPersonCommand with the details of the given person.
      */
-    private DeleteTransactionCommand getDeleteTransactionCommand(Transaction transaction, Model model) throws TransactionNotFoundException, PersonNotFoundException, CommandException {
+    private DeleteTransactionCommand getDeleteTransactionCommand(Transaction transaction, Model model) throws
+            PersonNotFoundException, CommandException {
         DeleteTransactionCommand command = new DeleteTransactionCommand(INDEX_FIRST_TRANSACTION);
         model.deletePerson(transaction.getPayer());
         command.setData(model, new CommandHistory(), new UndoRedoStack());
@@ -348,7 +348,7 @@ public class DeleteTransactionCommandTest {
     /**
      * Generates a new AddPersonCommand with the details of the given person.
      */
-    private DeleteTransactionCommand getDeleteTransactionCommand(Model model) throws TransactionNotFoundException, PersonNotFoundException, CommandException {
+    private DeleteTransactionCommand getDeleteTransactionCommand(Model model) {
         DeleteTransactionCommand command = new DeleteTransactionCommand(INDEX_FIRST_TRANSACTION);
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
