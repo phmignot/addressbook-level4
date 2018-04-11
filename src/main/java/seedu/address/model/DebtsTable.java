@@ -14,8 +14,6 @@ import seedu.address.model.transaction.Transaction;
 //@@author phmignot
 public class DebtsTable extends HashMap<Person, DebtsList> {
 
-    private DebtsTable internalList;
-
     public DebtsTable() {
         super();
     }
@@ -50,10 +48,6 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
 
     public void add(Person personToAdd) {
         this.putIfAbsent(personToAdd, new DebtsList());
-    }
-
-    public DebtsTable asObservableList() {
-        return internalList;
     }
 
     /**

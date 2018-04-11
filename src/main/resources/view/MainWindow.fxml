@@ -53,7 +53,7 @@
             </padding>
             <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS" />
           </VBox>
-          <VBox id="DebtsTables" minWidth="260" prefWidth="260" >
+          <VBox id="DebtsTables" minWidth="150" prefWidth="150" >
             <VBox fx:id="personListPositive"  SplitPane.resizableWithParent="false">
               <padding>
                 <Insets top="5" right="5" bottom="5" left="5" />
