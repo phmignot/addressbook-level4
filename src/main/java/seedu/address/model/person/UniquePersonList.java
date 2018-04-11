@@ -29,7 +29,10 @@ public class UniquePersonList implements Iterable<Person> {
      */
     public boolean contains(Person toCheck) {
         requireNonNull(toCheck);
-        return internalList.contains(toCheck);
+        return internalList.stream().anyMatch(
+                person -> person.getName().fullName.toLowerCase().equals(toCheck.getName().fullName.toLowerCase())
+                && person.getEmail().equals(toCheck.getEmail())
+                && person.getPhone().equals(toCheck.getPhone()));
     }
 
     /**
