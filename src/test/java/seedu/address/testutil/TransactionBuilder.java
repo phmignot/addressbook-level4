@@ -27,8 +27,8 @@ public class TransactionBuilder {
 
     public static final String DEFAULT_AMOUNT = "123.45";
     public static final String DEFAULT_DESCRIPTION = "paying for Cookies";
-
-    private final Integer id = 1;
+    private static Integer lastTransactionId = 0;
+    private final Integer id;
     private Person payer;
     private Amount amount;
     private Description description;
@@ -52,6 +52,7 @@ public class TransactionBuilder {
             throw new AssertionError("This payee has already been added");
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
         payees = samplePayees;
         splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
         unitsList = Collections.emptyList();
@@ -67,6 +68,7 @@ public class TransactionBuilder {
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
         dateTime = transactionToCopy.getDateTime();
+        id = transactionToCopy.getId();
         payees = transactionToCopy.getPayees();
         transactionType = transactionToCopy.getTransactionType();
         splitMethod = transactionToCopy.getSplitMethod();

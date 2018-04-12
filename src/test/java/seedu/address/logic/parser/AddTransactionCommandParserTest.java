@@ -7,7 +7,8 @@ import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_DESC_PERCENTAGE_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_DESC_PERCENTAGE_THREE;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_DESC_PERCENTAGE_TWO;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_DESC_UNITS;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_DESC_UNITS_ONE;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_SPLIT_METHOD_DESC_UNITS_TWO;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TRANSACTION_TYPE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_NON_EMPTY;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
@@ -18,6 +19,7 @@ import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_DESC_SPLI
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_DESC_SPLIT_METHOD_TWO;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYEE_DESC_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC_TWO;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_TYPE_DESC_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_AMOUNT_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_DESCRIPTION_ONE;
@@ -38,12 +40,6 @@ import seedu.address.model.transaction.TransactionType;
 
 public class AddTransactionCommandParserTest {
     private AddTransactionCommandParser parser = new AddTransactionCommandParser();
-
-    @Test
-    public void parse_allFieldsPresent_success() throws CommandException, DuplicatePersonException {
-
-    }
-
     @Test
     public void parse_compulsoryFieldMissing_failure() throws CommandException, DuplicatePersonException {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddTransactionCommand.MESSAGE_USAGE);
@@ -103,7 +99,12 @@ public class AddTransactionCommandParserTest {
                         + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
                         + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
                 TransactionType.MESSAGE_TRANSACTION_TYPE_CONSTRAINTS);
-
+        // Payer or payee does not exist
+        assertParseTransactionFailure(parser, TRANSACTION_TYPE_DESC_ONE
+                        + TRANSACTION_PAYER_DESC_TWO
+                        + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
+                        + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
+                AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON);
         // invalid amount
         assertParseTransactionFailure(parser, PREAMBLE_WHITESPACE + TRANSACTION_TYPE_DESC_ONE
                         + TRANSACTION_PAYER_DESC
@@ -151,8 +152,16 @@ public class AddTransactionCommandParserTest {
                         + TRANSACTION_PAYER_DESC
                         + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
                         + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_THREE
-                        + INVALID_SPLIT_METHOD_DESC_UNITS,
+                        + INVALID_SPLIT_METHOD_DESC_UNITS_ONE,
                 "List of units can only take comma-separated integers");
+        // invalid split method units
+        assertParseTransactionFailure(parser, PREAMBLE_WHITESPACE + TRANSACTION_TYPE_DESC_ONE
+                        + TRANSACTION_PAYER_DESC
+                        + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
+                        + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_THREE
+                        + INVALID_SPLIT_METHOD_DESC_UNITS_TWO,
+                "The number of units values does not match the number of persons involved."
+                        + " Remember to include the payer in the count.");
         // two invalid values, only first invalid value reported
         assertParseTransactionFailure(parser, INVALID_TRANSACTION_TYPE_DESC
                         + TRANSACTION_PAYER_DESC

@@ -88,6 +88,7 @@ public class CommandTestUtil {
     public static final String TRANSACTION_TYPE_DESC_ONE = " " + PREFIX_TRANSACTION_TYPE + VALID_TRANSACTION_TYPE_ONE;
     public static final String TRANSACTION_TYPE_DESC_TWO = " " + PREFIX_TRANSACTION_TYPE + VALID_TRANSACTION_TYPE_TWO;
     public static final String TRANSACTION_PAYER_DESC = " " + PREFIX_PAYER + VALID_NAME_ALICE;
+    public static final String TRANSACTION_PAYER_DESC_TWO = " " + PREFIX_PAYER + VALID_NAME_JACK;
     public static final String TRANSACTION_DESC_AMOUNT_ONE = " " + PREFIX_AMOUNT + VALID_TRANSACTION_AMOUNT_ONE;
     public static final String TRANSACTION_DESC_AMOUNT_TWO = " " + PREFIX_AMOUNT + VALID_TRANSACTION_AMOUNT_TWO;
     public static final String TRANSACTION_DESC_DESCRIPTION_ONE = " "
@@ -129,8 +130,10 @@ public class CommandTestUtil {
             + PREFIX_SPLIT_BY_PERCENTAGE + "50"; // '*' not allowed in transaction
     public static final String INVALID_SPLIT_METHOD_DESC_THREE = " "
             + PREFIX_SPLIT_METHOD + "units1"; // '*' not allowed in transaction
-    public static final String INVALID_SPLIT_METHOD_DESC_UNITS = " "
+    public static final String INVALID_SPLIT_METHOD_DESC_UNITS_ONE = " "
             + PREFIX_SPLIT_BY_UNITS + "4.2, 4.5, 4.6"; // '*' not allowed in transaction
+    public static final String INVALID_SPLIT_METHOD_DESC_UNITS_TWO = " "
+            + PREFIX_SPLIT_BY_UNITS + "4"; // '*' not allowed in transaction
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";

@@ -105,7 +105,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                     payees, splitMethod, units, percentages);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
+            throw new ParseException(MESSAGE_NONEXISTENT_PERSON, pnfe);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
@@ -118,7 +118,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
             if (units.size() != payees.asObservableList().size() + 1) {
-                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+                throw new IllegalValueException(
+                        String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
             if (percentages.size() != payees.asObservableList().size() + 1) {
