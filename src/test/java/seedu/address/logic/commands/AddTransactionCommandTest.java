@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.Rule;
@@ -154,15 +155,25 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public boolean findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException {
             fail("This method should not be called.");
             return true;
         }
 
         @Override
-        public boolean findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException {
             fail("This method should not be called.");
             return true;
+        }
+
+        @Override
+        public List<Transaction> findTransactionsWithPayer(Person person) {
+            return null;
+        }
+
+        @Override
+        public List<Transaction> findTransactionsWithPayee(Person person) {
+            return null;
         }
 
         @Override
