@@ -98,7 +98,6 @@ public class ModelManager extends ComponentManager implements Model {
     public void updatePerson(Person target, Person editedPerson)
             throws DuplicatePersonException, PersonNotFoundException {
         requireAllNonNull(target, editedPerson);
-
         addressBook.updatePerson(target, editedPerson);
         indicateAddressBookChanged();
     }
@@ -147,7 +146,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
     //@@author ongkc
     @Override
-    public boolean findTransactionsWithPayer(Person person) throws PersonFoundException {
+    public boolean hasNoTransactionWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -159,8 +158,9 @@ public class ModelManager extends ComponentManager implements Model {
             throw new PersonFoundException();
         }
     }
+
     @Override
-    public boolean findTransactionsWithPayee(Person person) throws PersonFoundException {
+    public boolean hasNoTransactionWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))
@@ -173,6 +173,19 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
+    @Override
+    public List<Transaction> findTransactionsWithPayer(Person person) {
+        List<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .filtered(transaction -> transaction.getPayer().equals(person));
+        return matchingTransactions;
+    }
+
+    @Override
+    public List<Transaction> findTransactionsWithPayee(Person person) {
+        List<Transaction> matchingTransactions = addressBook.getTransactionList()
+                .filtered(transaction -> transaction.getPayees().contains(person));
+        return matchingTransactions;
+    }
     /**
      * Returns an unmodifiable view of the list of {@code Transaction}
      */

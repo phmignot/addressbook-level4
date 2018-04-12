@@ -19,10 +19,10 @@ public class Transaction {
     private static Integer lastTransactionId = 0;
     private final Integer id;
     private final Date dateTime;
-    private final Person payer;
+    private Person payer;
     private final Amount amount;
     private final Description description;
-    private final UniquePersonList payees;
+    private UniquePersonList payees;
     private final TransactionType transactionType;
     private final SplitMethod splitMethod;
     private ArrayList<Integer> units;
@@ -65,6 +65,18 @@ public class Transaction {
         initializeSplitMethodListValues(units, percentages);
     }
 
+    public Transaction(Transaction transaction) {
+        this.transactionType = transaction.getTransactionType();
+        this.dateTime = transaction.getDateTime();
+        this.id = transaction.getId();
+        this.payer = transaction.getPayer();
+        this.amount = transaction.getAmount();
+        this.description = transaction.getDescription();
+        this.payees = transaction.getPayees();
+        this.splitMethod = transaction.getSplitMethod();
+        this.units = transaction.getUnits();
+        this.percentages = transaction.getPercentages();
+    }
     /**
      * @param units
      * @param percentages
@@ -96,6 +108,10 @@ public class Transaction {
         return payer;
     }
 
+    public void setPayer(Person payer) {
+        this.payer = payer;
+    }
+
     public Amount getAmount() {
         return amount;
     }
@@ -108,6 +124,10 @@ public class Transaction {
         return payees;
     }
 
+    public void setPayees(UniquePersonList payees) {
+        this.payees = payees;
+    }
+
     public TransactionType getTransactionType() {
         return transactionType;
     }
@@ -116,11 +136,11 @@ public class Transaction {
         return splitMethod;
     }
 
-    public List<Integer> getUnits() {
+    public ArrayList<Integer> getUnits() {
         return units;
     }
 
-    public List<Integer> getPercentages() {
+    public ArrayList<Integer> getPercentages() {
         return percentages;
     }
 
