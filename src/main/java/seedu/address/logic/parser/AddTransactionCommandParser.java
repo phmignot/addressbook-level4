@@ -116,8 +116,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      * Checks list of units and list of percentages for validity
      */
     private void validateSplitMethodValues(UniquePersonList payees, SplitMethod splitMethod,
-                                           List<Integer> units, List<Integer> percentages) throws CommandException,
-            IllegalValueException {
+                                           List<Integer> units, List<Integer> percentages)
+            throws IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
             if (units.size() != payees.asObservableList().size() + 1) {
                 throw new IllegalValueException(
