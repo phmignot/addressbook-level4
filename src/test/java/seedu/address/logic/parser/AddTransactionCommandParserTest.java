@@ -19,6 +19,7 @@ import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_DESC_SPLI
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_DESC_SPLIT_METHOD_TWO;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYEE_DESC_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC_THREE;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC_TWO;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_TYPE_DESC_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_AMOUNT_ONE;
@@ -40,6 +41,7 @@ import seedu.address.model.transaction.TransactionType;
 
 public class AddTransactionCommandParserTest {
     private AddTransactionCommandParser parser = new AddTransactionCommandParser();
+
     @Test
     public void parse_compulsoryFieldMissing_failure() throws CommandException, DuplicatePersonException {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddTransactionCommand.MESSAGE_USAGE);
@@ -105,6 +107,12 @@ public class AddTransactionCommandParserTest {
                         + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
                         + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
                 AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON);
+        // Payer is payee
+        assertParseTransactionFailure(parser, TRANSACTION_TYPE_DESC_ONE
+                        + TRANSACTION_PAYER_DESC_THREE
+                        + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
+                        + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
+                AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER);
         // invalid amount
         assertParseTransactionFailure(parser, PREAMBLE_WHITESPACE + TRANSACTION_TYPE_DESC_ONE
                         + TRANSACTION_PAYER_DESC

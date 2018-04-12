@@ -108,6 +108,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             throw new ParseException(MESSAGE_NONEXISTENT_PERSON, pnfe);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
+        } catch (CommandException a) {
+            throw new ParseException(a.getMessage(), a);
         }
     }
     /**

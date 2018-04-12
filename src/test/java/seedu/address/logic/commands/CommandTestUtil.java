@@ -89,6 +89,7 @@ public class CommandTestUtil {
     public static final String TRANSACTION_TYPE_DESC_TWO = " " + PREFIX_TRANSACTION_TYPE + VALID_TRANSACTION_TYPE_TWO;
     public static final String TRANSACTION_PAYER_DESC = " " + PREFIX_PAYER + VALID_NAME_ALICE;
     public static final String TRANSACTION_PAYER_DESC_TWO = " " + PREFIX_PAYER + VALID_NAME_JACK;
+    public static final String TRANSACTION_PAYER_DESC_THREE = " " + PREFIX_PAYER + VALID_TRANSACTION_PAYEE_ONE;
     public static final String TRANSACTION_DESC_AMOUNT_ONE = " " + PREFIX_AMOUNT + VALID_TRANSACTION_AMOUNT_ONE;
     public static final String TRANSACTION_DESC_AMOUNT_TWO = " " + PREFIX_AMOUNT + VALID_TRANSACTION_AMOUNT_TWO;
     public static final String TRANSACTION_DESC_DESCRIPTION_ONE = " "
