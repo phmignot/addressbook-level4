@@ -121,18 +121,17 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public void deletePerson(Person target) throws PersonNotFoundException {
+        public void deletePerson(Person target)  {
             fail("This method should not be called.");
         }
 
         @Override
-        public void updatePerson(Person target, Person editedPerson)
-                throws DuplicatePersonException {
+        public void updatePerson(Person target, Person editedPerson) {
             fail("This method should not be called.");
         }
 
         @Override
-        public Person findPersonByName(Name name) throws PersonNotFoundException {
+        public Person findPersonByName(Name name) {
             fail("This method should not be called.");
             return null;
         }
@@ -206,7 +205,6 @@ public class AddPersonCommandTest {
     }
 
     public class ModelStubImpl extends ModelStub { }
-
     /**
      * A Model stub that always throw a DuplicatePersonException when trying to add a person.
      */

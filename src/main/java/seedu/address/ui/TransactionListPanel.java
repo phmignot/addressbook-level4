@@ -39,15 +39,6 @@ public class TransactionListPanel extends UiPart<Region> {
     }
 
 
-    private void setEventHandlerForSelectionChangeEvent() {
-    }
-
-    /**
-     * Scrolls to the {@code PersonCard} at the {@code index} and selects it.
-     */
-    private void scrollTo(int index) {
-    }
-
     /* Method could be used for selection in the transactionList
     @Subscribe
     private void handleJumpToListRequestEvent(JumpToListRequestEvent event) {
