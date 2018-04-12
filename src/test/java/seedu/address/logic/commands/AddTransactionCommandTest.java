@@ -156,13 +156,13 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public boolean isNoTransactionWithPayer(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException {
             fail("This method should not be called.");
             return true;
         }
 
         @Override
-        public boolean isNoTransactionWithPayee(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException {
             fail("This method should not be called.");
             return true;
         }

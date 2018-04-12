@@ -171,7 +171,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
     //@@author ongkc
     @Override
-    public boolean isNoTransactionWithPayer(Person person) throws PersonFoundException {
+    public boolean hasNoTransactionWithPayer(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -185,7 +185,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean isNoTransactionWithPayee(Person person) throws PersonFoundException {
+    public boolean hasNoTransactionWithPayee(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayees().contains(person))

@@ -75,17 +75,17 @@ public interface Model {
     ObservableList<Person> getFilteredPersonList();
 
     //@@author steven-jia
-    /** Returns a set of transactions that have {@code person} as the payer */
-    boolean isNoTransactionWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
+    /** Returns a boolean if a transaction ,that have {@code person} as the payer, has been found. */
+    boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
 
-    /** Returns a set of transactions that have {@code person} as a payee */
-    boolean isNoTransactionWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
+    /** Returns a boolean if a transaction ,that have {@code person} as a payee, has been found. */
+    boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
 
     //@@author phmignot
-    /** Returns a set of transactions that have {@code person} as the payer */
+    /** Returns a List of transactions that have {@code person} as the payer */
     List<Transaction> findTransactionsWithPayer(Person person);
 
-    /** Returns a set of transactions that have {@code person} as a payee */
+    /** Returns a List of transactions that have {@code person} as a payee */
     List<Transaction> findTransactionsWithPayee(Person person);
 
     //@@author
