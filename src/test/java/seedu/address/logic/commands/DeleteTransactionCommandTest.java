@@ -12,6 +12,7 @@ import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TRANSACTION;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TRANSACTION;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.Rule;
@@ -37,6 +38,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.PersonFoundException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
@@ -163,7 +165,7 @@ public class DeleteTransactionCommandTest {
 
     @Test
     public void execute_payerOrPayeesDoNotExist_throwsCommandException() throws CommandException,
-            PersonNotFoundException, TransactionNotFoundException {
+            PersonNotFoundException {
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         Transaction transactionToDelete = model.getAddressBook().getTransactionList().get(0);
 
@@ -175,7 +177,7 @@ public class DeleteTransactionCommandTest {
 
     @Test
     public void execute_emptyTransactionList_throwsCommandException() throws CommandException,
-            PersonNotFoundException, TransactionNotFoundException {
+            PersonNotFoundException {
         Model expectedModel = new ModelManager(new AddressBook(), new UserPrefs());
         thrown.expect(CommandException.class);
         thrown.expectMessage(Messages.MESSAGE_EMPTY_TRANSACTION_LIST);
@@ -257,15 +259,27 @@ public class DeleteTransactionCommandTest {
         }
 
         @Override
-        public boolean findTransactionsWithPayer(Person person) throws TransactionNotFoundException {
-            fail("This method should not be called.");
-            return true;
+        public boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException,
+                PersonFoundException {
+            return false;
         }
 
         @Override
-        public boolean findTransactionsWithPayee(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException,
+                PersonFoundException {
+            return false;
+        }
+
+        @Override
+        public List<Transaction> findTransactionsWithPayer(Person person) {
             fail("This method should not be called.");
-            return true;
+            return null;
+        }
+
+        @Override
+        public List<Transaction> findTransactionsWithPayee(Person person) {
+            fail("This method should not be called.");
+            return null;
         }
 
         @Override
@@ -324,6 +338,16 @@ public class DeleteTransactionCommandTest {
         @Override
         public ReadOnlyAddressBook getAddressBook() {
             return new AddressBook();
+        }
+
+        @Override
+        public boolean hasNoTransactionWithPayer(Person person) {
+            return false;
+        }
+
+        @Override
+        public boolean hasNoTransactionWithPayee(Person person) {
+            return false;
         }
     }
     /**
