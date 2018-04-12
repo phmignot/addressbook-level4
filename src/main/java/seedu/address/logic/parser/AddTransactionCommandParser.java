@@ -55,9 +55,8 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                 ArgumentTokenizer.tokenize(args, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
                         PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS,
                         PREFIX_SPLIT_BY_PERCENTAGE);
-
         if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
-                PREFIX_DESCRIPTION, PREFIX_PAYEE)
+                PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     AddTransactionCommand.MESSAGE_USAGE));
@@ -71,7 +70,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             throw new ParseException(ive.getMessage(), ive);
         }
 
-        if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
+        if (transactionType.value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
             try {
                 splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
                 switch (splitMethod.method) {
@@ -115,21 +114,23 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      * Checks list of units and list of percentages for validity
      */
     private void validateSplitMethodValues(UniquePersonList payees, SplitMethod splitMethod,
-                                           List<Integer> units, List<Integer> percentages) throws CommandException {
+                                           List<Integer> units, List<Integer> percentages) throws CommandException,
+            IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
             if (units.size() != payees.asObservableList().size() + 1) {
                 throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
             if (percentages.size() != payees.asObservableList().size() + 1) {
-                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES,
+                        splitMethod.toString()));
             }
             Integer total = 0;
             for (Integer percentage: percentages) {
                 total += percentage;
             }
             if (total != 100) {
-                throw new CommandException(MESSAGE_INVALID_PERCENTAGE_VALUES);
+                throw new IllegalValueException(MESSAGE_INVALID_PERCENTAGE_VALUES);
             }
         }
     }

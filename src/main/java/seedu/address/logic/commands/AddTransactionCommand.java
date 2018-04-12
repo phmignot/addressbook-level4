@@ -20,7 +20,7 @@ import seedu.address.model.transaction.Transaction;
  */
 public class AddTransactionCommand extends UndoableCommand {
 
-    public static final String COMMAND_WORD = "addTransaction";
+    public static final String COMMAND_WORD = "addtransaction";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a new transaction to the address book. \n"
             + "Parameters: "

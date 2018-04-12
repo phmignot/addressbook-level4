@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_PAYEE_ONE;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_PAYEE_TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +36,6 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 import seedu.address.testutil.TransactionBuilder;
-import seedu.address.testutil.TypicalTransactions;
 
 //@@author ongkc
 public class AddTransactionCommandTest {
@@ -73,9 +74,10 @@ public class AddTransactionCommandTest {
     }
 
     @Test
-    public void equals() {
-        Transaction one = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(3)).build();
-        Transaction two = new TransactionBuilder().withPayees(TypicalTransactions.getTypicalPayees().get(4)).build();
+    public void equals() throws DuplicatePersonException {
+        Transaction one = new TransactionBuilder().build();
+        Transaction two = new TransactionBuilder().withPayees(
+                VALID_TRANSACTION_PAYEE_ONE, VALID_TRANSACTION_PAYEE_TWO).build();
         AddTransactionCommand addOneCommand = new AddTransactionCommand(one);
         AddTransactionCommand addTwoCommand = new AddTransactionCommand(two);
 

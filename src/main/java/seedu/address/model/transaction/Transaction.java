@@ -17,7 +17,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  */
 public class Transaction {
     private static Integer lastTransactionId = 0;
-    private final Integer id;
+    private Integer id;
     private final Date dateTime;
     private Person payer;
     private final Amount amount;
@@ -95,7 +95,9 @@ public class Transaction {
             this.percentages = new ArrayList<>();
         }
     }
-
+    public void setId(Integer value) {
+        this.id = value;
+    }
     public Integer getId() {
         return id;
     }
