@@ -78,7 +78,8 @@ public class CalculationUtil {
      * Returned amount will be negative.
      */
     private static Balance calculateAmountToAddForPayeeForPaydebtTransaction(Transaction transaction) {
-        Double amountToAdd = -Double.valueOf(transaction.getAmount().value);
+        Integer numberOfPayee = calculateNumberOfInvolvedPersons(transaction.getPayees());
+        Double amountToAdd = -Double.valueOf(transaction.getAmount().value) / (numberOfPayee - 1);
         return getRoundedFormattedBalance(amountToAdd);
     }
 
