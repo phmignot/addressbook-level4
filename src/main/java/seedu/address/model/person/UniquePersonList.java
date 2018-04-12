@@ -31,8 +31,7 @@ public class UniquePersonList implements Iterable<Person> {
         requireNonNull(toCheck);
         return internalList.stream().anyMatch(
                 person -> person.getName().fullName.toLowerCase().equals(toCheck.getName().fullName.toLowerCase())
-                && person.getEmail().equals(toCheck.getEmail())
-                && person.getPhone().equals(toCheck.getPhone()));
+        );
     }
 
     /**
