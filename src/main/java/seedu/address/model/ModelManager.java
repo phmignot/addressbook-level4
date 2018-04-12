@@ -88,7 +88,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public synchronized void addPerson(Person person) throws DuplicatePersonException, PersonFoundException {
+    public synchronized void addPerson(Person person) throws DuplicatePersonException {
         addressBook.addPerson(person);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
@@ -100,31 +100,6 @@ public class ModelManager extends ComponentManager implements Model {
         requireAllNonNull(target, editedPerson);
         addressBook.updatePerson(target, editedPerson);
         indicateAddressBookChanged();
-    }
-
-    /**
-     * Update the Person profile in the TransactionList.
-     * @param target actual profile
-     * @param editedPerson edited profile
-     * @throws DuplicatePersonException if the edited profile is already present.
-     */
-    public void updatePersonInTransactionList(Person target, Person editedPerson) throws DuplicatePersonException,
-            PersonNotFoundException {
-        List<Transaction> transactionListPayer = findTransactionsWithPayer(target);
-        for (Transaction transaction: transactionListPayer) {
-            if (transaction.getPayees().contains(editedPerson)) {
-                throw new DuplicatePersonException();
-            }
-            transaction.setPayer(editedPerson);
-        }
-        List<Transaction> transactionListPayee = findTransactionsWithPayee(target);
-        for (Transaction transaction: transactionListPayee) {
-            if (transaction.getPayer().equals(editedPerson)) {
-                throw new DuplicatePersonException();
-            }
-            UniquePersonList payees = transaction.getPayees();
-            payees.setPerson(target, editedPerson);
-        }
     }
     //@@author steven-jia
     @Override
@@ -251,6 +226,7 @@ public class ModelManager extends ComponentManager implements Model {
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
