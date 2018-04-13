@@ -7,6 +7,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_PAYEE_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_PAYEE_TWO;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SEVENTH_TRANSACTION;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SIXTH_TRANSACTION;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +29,9 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Creditor;
 import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Name;
@@ -42,6 +48,7 @@ public class AddTransactionCommandTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
     public void constructor_nullTransaction_throwsNullPointerException() {
@@ -72,10 +79,11 @@ public class AddTransactionCommandTest {
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
     @Test
-    public void execute_paymentTransactionUnitsAcceptedByModel_addSuccessful() throws Exception {
+    public void execute_payDebtTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
         ModelStubAcceptingTransactionAdded modelStub =
                 new ModelStubAcceptingTransactionAdded();
-        Transaction validTransaction = new TransactionBuilder().withSplitMethod("units").withUnits("4, 2").build();
+        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt")
+                .withAmount("12345").build();
 
         CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
         assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
@@ -83,16 +91,24 @@ public class AddTransactionCommandTest {
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
     @Test
-    public void execute_paymentTransactionPercentageAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingTransactionAdded modelStub =
-                new ModelStubAcceptingTransactionAdded();
-        Transaction validTransaction = new TransactionBuilder().withSplitMethod("percentage")
-                .withUnits("50, 50").build();
+    public void execute_paymentTransactionUnitsAcceptedByModel_addSuccessful() throws Exception {
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Transaction validTransaction = model.getFilteredTransactionList().get(INDEX_SIXTH_TRANSACTION.getZeroBased());
+        AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
+        String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
+                validTransaction);
+        assertCommandSuccess(addTransactionCommand, model, expectedMessage, expectedModel);
+    }
 
-        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
-        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
-                commandResult.feedbackToUser);
-        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+    @Test
+    public void execute_paymentTransactionPercentageAcceptedByModel_addSuccessful() throws Exception {
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Transaction validTransaction = model.getFilteredTransactionList().get(INDEX_SEVENTH_TRANSACTION.getZeroBased());
+
+        AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
+        String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
+                validTransaction);
+        assertCommandSuccess(addTransactionCommand, model, expectedMessage, expectedModel);
     }
     @Test
     public void execute_paydebtTransactionAcceptedByModel_addSuccessful() throws Exception {
@@ -304,5 +320,9 @@ public class AddTransactionCommandTest {
 
     }
 
-
+    private AddTransactionCommand prepareCommand(Transaction validTransaction) {
+        AddTransactionCommand addTransactionCommand = new AddTransactionCommand(validTransaction);
+        addTransactionCommand.setData(model, new CommandHistory(), new UndoRedoStack());
+        return addTransactionCommand;
+    }
 }

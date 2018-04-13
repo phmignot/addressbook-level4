@@ -95,9 +95,6 @@ public class Transaction {
             this.percentages = new ArrayList<>();
         }
     }
-    public void setId(Integer value) {
-        this.id = value;
-    }
     public void setTransactionType(String transactionType) {
         this.transactionType = new TransactionType(transactionType);
     }

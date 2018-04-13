@@ -43,7 +43,10 @@
       <Label fx:id="description" styleClass="cell_small_label" text="\$description" />
     </HBox>
     <HBox alignment="CENTER_LEFT" maxWidth="300" GridPane.columnIndex="4">
-      <FlowPane fx:id="payees" prefHeight="17.0" prefWidth="302.0" />
+      <FlowPane fx:id="payees" prefHeight="17.0" prefWidth="302.0">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin></FlowPane>
     </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="161.0" GridPane.columnIndex="6">
           <Label fx:id="date" styleClass="cell_small_label" text="\$date" />
