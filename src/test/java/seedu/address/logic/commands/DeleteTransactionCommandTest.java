@@ -39,6 +39,21 @@ public class DeleteTransactionCommandTest {
         Transaction transactionToDelete = model.getFilteredTransactionList().get(
                 INDEX_FIRST_TRANSACTION.getZeroBased());
         DeleteTransactionCommand deleteTransactionCommand = prepareCommand(INDEX_FIRST_TRANSACTION);
+        transactionToDelete.setTransactionType("paydebt");
+        String expectedMessage = String.format(DeleteTransactionCommand.MESSAGE_DELETE_TRANSACTION_SUCCESS,
+                transactionToDelete);
+
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.deleteTransaction(transactionToDelete);
+
+        assertCommandSuccess(deleteTransactionCommand, model, expectedMessage, expectedModel);
+        transactionToDelete.setTransactionType("payment");
+    }
+    @Test
+    public void execute_validIndexUnfilteredListPaydebt_success() throws Exception {
+        Transaction transactionToDelete = model.getFilteredTransactionList().get(
+                INDEX_FIRST_TRANSACTION.getZeroBased());
+        DeleteTransactionCommand deleteTransactionCommand = prepareCommand(INDEX_FIRST_TRANSACTION);
 
         String expectedMessage = String.format(DeleteTransactionCommand.MESSAGE_DELETE_TRANSACTION_SUCCESS,
                 transactionToDelete);

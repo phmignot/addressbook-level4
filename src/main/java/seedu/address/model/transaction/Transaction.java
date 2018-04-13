@@ -23,7 +23,7 @@ public class Transaction {
     private final Amount amount;
     private final Description description;
     private UniquePersonList payees;
-    private final TransactionType transactionType;
+    private TransactionType transactionType;
     private final SplitMethod splitMethod;
     private ArrayList<Integer> units;
     private ArrayList<Integer> percentages;
@@ -98,8 +98,8 @@ public class Transaction {
     public void setId(Integer value) {
         this.id = value;
     }
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+    public void setTransactionType(String transactionType) {
+        this.transactionType = new TransactionType(transactionType);
     }
     public Integer getId() {
         return id;
