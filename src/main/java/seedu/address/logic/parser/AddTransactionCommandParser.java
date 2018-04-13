@@ -69,7 +69,9 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
             parseSplitMethod(argMultimap);
         } else if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
-            if (arePrefixesPresent(argMultimap, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS, PREFIX_SPLIT_BY_PERCENTAGE)) {
+            if (arePrefixesPresent(argMultimap, PREFIX_SPLIT_METHOD)
+                    || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_UNITS)
+                    || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_PERCENTAGE)) {
                 throw new CommandException(MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT);
             }
             splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
