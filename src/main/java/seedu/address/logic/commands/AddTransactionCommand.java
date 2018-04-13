@@ -75,6 +75,12 @@ public class AddTransactionCommand extends UndoableCommand {
     public static final String MESSAGE_INVALID_NUMBER_OF_VALUES = "The number of %1$s values does not match"
             + " the number of persons involved. Remember to include the payer in the count.";
     public static final String MESSAGE_INVALID_PERCENTAGE_VALUES = "The sum of the percentages does not equal 100.";
+    public static final String MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT = "Paydebt transactions can only have 1 payee";
+    public static final String MESSAGE_PAYEE_NOT_OWED_ANY_DEBT = "Payee is not owed any debt";
+    public static final String MESSAGE_PAYEE_IS_BEING_OVERPAID = "Payee is being overpaid. Ensure that the transaction "
+            + "amount does not exceed the balance owed.";
+    public static final String MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT = "Paydebt transactions do not require "
+            + "a split method, a list of units, nor a list of percentages. Ensure that those prefixes are not entered.";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
     public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
     //@@author ongkc
