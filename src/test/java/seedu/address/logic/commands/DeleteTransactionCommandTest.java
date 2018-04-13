@@ -179,7 +179,7 @@ public class DeleteTransactionCommandTest {
     public void execute_payerOrPayeesDoNotExist_throwsCommandException() throws CommandException,
             PersonNotFoundException {
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        Transaction transactionToDelete = model.getAddressBook().getTransactionList().get(0);
+        Transaction transactionToDelete = model.getAddressBook().getTransactionList().get(1);
 
         thrown.expect(CommandException.class);
         thrown.expectMessage(DeleteTransactionCommand.MESSAGE_NONEXISTENT_PAYER_PAYEES);
@@ -236,7 +236,7 @@ public class DeleteTransactionCommandTest {
      */
     private DeleteTransactionCommand getDeleteTransactionCommand(Transaction transaction, Model model) throws
             PersonNotFoundException, CommandException {
-        DeleteTransactionCommand command = new DeleteTransactionCommand(INDEX_FIRST_TRANSACTION);
+        DeleteTransactionCommand command = new DeleteTransactionCommand(INDEX_SECOND_TRANSACTION);
         model.deletePerson(transaction.getPayer());
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
@@ -250,6 +250,7 @@ public class DeleteTransactionCommandTest {
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
     }
+
     /**
      * Updates {@code model}'s filtered list to show no one.
      */

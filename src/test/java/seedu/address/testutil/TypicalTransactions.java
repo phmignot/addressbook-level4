@@ -56,7 +56,7 @@ public class TypicalTransactions {
             payeeFiona.add(TypicalPersons.FIONA);
 
 
-            t1 = new TransactionBuilder().withPayer(person1).withAmount("0.00")
+            t1 = new TransactionBuilder().withPayer(person1).withAmount("12345.00")
                     .withDescription("Boat trip").withDate(date)
                     .withSplitMethod("evenly").build();
             t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
