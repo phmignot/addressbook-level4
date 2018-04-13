@@ -11,7 +11,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
   <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
-    <GridPane hgap="20" prefHeight="30.0" prefWidth="800.0" HBox.hgrow="ALWAYS">
+    <GridPane hgap="20" prefHeight="30.0" prefWidth="800.0" HBox.hgrow="ALWAYS" alignment="CENTER">
       <columnConstraints>
         <ColumnConstraints maxWidth="143.19998168945312" minWidth="10.0" prefWidth="32.20001220703125" />
         <ColumnConstraints maxWidth="214.39999389648438" minWidth="10.0" prefWidth="89.60000610351562" />
@@ -29,7 +29,7 @@
       <Label text="Amount" GridPane.columnIndex="2" />
       <Label text="Description" GridPane.columnIndex="3" />
       <Label text="Payee" GridPane.columnIndex="4" />
-      <Label text="Transaction Type" GridPane.columnIndex="5" />
+      <Label text="Type" GridPane.columnIndex="5" />
       <Label text="Date &amp; Time" GridPane.columnIndex="6" />
       <rowConstraints>
         <RowConstraints maxHeight="36.600006103515625" minHeight="10.0" prefHeight="21.5999755859375" />
