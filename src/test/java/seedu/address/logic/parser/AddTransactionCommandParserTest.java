@@ -106,12 +106,6 @@ public class AddTransactionCommandParserTest {
                         + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
                         + VALID_TRANSACTION_PAYEE_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
                 expectedMessage);
-        // missing split method prefix
-        assertParseTransactionFailure(parser, PREAMBLE_WHITESPACE + TRANSACTION_TYPE_DESC_ONE
-                        + TRANSACTION_PAYER_DESC
-                        + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
-                        + TRANSACTION_PAYEE_DESC_ONE + VALID_TRANSACTION_SPLIT_METHOD_ONE,
-                expectedMessage);
 
         // all prefix missing
         assertParseTransactionFailure(parser, PREAMBLE_WHITESPACE + VALID_TRANSACTION_SPLIT_METHOD_ONE

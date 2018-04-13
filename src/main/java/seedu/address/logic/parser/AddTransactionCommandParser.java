@@ -56,7 +56,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                         PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS,
                         PREFIX_SPLIT_BY_PERCENTAGE);
         if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
-                PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD)
+                PREFIX_DESCRIPTION, PREFIX_PAYEE)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     AddTransactionCommand.MESSAGE_USAGE));
