@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.parser.ParserUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -25,7 +27,8 @@ public class TransactionBuilder {
 
     public static final String DEFAULT_AMOUNT = "123.45";
     public static final String DEFAULT_DESCRIPTION = "paying for Cookies";
-
+    private static Integer lastTransactionId = 0;
+    private final Integer id;
     private Person payer;
     private Amount amount;
     private Description description;
@@ -45,12 +48,11 @@ public class TransactionBuilder {
         UniquePersonList samplePayees = new UniquePersonList();
         try {
             samplePayees.add(SampleDataUtil.getSamplePersons()[1]);
-            samplePayees.add(SampleDataUtil.getSamplePersons()[2]);
-            samplePayees.add(SampleDataUtil.getSamplePersons()[3]);
         } catch (DuplicatePersonException dpe) {
             throw new AssertionError("This payee has already been added");
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
         payees = samplePayees;
         splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
         unitsList = Collections.emptyList();
@@ -66,6 +68,7 @@ public class TransactionBuilder {
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
         dateTime = transactionToCopy.getDateTime();
+        id = transactionToCopy.getId();
         payees = transactionToCopy.getPayees();
         transactionType = transactionToCopy.getTransactionType();
         splitMethod = transactionToCopy.getSplitMethod();
@@ -98,9 +101,10 @@ public class TransactionBuilder {
 
     /**
      * Sets the {@code payees} of the {@code Transaction} that we are building.
+     * @param payees
      */
-    public TransactionBuilder withPayees(UniquePersonList payees) {
-        this.payees = payees;
+    public TransactionBuilder withPayees(String... payees) throws DuplicatePersonException {
+        this.payees = SampleDataUtil.getPayeesSet(payees);
         return this;
     }
 
@@ -115,31 +119,31 @@ public class TransactionBuilder {
     /**
      * Sets the {@code payer} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public TransactionBuilder withTransactionType(String transactionType) {
+        this.transactionType = new TransactionType(transactionType);
         return this;
     }
     /**
      * Sets the {@code SplitMethod} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withSplitMethod(SplitMethod splitMethod) {
-        this.splitMethod = splitMethod;
+    public TransactionBuilder withSplitMethod(String splitMethod) {
+        this.splitMethod = new SplitMethod(splitMethod);
         return this;
     }
 
     /**
      * Sets the units {@code List<Integer>} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withUnits(List<Integer> unitsList) {
-        this.unitsList = unitsList;
+    public TransactionBuilder withUnits(String unitsList) throws IllegalValueException {
+        this.unitsList = ParserUtil.parseUnitsList(unitsList);
         return this;
     }
 
     /**
      * Sets the percentages {@code List<Integer>} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withPercentages(List<Integer> percentagesList) {
-        this.percentagesList = percentagesList;
+    public TransactionBuilder withPercentages(String percentagesList) throws IllegalValueException {
+        this.percentagesList = ParserUtil.parsePercentagesList(percentagesList);
         return this;
     }
 

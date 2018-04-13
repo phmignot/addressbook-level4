@@ -1,6 +1,9 @@
 package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_BEING_OVERPAID;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_NOT_OWED_ANY_DEBT;
 import static seedu.address.logic.commands.DeletePersonCommand.MESSAGE_DEBT_NOT_PAID;
 import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayee;
 import static seedu.address.logic.util.CalculationUtil.calculateAmountToAddForPayer;
@@ -273,11 +276,14 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void addTransaction(Transaction transaction) throws CommandException {
         if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            if (transaction.getPayees().asObservableList().size() > 1) {
+                throw new CommandException(MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT);
+            }
             Person payeeToFind = transaction.getPayees().asObservableList().get(0);
-            if (debtsTable.size() != 0
-                    && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
-                    || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0)) {
-                throw new CommandException("Payee(s) is not owed any debt");
+            if (isNotOwedAnyDebt(transaction, payeeToFind)) {
+                throw new CommandException(MESSAGE_PAYEE_NOT_OWED_ANY_DEBT);
+            } else if (isBeingOverpaid(transaction, payeeToFind)) {
+                throw new CommandException(MESSAGE_PAYEE_IS_BEING_OVERPAID);
             }
         }
         transactions.add(transaction);
@@ -324,6 +330,18 @@ public class AddressBook implements ReadOnlyAddressBook {
         transactions.remove(target);
         debtsTable.updateDebts(target, false);
         debtsTable.display();
+    }
+
+
+    private boolean isNotOwedAnyDebt(Transaction transaction, Person payeeToFind) {
+        return debtsTable.size() != 0
+                && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
+                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0);
+    }
+
+    private boolean isBeingOverpaid(Transaction transaction, Person payeeToFind) {
+        return transaction.getAmount().getDoubleValue()
+                > -debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
     }
 
 }

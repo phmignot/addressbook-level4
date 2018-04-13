@@ -5,6 +5,7 @@ import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_INVALID
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_INVALID_PERCENTAGE_VALUES;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PAYEE;
@@ -55,7 +56,6 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                 ArgumentTokenizer.tokenize(args, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
                         PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS,
                         PREFIX_SPLIT_BY_PERCENTAGE);
-
         if (!arePrefixesPresent(argMultimap, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
                 PREFIX_DESCRIPTION, PREFIX_PAYEE)
                 || !argMultimap.getPreamble().isEmpty()) {
@@ -64,31 +64,16 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         }
 
         //@@author steven-jia
-        try {
-            transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
-                    PREFIX_TRANSACTION_TYPE).get());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(ive.getMessage(), ive);
-        }
+        parseTransactionType(argMultimap);
 
         if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
-            try {
-                splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
-                switch (splitMethod.method) {
-                case EVENLY:
-                    break;
-                case UNITS:
-                    units = ParserUtil.parseUnitsList(argMultimap.getValue(PREFIX_SPLIT_BY_UNITS));
-                    break;
-                case PERCENTAGE:
-                    percentages = ParserUtil.parsePercentagesList(argMultimap.getValue(PREFIX_SPLIT_BY_PERCENTAGE));
-                    break;
-                default:
-                }
-            } catch (IllegalValueException ive) {
-                throw new ParseException(ive.getMessage(), ive);
+            parseSplitMethod(argMultimap);
+        } else if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            if (arePrefixesPresent(argMultimap, PREFIX_SPLIT_METHOD)
+                    || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_UNITS)
+                    || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_PERCENTAGE)) {
+                throw new CommandException(MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT);
             }
-        } else {
             splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
         }
 
@@ -106,30 +91,74 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                     payees, splitMethod, units, percentages);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
+            throw new ParseException(MESSAGE_NONEXISTENT_PERSON, pnfe);
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        } catch (CommandException a) {
+            throw new ParseException(a.getMessage(), a);
+        }
+    }
+
+    /**
+     * Attempts to parse the split method
+     * @param argMultimap
+     * @throws ParseException if the split method is not one of the listed options
+     */
+    private void parseSplitMethod(ArgumentMultimap argMultimap) throws ParseException {
+        try {
+            splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
+            switch (splitMethod.method) {
+            case EVENLY:
+                break;
+            case UNITS:
+                units = ParserUtil.parseUnitsList(argMultimap.getValue(PREFIX_SPLIT_BY_UNITS));
+                break;
+            case PERCENTAGE:
+                percentages = ParserUtil.parsePercentagesList(argMultimap.getValue(PREFIX_SPLIT_BY_PERCENTAGE));
+                break;
+            default:
+            }
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
     }
+
+    /**
+     * Parses the transaction type
+     * @param argMultimap
+     * @throws ParseException if the transaction type is not one of the listed options
+     */
+    private void parseTransactionType(ArgumentMultimap argMultimap) throws ParseException {
+        try {
+            transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
+                    PREFIX_TRANSACTION_TYPE).get());
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        }
+    }
+
     /**
      * Checks list of units and list of percentages for validity
      */
     private void validateSplitMethodValues(UniquePersonList payees, SplitMethod splitMethod,
-                                           List<Integer> units, List<Integer> percentages) throws CommandException {
+                                           List<Integer> units, List<Integer> percentages)
+            throws IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
             if (units.size() != payees.asObservableList().size() + 1) {
-                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+                throw new IllegalValueException(
+                        String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
             if (percentages.size() != payees.asObservableList().size() + 1) {
-                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES,
+                        splitMethod.toString()));
             }
             Integer total = 0;
             for (Integer percentage: percentages) {
                 total += percentage;
             }
             if (total != 100) {
-                throw new CommandException(MESSAGE_INVALID_PERCENTAGE_VALUES);
+                throw new IllegalValueException(MESSAGE_INVALID_PERCENTAGE_VALUES);
             }
         }
     }

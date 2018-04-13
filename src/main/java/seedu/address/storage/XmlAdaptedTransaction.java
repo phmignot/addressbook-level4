@@ -83,6 +83,31 @@ public class XmlAdaptedTransaction {
     }
 
     /**
+     * Constructs an {@code XmlAdaptedTransaction} with the given person details.
+     */
+    public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
+                                 UniquePersonList payees, Date dateTime, String splitMethod, List<Integer> unitsList,
+                                 List<Integer> percentagesList) {
+        this.payer = new XmlAdaptedPerson(payer);
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.description = description;
+        this.dateTime = dateTime;
+
+        //@@author steven-jia
+        List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
+        payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
+        this.payees = payeesToStore;
+        this.splitMethod = splitMethod;
+        if (!unitsList.isEmpty()) {
+            this.unitsList = buildIntegerListString(unitsList);
+        }
+        if (!percentagesList.isEmpty()) {
+            this.percentagesList = buildIntegerListString(percentagesList);
+        }
+        //@@author
+    }
+    /**
      * Converts a given Transaction into this class for JAXB use.
      *
      * @param source future changes to this will not affect the created XmlAdaptedTransaction
@@ -157,6 +182,7 @@ public class XmlAdaptedTransaction {
             throw new IllegalValueException(String.format
                     (MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName()));
         }
+
         final Date dateTime = this.dateTime;
 
         if (this.payees == null) {

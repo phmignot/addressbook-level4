@@ -33,7 +33,7 @@ public class TransactionType {
      * Returns true if a given string is a valid transaction type.
      */
     public static boolean isValidTransactionType(String test) {
-        if (test.equals(TRANSACTION_TYPE_PAYMENT) || test.equals(
+        if (test.toLowerCase().equals(TRANSACTION_TYPE_PAYMENT) || test.toLowerCase().equals(
                 TRANSACTION_TYPE_PAYDEBT)) {
             return true;
         }

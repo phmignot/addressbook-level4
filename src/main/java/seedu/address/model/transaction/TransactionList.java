@@ -62,13 +62,12 @@ public class TransactionList implements Iterable<Transaction> {
      *
      * @throws TransactionNotFoundException if no such transaction could be found in the list.
      */
-    public boolean remove(Transaction toRemove) throws TransactionNotFoundException {
+    public void remove(Transaction toRemove) throws TransactionNotFoundException {
         requireNonNull(toRemove);
         final boolean transactionFoundAndDeleted = internalList.remove(toRemove);
         if (!transactionFoundAndDeleted) {
             throw new TransactionNotFoundException();
         }
-        return transactionFoundAndDeleted;
     }
     /**
      * Replaces the list of transactions by a input list of transaction.

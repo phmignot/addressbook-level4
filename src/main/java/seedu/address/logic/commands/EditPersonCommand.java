@@ -34,7 +34,7 @@ import seedu.address.model.tag.Tag;
  */
 public class EditPersonCommand extends UndoableCommand {
 
-    public static final String COMMAND_WORD = "editPerson";
+    public static final String COMMAND_WORD = "editperson";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
             + "by the index number used in the last person listing. "

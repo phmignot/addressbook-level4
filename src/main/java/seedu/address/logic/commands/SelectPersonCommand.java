@@ -14,7 +14,7 @@ import seedu.address.model.person.Person;
  */
 public class SelectPersonCommand extends Command {
 
-    public static final String COMMAND_WORD = "selectPerson";
+    public static final String COMMAND_WORD = "selectperson";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Selects the person identified by the index number used in the last person listing.\n"
