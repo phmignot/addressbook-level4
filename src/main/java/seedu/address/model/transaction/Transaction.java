@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
  * Represents a Transaction in SmartSplit.
@@ -31,29 +29,6 @@ public class Transaction {
     public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
                        Date dateTime, UniquePersonList payees, SplitMethod splitMethod, List<Integer> units,
                        List<Integer> percentages) {
-        this.transactionType = transactionType;
-        this.dateTime = dateTime;
-        this.id = lastTransactionId++;
-        this.payer = payer;
-        this.amount = amount;
-        this.description = description;
-        this.payees = payees;
-        this.splitMethod = splitMethod;
-        initializeSplitMethodListValues(units, percentages);
-    }
-
-    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, Set<Person> payeesToAdd, SplitMethod splitMethod,
-                       List<Integer> units, List<Integer> percentages) {
-        UniquePersonList payees = new UniquePersonList();
-        for (Person p: payeesToAdd) {
-            try {
-                payees.add(p);
-            } catch (DuplicatePersonException e) {
-                System.out.println("Duplicate person" + p.getName() + " not added to list of payees");
-            }
-        }
-
         this.transactionType = transactionType;
         this.dateTime = dateTime;
         this.id = lastTransactionId++;
