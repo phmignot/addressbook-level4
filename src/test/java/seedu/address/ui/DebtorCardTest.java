@@ -8,9 +8,7 @@ import static seedu.address.ui.testutil.GuiTestAssert.assertDebtorCardDisplays;
 import org.junit.Test;
 
 import guitests.guihandles.DebtorCardHandle;
-import seedu.address.model.person.Creditor;
 import seedu.address.model.person.Debtor;
-import seedu.address.testutil.CreditorBuilder;
 import seedu.address.testutil.DebtorBuilder;
 
 public class DebtorCardTest extends GuiUnitTest {
@@ -26,21 +24,21 @@ public class DebtorCardTest extends GuiUnitTest {
 
     @Test
     public void equals() {
-        Creditor creditor = new CreditorBuilder().build();
-        CreditorCard creditorCard = new CreditorCard(creditor, 0);
+        Debtor debtor = new DebtorBuilder().build();
+        DebtorCard debtorCard = new DebtorCard(debtor, 0);
 
         // same person, same index -> returns true
-        CreditorCard copy = new CreditorCard(creditor, 0);
-        assertTrue(creditorCard.equals(copy));
+        DebtorCard copy = new DebtorCard(debtor, 0);
+        assertTrue(debtorCard.equals(copy));
 
         // same object -> returns true
-        assertTrue(creditorCard.equals(creditorCard));
+        assertTrue(debtorCard.equals(debtorCard));
 
         // null -> returns false
-        assertFalse(creditorCard.equals(null));
+        assertFalse(debtorCard.equals(null));
 
         // different types -> returns false
-        assertFalse(creditorCard.equals(0));
+        assertFalse(debtorCard.equals(0));
 
     }
 
