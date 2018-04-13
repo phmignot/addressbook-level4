@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TRANSACTION;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.junit.rules.ExpectedException;
 import seedu.address.logic.commands.AddPersonCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeletePersonCommand;
+import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.EditPersonCommand;
 import seedu.address.logic.commands.EditPersonCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
@@ -61,7 +63,12 @@ public class AddressBookParserTest {
                 DeletePersonCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new DeletePersonCommand(INDEX_FIRST_PERSON), command);
     }
-
+    @Test
+    public void parseTransactionCommand_delete() throws Exception {
+        DeleteTransactionCommand command = (DeleteTransactionCommand) parser.parseCommand(
+                DeleteTransactionCommand.COMMAND_WORD + " " + INDEX_FIRST_TRANSACTION.getOneBased());
+        assertEquals(new DeleteTransactionCommand(INDEX_FIRST_TRANSACTION), command);
+    }
     @Test
     public void parseCommand_edit() throws Exception {
         Person person = new PersonBuilder().build();

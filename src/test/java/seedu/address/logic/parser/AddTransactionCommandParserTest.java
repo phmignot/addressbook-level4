@@ -41,8 +41,6 @@ import seedu.address.model.transaction.TransactionType;
 
 public class AddTransactionCommandParserTest {
     private AddTransactionCommandParser parser = new AddTransactionCommandParser();
-
-
     @Test
     public void parse_compulsoryFieldMissing_failure() throws CommandException, DuplicatePersonException {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddTransactionCommand.MESSAGE_USAGE);
