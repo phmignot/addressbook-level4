@@ -60,10 +60,10 @@ public class SplitMethod {
      * Returns true if a given string is a valid split method.
      */
     public static boolean isValidSplitMethod(String test) {
-        return test.matches(SPLIT_METHOD_EVENLY)
-            || test.matches(SPLIT_METHOD_UNITS)
-            || test.matches(SPLIT_METHOD_PERCENTAGE)
-            || test.matches(SPLIT_METHOD_NOT_APPLICABLE);
+        return test.toLowerCase().matches(SPLIT_METHOD_EVENLY)
+            || test.toLowerCase().matches(SPLIT_METHOD_UNITS)
+            || test.toLowerCase().matches(SPLIT_METHOD_PERCENTAGE)
+            || test.toLowerCase().matches(SPLIT_METHOD_NOT_APPLICABLE);
     }
 
     @Override

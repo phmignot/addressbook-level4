@@ -10,6 +10,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.tag.Tag;
 
@@ -56,6 +57,22 @@ public class SampleDataUtil {
         }
 
         return tags;
+    }
+
+    /**
+     * Returns a tag set containing the list of strings given.
+     */
+    public static UniquePersonList getPayeesSet(String... strings) throws DuplicatePersonException {
+        UniquePersonList payees = new UniquePersonList();
+        for (String s : strings) {
+            for (Person person: getSamplePersons()) {
+                if (person.getName().fullName == s) {
+                    payees.add(person);
+                }
+            }
+        }
+
+        return payees;
     }
 
 }

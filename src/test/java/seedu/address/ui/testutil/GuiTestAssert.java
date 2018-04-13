@@ -5,10 +5,14 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import guitests.guihandles.CreditorCardHandle;
+import guitests.guihandles.DebtorCardHandle;
 import guitests.guihandles.PersonCardHandle;
 import guitests.guihandles.PersonListPanelHandle;
 import guitests.guihandles.ResultDisplayHandle;
 import guitests.guihandles.TransactionCardHandle;
+import seedu.address.model.person.Creditor;
+import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
 import seedu.address.model.transaction.Transaction;
 
@@ -50,7 +54,31 @@ public class GuiTestAssert {
         assertEquals(expectedPerson.getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
                 actualCard.getTags());
     }
-
+    //@@author phmignot
+    /**
+     * Asserts that {@code actualCard} displays the details of {@code expectedPerson}.
+     */
+    public static void assertCreditorCardDisplays(Creditor expectedCreditor, CreditorCardHandle actualCard) {
+        assertEquals(expectedCreditor.getCreditor().getName().fullName, actualCard.getName());
+        assertEquals(expectedCreditor.getCreditor().getPhone().value, actualCard.getPhone());
+        assertEquals(expectedCreditor.getCreditor().getEmail().value, actualCard.getEmail());
+        assertEquals(expectedCreditor.getCreditor().getTags().stream().map(tag -> tag.tagName)
+                        .collect(Collectors.toList()),
+                actualCard.getTags());
+        assertEquals(expectedCreditor.getDebt().value, actualCard.getDebt());
+    }
+    //@@author phmignot
+    /**
+     * Asserts that {@code actualCard} displays the details of {@code expectedPerson}.
+     */
+    public static void assertDebtorCardDisplays(Debtor expectedDebtor, DebtorCardHandle actualCard) {
+        assertEquals(expectedDebtor.getDebtor().getName().fullName, actualCard.getName());
+        assertEquals(expectedDebtor.getDebtor().getPhone().value, actualCard.getPhone());
+        assertEquals(expectedDebtor.getDebtor().getEmail().value, actualCard.getEmail());
+        assertEquals(expectedDebtor.getDebtor().getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
+                actualCard.getTags());
+        assertEquals(expectedDebtor.getDebt().value, actualCard.getDebt());
+    }
     /**
      * Asserts that the list in {@code personListPanelHandle} displays the details of {@code persons} correctly and
      * in the correct order.

@@ -18,7 +18,7 @@ import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
  */
 public class DeleteTransactionCommand extends UndoableCommand {
 
-    public static final String COMMAND_WORD = "deleteTransaction";
+    public static final String COMMAND_WORD = "deletetransaction";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the transaction identified by its index number used in the list of transactions.\n"

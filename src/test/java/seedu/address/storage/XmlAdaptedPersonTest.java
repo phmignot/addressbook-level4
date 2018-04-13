@@ -19,18 +19,18 @@ import seedu.address.model.person.Phone;
 import seedu.address.testutil.Assert;
 
 public class XmlAdaptedPersonTest {
-    private static final String INVALID_NAME = "R@chel";
-    private static final String INVALID_PHONE = "+651234";
-    private static final String INVALID_EMAIL = "example.com";
-    private static final String INVALID_BALANCE = " ";
-    private static final String INVALID_TAG = "#friend";
+    protected static final String INVALID_NAME = "R@chel";
+    protected static final String INVALID_PHONE = "+651234";
+    protected static final String INVALID_EMAIL = "example.com";
+    protected static final String INVALID_BALANCE = " ";
+    protected static final String INVALID_TAG = "#friend";
 
-    private static final String VALID_NAME = BENSON.getName().toString();
-    private static final String VALID_PHONE = BENSON.getPhone().toString();
-    private static final String VALID_EMAIL = BENSON.getEmail().toString();
-    private static final String VALID_BALANCE = BENSON.getBalance().toString();
-    private static final String VALID_ZERO_BALANCE = "0.00";
-    private static final List<XmlAdaptedTag> VALID_TAGS = BENSON.getTags().stream()
+    protected static final String VALID_NAME = BENSON.getName().toString();
+    protected static final String VALID_PHONE = BENSON.getPhone().toString();
+    protected static final String VALID_EMAIL = BENSON.getEmail().toString();
+    protected static final String VALID_BALANCE = BENSON.getBalance().toString();
+    protected static final String VALID_ZERO_BALANCE = "0.00";
+    protected static final List<XmlAdaptedTag> VALID_TAGS = BENSON.getTags().stream()
             .map(XmlAdaptedTag::new)
             .collect(Collectors.toList());
 

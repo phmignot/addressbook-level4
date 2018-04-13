@@ -29,14 +29,13 @@ public class CalculationUtil {
             return calculateAmountToAddForPayerForDeleteTransaction(transaction);
         }
 
-        switch (transaction.getTransactionType().value) {
+        switch (transaction.getTransactionType().value.toLowerCase()) {
         case TransactionType.TRANSACTION_TYPE_PAYMENT:
             return calculateAmountToAddForPayerForPaymentTransaction(transaction);
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
             assert false : transaction.getTransactionType().value;
-            ;
         }
         return null;
     }
@@ -52,7 +51,7 @@ public class CalculationUtil {
             return calculateAmountToAddForPayeeForDeleteTransaction(splitMethodValuesListIndex, transaction);
         }
 
-        switch (transaction.getTransactionType().value) {
+        switch (transaction.getTransactionType().value.toLowerCase()) {
         case TransactionType.TRANSACTION_TYPE_PAYMENT:
             return calculateAmountToAddForPayeeForPaymentTransaction(splitMethodValuesListIndex, transaction);
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:

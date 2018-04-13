@@ -7,7 +7,7 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
  */
 public class ListPersonsCommand extends Command {
 
-    public static final String COMMAND_WORD = "listPersons";
+    public static final String COMMAND_WORD = "listpersons";
     public static final String MESSAGE_SUCCESS = "Listed all persons";
     @Override
     public CommandResult execute() {
