@@ -272,7 +272,8 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Adds a {@code transaction} to the list of transactions.
      */
     public void addTransaction(Transaction transaction) throws CommandException {
-        if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+        if (transaction.getTransactionType().toString().toLowerCase().equals(
+                TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             Person payeeToFind = transaction.getPayees().asObservableList().get(0);
             if (debtsTable.size() != 0
                     && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
