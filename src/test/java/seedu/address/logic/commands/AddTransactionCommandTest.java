@@ -50,7 +50,7 @@ public class AddTransactionCommandTest {
     }
 
     @Test
-    public void execute_transactionAcceptedByModel_addSuccessful() throws Exception {
+    public void execute_paymentTransactionAcceptedByModel_addSuccessful() throws Exception {
         ModelStubAcceptingTransactionAdded modelStub =
                 new ModelStubAcceptingTransactionAdded();
         Transaction validTransaction = new TransactionBuilder().build();
@@ -60,7 +60,51 @@ public class AddTransactionCommandTest {
                 commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
     }
+    @Test
+    public void execute_paymentTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingTransactionAdded modelStub =
+                new ModelStubAcceptingTransactionAdded();
+        Transaction validTransaction = new TransactionBuilder().withAmount("12345").build();
 
+        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
+        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
+                commandResult.feedbackToUser);
+        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+    }
+    @Test
+    public void execute_paymentTransactionUnitsAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingTransactionAdded modelStub =
+                new ModelStubAcceptingTransactionAdded();
+        Transaction validTransaction = new TransactionBuilder().withSplitMethod("units").withUnits("4, 2").build();
+
+        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
+        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
+                commandResult.feedbackToUser);
+        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+    }
+    @Test
+    public void execute_paymentTransactionPercentageAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingTransactionAdded modelStub =
+                new ModelStubAcceptingTransactionAdded();
+        Transaction validTransaction = new TransactionBuilder().withSplitMethod("percentage")
+                .withUnits("50, 50").build();
+
+        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
+        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
+                commandResult.feedbackToUser);
+        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+    }
+    @Test
+    public void execute_paydebtTransactionAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingTransactionAdded modelStub =
+                new ModelStubAcceptingTransactionAdded();
+        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt").build();
+
+        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
+        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
+                commandResult.feedbackToUser);
+        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+    }
     @Test
     public void execute_personNotFound_throwsCommandException() throws Exception {
         ModelStub modelStub =
@@ -76,10 +120,11 @@ public class AddTransactionCommandTest {
     @Test
     public void equals() throws DuplicatePersonException {
         Transaction one = new TransactionBuilder().build();
-        Transaction two = new TransactionBuilder().withPayees(
+        Transaction two = new TransactionBuilder().withTransactionType("paydebt").build();
+        Transaction three = new TransactionBuilder().withPayees(
                 VALID_TRANSACTION_PAYEE_ONE, VALID_TRANSACTION_PAYEE_TWO).build();
         AddTransactionCommand addOneCommand = new AddTransactionCommand(one);
-        AddTransactionCommand addTwoCommand = new AddTransactionCommand(two);
+        AddTransactionCommand addThreeCommand = new AddTransactionCommand(three);
 
         // same object -> returns true
         assertTrue(addOneCommand.equals(addOneCommand));
@@ -95,7 +140,7 @@ public class AddTransactionCommandTest {
         assertFalse(addOneCommand.equals(null));
 
         // different Transaction -> returns false
-        assertFalse(addOneCommand.equals(addTwoCommand));
+        assertFalse(addOneCommand.equals(addThreeCommand));
     }
 
     /**
