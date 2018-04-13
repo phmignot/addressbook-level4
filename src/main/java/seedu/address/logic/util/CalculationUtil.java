@@ -36,7 +36,6 @@ public class CalculationUtil {
             return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
             assert false : transaction.getTransactionType().value;
-            ;
         }
         return null;
     }
@@ -78,8 +77,8 @@ public class CalculationUtil {
      * Returned amount will be negative.
      */
     private static Balance calculateAmountToAddForPayeeForPaydebtTransaction(Transaction transaction) {
-        Integer numberOfPayee = calculateNumberOfInvolvedPersons(transaction.getPayees());
-        Double amountToAdd = -Double.valueOf(transaction.getAmount().value) / (numberOfPayee - 1);
+        Integer numberOfPayee = calculateNumberOfInvolvedPersons(transaction.getPayees()) - 1;
+        Double amountToAdd = -Double.valueOf(transaction.getAmount().value) / numberOfPayee;
         return getRoundedFormattedBalance(amountToAdd);
     }
 
