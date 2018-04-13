@@ -80,15 +80,12 @@ public class AddTransactionCommandTest {
     }
     @Test
     public void execute_payDebtTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingTransactionAdded modelStub =
-                new ModelStubAcceptingTransactionAdded();
-        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt")
-                .withAmount("12345").build();
-
-        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
-        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
-                commandResult.feedbackToUser);
-        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt").build();
+        AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
+        String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
+                validTransaction);
+        assertCommandSuccess(addTransactionCommand, model, expectedMessage, expectedModel);
     }
     @Test
     public void execute_paymentTransactionUnitsAcceptedByModel_addSuccessful() throws Exception {

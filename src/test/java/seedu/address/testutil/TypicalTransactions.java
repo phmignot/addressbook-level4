@@ -61,7 +61,7 @@ public class TypicalTransactions {
             t1 = new TransactionBuilder().withPayer(person1).withAmount("12345.00")
                     .withDescription("Boat trip").withDate(date)
                     .withSplitMethod("evenly").build();
-            t2 = new TransactionBuilder().withPayer(person3).withAmount("0.00")
+            t2 = new TransactionBuilder().withPayer(person3).withAmount("0")
                     .withDescription("Food for barbecue")
                     .withSplitMethod("units").withUnits("1, 2, 3").withDate(date).build();
             t3 = new TransactionBuilder().withPayer(person5).withAmount("0.00")
