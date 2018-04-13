@@ -98,7 +98,7 @@ public class AddTransactionCommandTest {
     public void execute_paydebtTransactionAcceptedByModel_addSuccessful() throws Exception {
         ModelStubAcceptingTransactionAdded modelStub =
                 new ModelStubAcceptingTransactionAdded();
-        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt").build();
+        Transaction validTransaction = new TransactionBuilder().withAmount("12345").withTransactionType("paydebt").build();
 
         CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
         assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
