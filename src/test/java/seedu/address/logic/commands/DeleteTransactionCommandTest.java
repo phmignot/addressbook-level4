@@ -10,7 +10,8 @@ import static seedu.address.logic.commands.CommandTestUtil.prepareUndoCommand;
 import static seedu.address.testutil.AddressBookBuilder.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TRANSACTION;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TRANSACTION;
-import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_TRANSACTION;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SEVENTH_TRANSACTION;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SIXTH_TRANSACTION;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,8 +67,8 @@ public class DeleteTransactionCommandTest {
     @Test
     public void execute_validIndexUnfilteredListUnits_success() throws Exception {
         Transaction transactionToDelete = model.getFilteredTransactionList().get(
-                INDEX_SECOND_TRANSACTION.getZeroBased());
-        DeleteTransactionCommand deleteTransactionCommand = prepareCommand(INDEX_SECOND_TRANSACTION);
+                INDEX_SIXTH_TRANSACTION.getZeroBased());
+        DeleteTransactionCommand deleteTransactionCommand = prepareCommand(INDEX_SIXTH_TRANSACTION);
 
         String expectedMessage = String.format(DeleteTransactionCommand.MESSAGE_DELETE_TRANSACTION_SUCCESS,
                 transactionToDelete);
@@ -80,8 +81,8 @@ public class DeleteTransactionCommandTest {
     @Test
     public void execute_validIndexUnfilteredListPercentage_success() throws Exception {
         Transaction transactionToDelete = model.getFilteredTransactionList().get(
-                INDEX_THIRD_TRANSACTION.getZeroBased());
-        DeleteTransactionCommand deleteTransactionCommand = prepareCommand(INDEX_THIRD_TRANSACTION);
+                INDEX_SEVENTH_TRANSACTION.getZeroBased());
+        DeleteTransactionCommand deleteTransactionCommand = prepareCommand(INDEX_SEVENTH_TRANSACTION);
 
         String expectedMessage = String.format(DeleteTransactionCommand.MESSAGE_DELETE_TRANSACTION_SUCCESS,
                 transactionToDelete);

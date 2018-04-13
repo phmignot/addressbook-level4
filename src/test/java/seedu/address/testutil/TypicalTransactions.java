@@ -25,6 +25,8 @@ public class TypicalTransactions {
     private static Transaction t3 = null;
     private static Transaction t4 = null;
     private static Transaction t5 = null;
+    private static Transaction t6 = null;
+    private static Transaction t7 = null;
 
     private static Person person1 = SampleDataUtil.getSamplePersons()[0];
     private static Person person2 = SampleDataUtil.getSamplePersons()[1];
@@ -72,6 +74,12 @@ public class TypicalTransactions {
                     .withAmount("0.00").withDescription("Dinner")
                     .withDate(date)
                     .withSplitMethod("evenly").withDate(date).build();
+            t6 = new TransactionBuilder().withPayer(person5).withAmount("1234.00")
+                    .withDescription("Food for barbecue")
+                    .withSplitMethod("units").withUnits("1, 2, 3").withDate(date).build();
+            t7 = new TransactionBuilder().withPayer(person5).withAmount("1234.00")
+                    .withDescription("Open air concert")
+                    .withSplitMethod("percentage").withPercentages("20, 20, 60").withDate(date).build();
         } catch (DuplicatePersonException dpe) {
             dpe.printStackTrace();
         } catch (IllegalValueException e) {
@@ -97,7 +105,7 @@ public class TypicalTransactions {
     }
 
     public static List<Transaction> getTypicalTransactions() {
-        return new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5));
+        return new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7));
     }
 
     public static List<UniquePersonList> getTypicalPayees() {
