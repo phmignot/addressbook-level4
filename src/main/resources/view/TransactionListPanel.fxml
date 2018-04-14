@@ -9,28 +9,44 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<!-- @@author phmignot -->
+
 <VBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
   <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
-    <GridPane hgap="20" prefHeight="30.0" prefWidth="800.0" HBox.hgrow="ALWAYS">
+    <GridPane hgap="20" prefHeight="30.0" prefWidth="800.0" HBox.hgrow="ALWAYS" alignment="CENTER">
       <columnConstraints>
-        <ColumnConstraints maxWidth="143.19998168945312" minWidth="10.0" prefWidth="32.20001220703125" />
-        <ColumnConstraints maxWidth="214.39999389648438" minWidth="10.0" prefWidth="89.60000610351562" />
-        <ColumnConstraints maxWidth="179.60003662109375" minWidth="73.20001220703125" prefWidth="73.20001220703125" />
-        <ColumnConstraints maxWidth="274.79998779296875" minWidth="179.0" prefWidth="179.0" />
-        <ColumnConstraints maxWidth="255.60003662109375" minWidth="135.20001220703125" prefWidth="157.39996337890625" />
-        <ColumnConstraints maxWidth="255.60003662109375" minWidth="102" prefWidth="122" />
-        <ColumnConstraints maxWidth="264.00006103515625" minWidth="140.60003662109375" prefWidth="185.0" />
+        <ColumnConstraints prefWidth="25.0" />
+        <ColumnConstraints maxWidth="214.4" minWidth="10.0" prefWidth="89.6" />
+        <ColumnConstraints maxWidth="179.6" minWidth="73.2" prefWidth="74.4" />
+        <ColumnConstraints maxWidth="274.8" minWidth="179.0" prefWidth="179.0" />
+        <ColumnConstraints maxWidth="255.6" minWidth="135.2" prefWidth="157.4" />
+        <ColumnConstraints maxWidth="85.0" minWidth="62.0" prefWidth="72.0" />
+        <ColumnConstraints maxWidth="250.0" minWidth="100.0" prefWidth="160.0" />
       </columnConstraints>
       <padding>
-        <Insets bottom="5" left="15" right="5" top="5" />
+        <Insets bottom="5" left="15" right="15" top="5" />
       </padding>
-      <Label prefHeight="17.0" prefWidth="33.0" text="No." />
-      <Label text="Payer" GridPane.columnIndex="1" />
-      <Label text="Amount" GridPane.columnIndex="2" />
-      <Label text="Description" GridPane.columnIndex="3" />
-      <Label text="Payee" GridPane.columnIndex="4" />
-      <Label text="Transaction Type" GridPane.columnIndex="5" />
-      <Label text="Date &amp; Time" GridPane.columnIndex="6" />
+      <HBox GridPane.columnIndex="0" alignment="CENTER">
+        <Label text="No."/>
+      </HBox>
+      <HBox GridPane.columnIndex="1" alignment="CENTER">
+        <Label text="Payer" />
+      </HBox>
+      <HBox GridPane.columnIndex="2" alignment="CENTER">
+        <Label text="Amount" />
+      </HBox>
+      <HBox GridPane.columnIndex="3" alignment="CENTER">
+        <Label text="Description" />
+      </HBox>
+      <HBox GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" alignment="CENTER">
+        <Label text="Payee" />
+      </HBox>
+      <HBox GridPane.columnIndex="5" alignment="CENTER">
+        <Label text="Type" />
+      </HBox>
+      <HBox GridPane.columnIndex="6" alignment="CENTER">
+        <Label text="Date &amp; Time" />
+      </HBox>
       <rowConstraints>
         <RowConstraints maxHeight="36.600006103515625" minHeight="10.0" prefHeight="21.5999755859375" />
         <RowConstraints maxHeight="33.399993896484375" minHeight="10.399993896484375" prefHeight="25.4000244140625" />
