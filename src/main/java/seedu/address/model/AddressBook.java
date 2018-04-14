@@ -275,7 +275,8 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Adds a {@code transaction} to the list of transactions.
      */
     public void addTransaction(Transaction transaction) throws CommandException {
-        if (transaction.getTransactionType().toString().toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+        if (transaction.getTransactionType().toString().toLowerCase()
+                .equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             if (transaction.getPayees().asObservableList().size() > 1) {
                 throw new CommandException(MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT);
             }
@@ -296,12 +297,13 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction, Person payer,
                                             UniquePersonList payees) {
-
-        updatePayerBalance(isAddingTransaction, transaction, payer);
-        for (int i = 0; i < payees.asObservableList().size(); i++) {
-            Person payee = payees.asObservableList().get(i);
-            Integer splitMethodValuesListIndex = i + 1;
-            updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
+        if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            updatePayerBalance(isAddingTransaction, transaction, payer);
+            for (int i = 0; i < payees.asObservableList().size(); i++) {
+                Person payee = payees.asObservableList().get(i);
+                Integer splitMethodValuesListIndex = i + 1;
+                updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
+            }
         }
     }
 
@@ -309,12 +311,8 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Update payer balance whenever a new transaction is added or deleted
      */
     private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction, Person payer) {
-        if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
-            payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
-                    transaction));
-        }
+        payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction, transaction));
     }
-
     /**
      * Update payee balance whenever a new transaction is added or deleted
      */
@@ -322,10 +320,8 @@ public class AddressBook implements ReadOnlyAddressBook {
                                     Boolean isAddingTransaction,
                                     Integer splitMethodValuesListIndex,
                                     Transaction transaction) {
-        if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
-            payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
+        payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
                     splitMethodValuesListIndex, transaction));
-        }
     }
     /**
      * Removes {@code target} from the list of transactions.
