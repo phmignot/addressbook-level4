@@ -188,6 +188,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      * @throws PersonNotFoundException if the {@code key} is not in this {@code AddressBook}.
      */
     public boolean removePerson(Person key) throws PersonNotFoundException, CommandException {
+        //@@author ongkc
         if (checkDebt(key)) {
             throw new CommandException(String.format(MESSAGE_DEBT_NOT_PAID, key));
         }

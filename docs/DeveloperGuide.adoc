@@ -362,23 +362,67 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ==== Add Transaction Command Implementation
 .Component interactions for `addTransaction` command (part 1)
 image::AddTransaction.png[width="800"]
-From the diagram above, when users enter the command addTransaction payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will parse the arguments, and return AddTransactionCommand.
+From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return toAddTransactionCommand. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. An exception will be thrown if its not found. Refer to the code and diagram below for addTransactionCommandParser.
+
+image::AddTransactionCommandParser.png[width="800"]
+
+* Code Listing
+
+image::AddTransactionCommandParserCode.png[width="800"]
+
 Next, AddTransactionCommand will call its method execute(). After addTransaction command is executed, an addTransaction() method will be called.
 
-The diagram below shows how the addTransaction operation work in the logic component
-image::AddTransactionSequenceDiagram.png[width="800"]
+image::AddTransactionSequenceDiagram1.png[width="800"]
+
+With reference to the diagram above, when addTransaction method is executed, new transaction will be added and debt table will be updated as well. Subsequently, using calculation from calculationUtil, the new transaction amount will be added to each payer and payee(s) balance. Refer to the code below.
+
+* Code Listing
+
+** AddTransaction
+
+image::AddTransactionCode.png[width="800"]
+
+** Debt Table Object
+
+image::DebtTable.png[width="800"]
 
 ==== Add Transaction Event process
 .Component interactions for `addTransaction` command (part 2)
 image::SDforDeletePersonEventHandling.png[width="800"]
-With reference to the diagram above, after addTransaction method is executed, the AddTransactionCommandParser, as part of the Logic component, will calculate a new balance for the payer and each payee.
 An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
-The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel, updating the amount spent for each person, as well as CreditorList Panel and DebtorList Panel.
 
 ==== Design Considerations
 Why it is implemented that way
 
-Instead of saving each transaction details to every person involved, a new transaction object is created and added in transactionlist object when addTransaction command is executed. This allows all the new transactions to be stored in the hand disk and can be easily retrieved when the user requests for transaction history details.
+===== Aspect: Calculation for each transaction
+
+** Alternative 1: A new calculationUtil object is created (Current)
+** Pro: Allow reusability of calculation method since most transaction uses similar calculation formula. In addition, it ensures minimum coupling which could arise if there are many different kinds of transactions to be added in future enhancement.
+** Con: Create method not specific for each type of transaction calculation can be confusing and messy
+
+** Alternative 2: Each transaction has it own specific calculation method
+** Pro: Easier to amend errors or bugs if arises
+** Con: Multiple method for each transaction calculation has to be created
+
+===== Aspect: Storing and updating of debt for each person after each new transaction is added
+
+** Alternative 1: Create a HashMap Object
+** Pros: Allow debt to be updated easily when a person added or deleted, or when a person information is changed
+** Cons: Find method is required to retrieve the information required
+
+** Alternative 2: Create a list of debtors or creditors unique to each person
+** Pros: Debt amount can be easily retrieved
+** Con: If any person is deleted or added, or when any person information is changed, we need to go through every single person debtors or creditors list to amend.
+
+===== Aspect: Implementation of `payDebt addTransactionCommand`
+
+* **Alternative 1 (current choice):** Add a `transactionType` parameter that allows for a transaction to be added as a transaction of type "payDebt"
+** Pros: `addTransactionCommand` already works well and would simply need to include another parameter.
+** Cons: Increases the length of CLI input required from the user and adds complexity to the command by increasing the number of parameter combinations.
+* **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
+** Pros: Easier for users to understand. Allows for the use of a clearer and more obvious command word (i.e. "payDebt").
+** Cons: Very similar to addTransaction and will likely re-use a lot of the same code. As a new command, `payDebtCommand` would also require new tests for coverage.
 
 // tag::selectfeature[]
 ===  Select feature
@@ -387,11 +431,13 @@ There are two ways to triggered the `Select` feature. The first one uses the Com
 The second one directly through the user interface, by clicking on a `Person card`. +
 These two interactions will result in raising the same events. +
 
+
 `SelectCommand` is not a undoable command.
 
 ==== Select Command Implementation
 
 .Component interactions for `select` command
+
 image::SelectCommandDiagram.png[width="800"]
 
 From the diagram above when users enter the command `select INDEX` to select one of the person from the persons list,
@@ -412,7 +458,7 @@ image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
 
 With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call
 the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep only transactions related with the person selected. +
-The `FilteredTransactionList` will be updated, the UI will display the new list.
+The `FilteredTransactionList`, `FilteredDebtorList` and `FilteredCreditorList` will be updated, the UI will display the new list.
 
 ==== PersonPanelNoSelection Event process
 In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
@@ -434,27 +480,8 @@ This implementation saves the application from wasting of computing resource.
 
 // end::selectfeature[]
 
-// tag::payDebt[]
-=== [Proposed] Pay Debt feature
-==== Pay Debt Command Implementation
-When users enter the payDebt command to settle a balance, payDebtCommandParser will parse the arguments, and return payDebtCommand.
-Next, payDebtCommand will call its method execute(). After a payDebt command is executed, a calculateUpdatedBalance() method will be called.
+=== Delete Transaction Feature
 
-==== Pay Debt Event process
-After the payDebt method is executed, the PayDebtCommandParser, as part of the Logic component, will subtract the amount from the balance of the debtor and record
-the event as a transaction of type "paydebt".
-An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the storage file.
-The UI will also handle this event by adding the new transaction to the TransactionList Panel and updating the balance of each Person that was involved in the transaction.
-
-==== Design Considerations
-===== Aspect: Implementation of `payDebtCommand`
-
-* **Alternative 1 (current choice):** Add a `transactionType` parameter that allows for a transaction to be added as a transaction of type "payDebt"
-** Pros: `addTransactionCommand` already works well and would simply need to include another parameter.
-** Cons: Increases the length of CLI input required from the user and adds complexity to the command by increasing the number of parameter combinations.
-* **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
-** Pros: Easier for users to understand. Allows for the use of a clearer and more obvious command word (i.e. "payDebt").
-** Cons: Very similar to addTransaction and will likely re-use a lot of the same code. As a new command, `payDebtCommand` would also require new tests for coverage.
 
 // end::payDebt[]
 === Logging
