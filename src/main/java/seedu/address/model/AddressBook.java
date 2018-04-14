@@ -274,6 +274,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Adds a {@code transaction} to the list of transactions.
      */
     public void addTransaction(Transaction transaction) throws CommandException {
+        //@@author steven-jia
         if (transaction.getTransactionType().toString().toLowerCase()
                 .equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             if (transaction.getPayees().asObservableList().size() > 1) {
@@ -286,6 +287,7 @@ public class AddressBook implements ReadOnlyAddressBook {
                 throw new CommandException(MESSAGE_PAYEE_IS_BEING_OVERPAID);
             }
         }
+        //@@author ongkc
         transactions.add(transaction);
         debtsTable.updateDebts(transaction, true);
         debtsTable.display();
@@ -298,11 +300,13 @@ public class AddressBook implements ReadOnlyAddressBook {
                                             UniquePersonList payees) {
         if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             updatePayerBalance(isAddingTransaction, transaction, payer);
+            //@@author steven-jia
             for (int i = 0; i < payees.asObservableList().size(); i++) {
                 Person payee = payees.asObservableList().get(i);
                 Integer splitMethodValuesListIndex = i + 1;
                 updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
             }
+            //@@author ongkc
         }
     }
 
