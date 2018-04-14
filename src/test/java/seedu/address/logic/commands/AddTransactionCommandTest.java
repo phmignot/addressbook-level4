@@ -41,6 +41,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
+import seedu.address.model.util.SampleDataUtil;
 import seedu.address.testutil.TransactionBuilder;
 
 //@@author ongkc
@@ -80,8 +81,9 @@ public class AddTransactionCommandTest {
     }
     @Test
     public void execute_payDebtTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
-        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt").build();
+        ModelManager expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Transaction validTransaction = new TransactionBuilder().withPayer(SampleDataUtil.getSamplePersons()[1])
+                .withTransactionType("paydebt").withPayees("Alice Pauline").build();
         AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
         String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
                 validTransaction);

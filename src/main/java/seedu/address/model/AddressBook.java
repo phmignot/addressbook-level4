@@ -336,7 +336,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private boolean isNotOwedAnyDebt(Transaction transaction, Person payeeToFind) {
         return debtsTable.size() != 0
                 && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
-                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0);
+                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() >= 0);
     }
 
     private boolean isBeingOverpaid(Transaction transaction, Person payeeToFind) {
