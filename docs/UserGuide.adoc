@@ -187,12 +187,13 @@ All transactions will be re-displayed and the debtors panel and creditors panel 
 
 Adds a transaction between one payer and one or multiple payees. +
 Format with 1 Payee: `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]` +
-Format with more than 1 Payee: `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]`
+Format with more than 1 Payee (e.g. 2 Payees): `addTransaction type/TRANSACTION TYPE payer/PAYER NAME a/AMOUNT d/DESCRIPTION payee/PAYEE NAME payee/PAYEE NAME m/SPLIT METHOD [units/LIST OF UNITS] [percentages/LIST OF PERCENTAGES]`
 
 ****
 * The options for transaction type are: *payment* and *paydebt*.
 ** *payment* is for recording a transaction that was paid by a person on behalf of himself/herself and other persons.
 ** *paydebt* is for recording a transaction that reduces an existing debt owed to another person. *Only 1 payee is allowed.*
+A paydebt transaction can only be made if the payer owes the payee a balance. The amount specified cannot exceed this balance.
 * The options for split method are: *evenly*, *units*, and *percentage*. If no method is specified, the transaction will default to split evenly.
 ** Only specify a split method if the transaction type is *payment*.
 ** If *units* is selected as the split method, a list of integers representing the units must be entered as a comma-separated list. The first integer is the number of units
@@ -213,32 +214,34 @@ Examples:
 
 1. `addTransaction type/payment payer/John Doe a/1000.00 d/Fancy dinner payee/Tom Riddle`
 * Adds a transaction where John Doe paid $1000.00. This is split evenly by default with Tom Riddle.
-Thus, John Doe's balance will increase by 500.00 since he can expect to get much back from Tom Riddle.
-Tom Riddle's balance will decrease by 500.00 (reflected as -500.00) since that is the amount he owes.
+Thus, the total amount spent by John Doe and by Tom Riddle will each increase by 500.00.
 
 2. `addTransaction type/payment payer/Betsy Crowe a/30.00 d/Team T-shirts payee/John Doe payee/Bernice Yu m/units units/1, 2, 3`
 * Adds a transaction where Betsy Crowe paid $30.00 for team t-shirts. The split method is by units with a split of
-"1, 2, 3". The total number of units is 6. Thus, Betsy Crowe is responsible for 30.00 * (1/6) = 5.00. Similarly, John Doe
-is responsible for 10.00 and Bernice Yu is responsible for 15.00. Since Betsy Crowe paid for the transaction, her
-balance will increase by 25.00 since that is the sum of what she is owed. John Doe's balance will decrease by 10.00 (reflected as -10.00)
-and Bernice Yu's balance will decrease by 15.00 (reflected as -15.00).
+"1, 2, 3". The total number of units is 6. Thus, Betsy Crowe's total amount spent will increase by 30.00 * (1/6) = 5.00. Similarly, John Doe's
+ total amount spent will increase by 10.00 and Bernice Yu's total amount spent will increase by 15.00.
 
 3. `addTransaction type/payment payer/Steven Jia a/50.00 d/Taxi ride payee/Paul Mignot payee/Kok Cong Ong m/percentage percentage/50, 10, 10`
 * The *addTransaction* command fails because the sum of the percentages is not 100.
 
 4. `addTransaction type/payment payer/Steven Jia a/50.00 d/Taxi ride payee/Paul Mignot payee/Kok Cong Ong m/percentage percentage/38, 28, 34`
 * Adds a transaction where Steven Jia paid $50.00 for a shared taxi ride. The split method is by percentage with a split of
-"38, 28, 34". Thus, Steven Jia is responsible for 50.00 * (38/100) = 19.00. Similarly, Paul Mignot
-is responsible for 14.00 and Kok Cong Ong is responsible for 17.00. Since Steven Jia paid for the transaction, his
-balance will increase by 31.00 since that is the sum of what he is owed. Paul Mignot's balance will decrease by 14.00 (reflected as -14.00)
-and Kok Cong Ong's balance will decrease by 17.00 (reflected as -17.00).
+"38, 28, 34". Thus, Steven Jia's total amount spent will increase by 50.00 * (38/100) = 19.00. Similarly, Paul Mignot's
+total amount spent will increase by 14.00 and Kok Cong Ong's total amount spent will increase by 17.00.
 
-5. `addTransaction type/paydebt payer/Tom Riddle a/500.00 d/Pay John for last night's dinner payee/John Doe
-* Adds a transaction where Tom Riddle paid John Doe $500.00. Tom Riddle's balance increases by 500.00 since
-he no longer owes that amount. John Doe's balance decreases by 500.00 since he is no longer owed that amount.
+5. `addTransaction type/paydebt payer/Tom Riddle a/500.00 d/Pay John for last night's dinner payee/John Doe`
+* Adds a transaction where Tom Riddle paid John Doe $500.00.
 
-6. `addTransaction type/paydebt payer/Bernice Yu a/15.00 d/Pay Betsy for last night's dinner payee/Betsy Crowe payee/John Doe
-* The *addTransaction* command fails because the there is more than 1 payee when the transaction type is *paydebt*.
+6. `addTransaction type/paydebt payer/Bernice Yu a/15.00 d/Pay Betsy for last night's dinner payee/Betsy Crowe payee/John Doe`
+* The *addTransaction* command fails because there is more than 1 payee when the transaction type is *paydebt*.
+
+7. `addTransaction type/paydebt payer/Bernice Yu a/15.00 d/Pay Betsy for last night's dinner payee/John Doe`
+* Assuming that Betsy paid for the dinner and John did not, Bernice does not actually owe John any amount.
+The *addTransaction* command fails because the payer does not owe the payee any amount.
+
+8. `addTransaction type/paydebt payer/Bernice Yu a/30.00 d/Pay Betsy for last night's dinner payee/Betsy Crowe`
+* Assuming that Bernice only owes Betsy $15.00 for the dinner last night, the *addTransaction* command fails
+because the payer is overpaying the payee.
 
 // end::addTransaction[]
 === Deleting a transaction : `deleteTransaction` `[Since v1.2]`
