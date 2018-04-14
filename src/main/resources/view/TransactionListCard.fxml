@@ -7,25 +7,26 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 
-<HBox id="cardPane" fx:id="cardPane" prefHeight="30.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
-  <GridPane hgap="20" prefHeight="30.0" prefWidth="853.0" HBox.hgrow="ALWAYS">
+<!-- @@author phmignot -->
+
+<HBox id="cardPane" fx:id="cardPane" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+  <GridPane hgap="20" prefWidth="400.0" HBox.hgrow="ALWAYS" alignment="CENTER">
     <columnConstraints>
-         <ColumnConstraints maxWidth="143.19998168945312" minWidth="10.0" prefWidth="32.20001220703125" />
-      <ColumnConstraints maxWidth="214.39999389648438" minWidth="10.0" prefWidth="89.60000610351562" />
-         <ColumnConstraints maxWidth="179.60003662109375" minWidth="73.20001220703125" prefWidth="74.39999389648438" />
-         <ColumnConstraints maxWidth="274.79998779296875" minWidth="179.0" prefWidth="179.0" />
-         <ColumnConstraints maxWidth="255.60003662109375" minWidth="135.20001220703125" prefWidth="157.39996337890625" />
-         <ColumnConstraints maxWidth="255.60003662109375" minWidth="102.0" prefWidth="122.0" />
-         <ColumnConstraints maxWidth="264.00006103515625" minWidth="140.60003662109375" prefWidth="185.0" />
+         <ColumnConstraints prefWidth="25.0" />
+      <ColumnConstraints maxWidth="214.4" minWidth="10.0" prefWidth="89.6" />
+         <ColumnConstraints maxWidth="179.6" minWidth="73.2" prefWidth="74.4" />
+         <ColumnConstraints maxWidth="274.8" minWidth="179.0" prefWidth="179.0" />
+         <ColumnConstraints maxWidth="255.6" minWidth="135.2" prefWidth="157.4" />
+         <ColumnConstraints maxWidth="85.0" minWidth="62.0" prefWidth="72.0" />
+         <ColumnConstraints maxWidth="250.0" minWidth="100.0" prefWidth="160.0" />
     </columnConstraints>
     <padding>
-      <Insets bottom="5" left="15" right="5" top="5" />
+      <Insets bottom="5" left="15" right="15" top="5" />
     </padding>
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <HBox prefWidth="200.0" alignment="CENTER">
          <children>
-         <Label fx:id="idDisplay" styleClass="cell_big_label">
+         <Label fx:id="idDisplay" alignment="CENTER" styleClass="cell_big_label">
            <minWidth>
              <!-- Ensures that the label text is never truncated -->
              <Region fx:constant="USE_PREF_SIZE" />
@@ -33,27 +34,24 @@
          </Label>
          </children>
       </HBox>
-    <HBox alignment="CENTER_LEFT" minWidth="200" GridPane.columnIndex="1">
-      <Label fx:id="payerName" styleClass="cell_big_label" text="\$first" />
+    <HBox minWidth="200" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+      <Label fx:id="payerName" styleClass="cell_big_label" text="\$first" wrapText="true" />
     </HBox>
-    <HBox alignment="CENTER_LEFT" minWidth="100" GridPane.columnIndex="2">
-      <Label fx:id="amount" styleClass="cell_small_label" text="\$amount" />
+    <HBox minWidth="100" GridPane.columnIndex="2" alignment="CENTER">
+      <Label fx:id="amount" styleClass="cell_small_label" text="\$amount" wrapText="true" />
+      <padding>
+         <Insets left="5" right="5"/>
+      </padding>
     </HBox>
-    <HBox alignment="CENTER_LEFT" minWidth="189.0" prefHeight="20.0" prefWidth="189.0" GridPane.columnIndex="3">
-      <Label fx:id="description" styleClass="cell_small_label" text="\$description" />
+    <HBox minWidth="189.0" prefWidth="189.0" GridPane.columnIndex="3" alignment="CENTER">
+      <Label fx:id="description" styleClass="cell_small_label" text="\$description" wrapText="true" />
     </HBox>
-    <HBox alignment="CENTER_LEFT" maxWidth="300" GridPane.columnIndex="4">
-      <FlowPane fx:id="payees" prefHeight="17.0" prefWidth="302.0">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin></FlowPane>
+    <HBox maxWidth="300" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
+      <FlowPane fx:id="payees"  prefWidth="302.0" alignment="CENTER" />
     </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="161.0" GridPane.columnIndex="6">
-          <Label fx:id="date" styleClass="cell_small_label" text="\$date" />
-      </HBox>
-      <Label fx:id="transactionType" text="\$transactionType" GridPane.columnIndex="5" />
-      <rowConstraints>
-         <RowConstraints maxHeight="33.399993896484375" minHeight="10.399993896484375" prefHeight="25.4000244140625" />
-      </rowConstraints>
+    <HBox prefWidth="161.0" GridPane.columnIndex="6" alignment="CENTER" >
+      <Label fx:id="date" styleClass="cell_small_label" text="\$date" wrapText="true" />
+    </HBox>
+    <Label fx:id="transactionType" text="\$transactionType" GridPane.columnIndex="5" alignment="CENTER"/>
   </GridPane>
 </HBox>
