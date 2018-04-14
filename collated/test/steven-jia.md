@@ -31,6 +31,9 @@
         XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE, null,
                 VALID_AMOUNT, VALID_DESCRIPTION, validPayees,
                 VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
+        String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payer");
+        Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
+
     }
 
     @Test
@@ -49,6 +52,14 @@
                 VALID_PAYER, null, VALID_DESCRIPTION, validPayees,
                 VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Amount.class.getSimpleName());
+        Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
+    }
+    @Test
+    public void toModelType_nullDate_throwsIllegalValueException() {
+        XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE,
+                VALID_PAYER, VALID_AMOUNT, VALID_DESCRIPTION, validPayees, null,
+                VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
+        String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName());
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
 
@@ -78,6 +89,8 @@
         XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE, VALID_PAYER, VALID_AMOUNT,
                 VALID_DESCRIPTION, null,
                 VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
+        String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees");
+        Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
 
     @Test
@@ -122,31 +135,31 @@
     /**
      * Sets the {@code payer} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public TransactionBuilder withTransactionType(String transactionType) {
+        this.transactionType = new TransactionType(transactionType);
         return this;
     }
     /**
      * Sets the {@code SplitMethod} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withSplitMethod(SplitMethod splitMethod) {
-        this.splitMethod = splitMethod;
+    public TransactionBuilder withSplitMethod(String splitMethod) {
+        this.splitMethod = new SplitMethod(splitMethod);
         return this;
     }
 
     /**
      * Sets the units {@code List<Integer>} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withUnits(List<Integer> unitsList) {
-        this.unitsList = unitsList;
+    public TransactionBuilder withUnits(String unitsList) throws IllegalValueException {
+        this.unitsList = ParserUtil.parseUnitsList(unitsList);
         return this;
     }
 
     /**
      * Sets the percentages {@code List<Integer>} of the {@code Transaction} that we are building.
      */
-    public TransactionBuilder withPercentages(List<Integer> percentagesList) {
-        this.percentagesList = percentagesList;
+    public TransactionBuilder withPercentages(String percentagesList) throws IllegalValueException {
+        this.percentagesList = ParserUtil.parsePercentagesList(percentagesList);
         return this;
     }
 
