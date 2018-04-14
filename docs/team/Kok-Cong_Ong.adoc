@@ -59,8 +59,11 @@ Furthermore, a transaction can only be added only if the person in the transacti
 ** Project management:
 *** Managed releases `v1.3` - `v1.5rc` (3 releases) on GitHub
 ** Enhancements to existing features:
-*** Updated the GUI color scheme (Pull requests https://github.com[#33], https://github.com[#34])
-*** Wrote additional tests for existing features to increase coverage from 88% to 92% (Pull requests https://github.com[#36], https://github.com[#38])
+*** Updated the addTransaction Command (Payment) (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/25[#25])
+*** Updated the addTransaction Command (Paydebt) (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/139[#139])
+*** Create the balance amount on the person panel card (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/106[#106])
+*** Create the balance amount on the debtor and creditor panel card (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/106[#106])
+*** Wrote tests for existing features to increase coverage from 79% to 90% (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/129/commits[#129])
 ** Documentation:
 *** Did cosmetic tweaks to existing contents of the User Guide: https://github.com[#14]
 ** Community:
