@@ -146,7 +146,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                                            List<Integer> units, List<Integer> percentages)
             throws IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
-            if(units.isEmpty()) {
+            if (units.isEmpty()) {
                 throw new IllegalValueException(String.format(MESSAGE_MISSING_UNITS_VALUES,
                         splitMethod.toString()));
             }
@@ -155,7 +155,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                         String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
-            if(percentages.isEmpty()) {
+            if (percentages.isEmpty()) {
                 throw new IllegalValueException(String.format(MESSAGE_MISSING_PERCENTAGES_VALUES,
                         splitMethod.toString()));
             }

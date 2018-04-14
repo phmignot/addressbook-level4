@@ -92,7 +92,7 @@ public class XmlAdaptedTransaction {
         this.transactionType = transactionType;
         this.amount = amount;
         this.description = description;
-        this.dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.dateTime = dateTime;
 
         //@@author steven-jia
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
