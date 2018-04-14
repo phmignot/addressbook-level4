@@ -39,7 +39,7 @@ import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.TransactionType;
-
+//@@author ongkc
 public class AddTransactionCommandParserTest {
     private AddTransactionCommandParser parser = new AddTransactionCommandParser();
 

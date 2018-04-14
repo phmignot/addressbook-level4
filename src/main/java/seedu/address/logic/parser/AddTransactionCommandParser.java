@@ -53,7 +53,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
      * and returns an AddTransactionCommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
-    public AddTransactionCommand parse(String args, Model model) throws ParseException, CommandException {
+    public AddTransactionCommand parse(String args, Model model) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_TRANSACTION_TYPE, PREFIX_PAYER, PREFIX_AMOUNT,
                         PREFIX_DESCRIPTION, PREFIX_PAYEE, PREFIX_SPLIT_METHOD, PREFIX_SPLIT_BY_UNITS,
@@ -78,14 +78,14 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             }
             splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
         }
-
+        //@@author ongkc
         try {
             Person payer = model.findPersonByName(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
             Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
             Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
             UniquePersonList payees = model.getPayeesList(argMultimap, model);
             Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
-
+            //@@author steven-jia
             validatePayees(payer, payees);
             validateSplitMethodValues(payees, splitMethod, units, percentages);
 
@@ -100,7 +100,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             throw new ParseException(a.getMessage(), a);
         }
     }
-
+    //@@author steven-jia
     /**
      * Attempts to parse the split method
      * @param argMultimap
@@ -146,6 +146,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                                            List<Integer> units, List<Integer> percentages)
             throws IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
+
             if (units.isEmpty()) {
                 throw new IllegalValueException(String.format(MESSAGE_MISSING_UNITS_VALUES,
                         splitMethod.toString()));
@@ -156,7 +157,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
             if (percentages.isEmpty()) {
-                throw new IllegalValueException(String.format(MESSAGE_MISSING_PERCENTAGES_VALUES,
+                throw new ParseException(String.format(MESSAGE_MISSING_PERCENTAGES_VALUES,
                         splitMethod.toString()));
             }
             if (percentages.size() != payees.asObservableList().size() + 1) {

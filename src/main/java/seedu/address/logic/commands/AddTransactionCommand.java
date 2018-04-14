@@ -16,7 +16,7 @@ import seedu.address.model.transaction.Transaction;
 
 //@@author ongkc
 /**
- * Adds a transaction to the address book.
+ * Adds a new transaction to the SplitSplit application.
  */
 public class AddTransactionCommand extends UndoableCommand {
 

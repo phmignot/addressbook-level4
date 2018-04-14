@@ -10,7 +10,7 @@ import org.junit.Test;
 import guitests.guihandles.DebtorCardHandle;
 import seedu.address.model.person.Debtor;
 import seedu.address.testutil.DebtorBuilder;
-
+//@@author ongkc
 public class DebtorCardTest extends GuiUnitTest {
 
     @Test

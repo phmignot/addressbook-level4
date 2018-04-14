@@ -11,7 +11,6 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.model.util.SampleDataUtil;
 //@@author ongkc
@@ -42,12 +41,6 @@ public class TypicalTransactions {
     private static UniquePersonList payeeFiona = new UniquePersonList();
 
     private static Date date = new Date();
-
-    private static SplitMethod splitEvenly = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
-    private static SplitMethod splitByUnits = new SplitMethod(SplitMethod.SPLIT_METHOD_UNITS);
-    private static SplitMethod splitByPercentage = new SplitMethod(SplitMethod.SPLIT_METHOD_PERCENTAGE);
-    private static List<Integer> unitsList = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
-    private static List<Integer> percentagesList = new ArrayList<Integer>(Arrays.asList(25, 30, 45));
 
     static {
         try {
@@ -108,7 +101,4 @@ public class TypicalTransactions {
         return new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7));
     }
 
-    public static List<UniquePersonList> getTypicalPayees() {
-        return new ArrayList<>(Arrays.asList(payee2, payee4, payee6, payeeGeorge, payeeFiona));
-    }
 }

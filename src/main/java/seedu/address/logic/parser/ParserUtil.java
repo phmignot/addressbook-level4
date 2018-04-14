@@ -147,7 +147,7 @@ public class ParserUtil {
         }
         return tagSet;
     }
-
+    //@@author steven-jia
     /**
      * Parses a {@code String amount} into a {@code Amount}.
      * Leading and trailing whitespaces will be trimmed.
@@ -173,7 +173,7 @@ public class ParserUtil {
         requireNonNull(amount);
         return amount.isPresent() ? Optional.of(parseAmount(amount.get())) : Optional.empty();
     }
-
+    //@@author ongkc
     /**
      * Parses a {@code String description} into a {@code Description}.
      * Leading and trailing whitespaces will be trimmed.
@@ -197,7 +197,6 @@ public class ParserUtil {
         return description.isPresent() ? Optional.of(parseDescription(description.get())) : Optional.empty();
     }
 
-    //@@author ongkc
     /**
      * Parses {@code Collection<String> TransactionType} into a {@code Set<TransactionType>}.
      */

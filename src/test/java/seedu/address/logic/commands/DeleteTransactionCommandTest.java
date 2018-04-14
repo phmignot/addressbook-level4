@@ -28,7 +28,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
-
+//@@author ongkc
 public class DeleteTransactionCommandTest {
 
     @Rule

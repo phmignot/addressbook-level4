@@ -74,11 +74,14 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     //// list overwrite operations
-
     public void setPersons(List<Person> persons) throws DuplicatePersonException {
         this.persons.setPersons(persons);
     }
 
+    public void setTags(Set<Tag> tags) {
+        this.tags.setTags(tags);
+    }
+    //@@author ongkc
     public void setDebtors(DebtsList debtsList)  {
         this.debtors.setDebtors(debtsList);
     }
@@ -88,11 +91,6 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void setTransactions(List<Transaction> transactions) {
         this.transactions.setTransactions(transactions);
     }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags.setTags(tags);
-    }
-
     public void setDebtsTable(DebtsTable debtsTable) {
         final DebtsTable replacement = new DebtsTable();
         for (DebtsTable.Entry<Person, DebtsList> entry : debtsTable.entrySet()) {
@@ -199,6 +197,7 @@ public class AddressBook implements ReadOnlyAddressBook {
             throw new PersonNotFoundException();
         }
     }
+    //@@author ongkc
     /**
      * check if the person to be deleted still owed any unpaid debt
      */
@@ -270,7 +269,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
     }
-
+    //@@author ongkc
     /**
      * Adds a {@code transaction} to the list of transactions.
      */
@@ -323,6 +322,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
                     splitMethodValuesListIndex, transaction));
     }
+    //@author phmignot
     /**
      * Removes {@code target} from the list of transactions.
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
@@ -333,7 +333,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         debtsTable.display();
     }
 
-
+    //@@author steven-jia
     private boolean isNotOwedAnyDebt(Transaction transaction, Person payeeToFind) {
         return debtsTable.size() != 0
                 && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null

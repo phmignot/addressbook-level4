@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.model.AddressBook;
 
 /**
- * Clears the address book.
+ * Clears the Smartsplit applcation.
  */
 public class ClearCommand extends UndoableCommand {
 

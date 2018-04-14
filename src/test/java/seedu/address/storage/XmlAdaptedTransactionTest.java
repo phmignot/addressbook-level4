@@ -19,7 +19,7 @@ import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.TransactionType;
 import seedu.address.testutil.Assert;
 import seedu.address.testutil.TypicalTransactions;
-
+//@@author ongkc
 public class XmlAdaptedTransactionTest extends XmlAdaptedPersonTest {
 
     private static final String INVALID_AMOUNT = " ";

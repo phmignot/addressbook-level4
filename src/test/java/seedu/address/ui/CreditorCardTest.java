@@ -10,7 +10,7 @@ import org.junit.Test;
 import guitests.guihandles.CreditorCardHandle;
 import seedu.address.model.person.Creditor;
 import seedu.address.testutil.CreditorBuilder;
-
+//@@author ongkc
 public class CreditorCardTest extends GuiUnitTest {
 
     @Test

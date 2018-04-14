@@ -243,6 +243,7 @@ public class ModelManager extends ComponentManager implements Model {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
     }
+    //@@author ongkc
     @Override
     public void updateDebtorList(Predicate<Debtor> predicate) {
         requireNonNull(predicate);
@@ -255,7 +256,6 @@ public class ModelManager extends ComponentManager implements Model {
         filteredCreditors.setPredicate(predicate);
     }
 
-    //@@author ongkc
     @Override
     public void updateFilteredTransactionList(Predicate<Transaction> predicate) {
         requireNonNull(predicate);

@@ -57,7 +57,7 @@ public class XmlAdaptedTransaction {
     public XmlAdaptedTransaction() {}
 
     /**
-     * Constructs an {@code XmlAdaptedTransaction} with the given person details.
+     * Constructs an {@code XmlAdaptedTransaction} with the given transactions details.
      */
     public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
                                  UniquePersonList payees, String splitMethod, List<Integer> unitsList,
@@ -83,7 +83,7 @@ public class XmlAdaptedTransaction {
     }
 
     /**
-     * Constructs an {@code XmlAdaptedTransaction} with the given person details.
+     * Constructs an {@code XmlAdaptedTransaction} with the given transaction details.
      */
     public XmlAdaptedTransaction(String transactionType, Person payer, String amount, String description,
                                  UniquePersonList payees, Date dateTime, String splitMethod, List<Integer> unitsList,

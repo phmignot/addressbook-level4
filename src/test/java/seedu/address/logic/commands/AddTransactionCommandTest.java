@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javafx.collections.ObservableList;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -40,10 +39,8 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
-import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.testutil.TransactionBuilder;
-
 //@@author ongkc
 public class AddTransactionCommandTest {
 
@@ -188,25 +185,23 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void deletePerson(Person target) throws PersonNotFoundException {
+        public void deletePerson(Person target) {
             fail("This method should not be called.");
         }
 
         @Override
-        public void updatePerson(Person target, Person editedPerson)
-                throws DuplicatePersonException {
+        public void updatePerson(Person target, Person editedPerson) {
             fail("This method should not be called.");
         }
 
         @Override
-        public Person findPersonByName(Name name) throws PersonNotFoundException {
+        public Person findPersonByName(Name name) {
             fail("This method should not be called.");
             return null;
         }
 
         @Override
-        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) throws PersonNotFoundException,
-                IllegalValueException {
+        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) {
             return null;
         }
 
@@ -217,13 +212,13 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayer(Person person) {
             fail("This method should not be called.");
             return true;
         }
 
         @Override
-        public boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayee(Person person) {
             fail("This method should not be called.");
             return true;
         }
@@ -254,10 +249,10 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) throws CommandException, PersonNotFoundException {}
+        public void addTransaction(Transaction transaction) throws PersonNotFoundException {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
+        public void deleteTransaction(Transaction transaction) {
         }
 
         @Override
@@ -280,11 +275,6 @@ public class AddTransactionCommandTest {
 
         }
     }
-
-    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub {
-    }
-
-
     /**
      * A Model stub that always accept the transaction being added.
      */
