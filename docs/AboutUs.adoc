@@ -12,28 +12,31 @@ We are a team based in the http://www.comp.nus.edu.sg[School of Computing, Natio
 
 === Kok Cong Ong
 image::ongkc.png[width="150", align="left"]
-{empty}[https://github.com/ongkc[github]]
+https://github.com/ongkc[Github Account] +
+https://github.com/CS2103JAN2018-W10-B1/main/blob/master/docs/team/Kok-Cong_Ong.adoc[Project Portfolio Page]
 
 Role: Team Lead, Development, Testing +
-Responsibilities: Logic, Storage, UI
+Responsibilities: Implementing the addtransaction command and creating the debtors and creditors tables
 
 '''
 
-=== Steven Jia
+=== Wen Qin Jia
 image::steven-jia.png[width="150", align="left"]
-{empty}[https://github.com/Steven-Jia[github]]
+https://github.com/Steven-Jia[Github Account] +
+https://github.com/CS2103JAN2018-W10-B1/main/blob/master/docs/team/steven-jia.adoc[Project Portfolio Page]
 
 Role: Project Management, Development +
-Responsibilities: Model, Logic, Storage
+Responsibilities: Implementing the different split methods for adding a transaction
 
 '''
 
-=== Paul-Henri MIGNOT
+=== Paul-Henri François Jacques Mignot
 image::phmignot.png[width="150", align="left"]
-{empty}[http://github.com/phmignot[github]]
+http://github.com/phmignot[Github Account] +
+https://github.com/CS2103JAN2018-W10-B1/main/blob/master/docs/team/paulhenrimignot.adoc[Project Portfolio Page]
 
 Role: Development, Integration, Code Quality +
-Responsibilities: UI, Logic
+Responsibilities: Creating the debts table and implementing the select/unselect feature for a person
 
 '''
 
