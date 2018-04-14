@@ -93,7 +93,35 @@ public class TransactionCardTest extends GuiUnitTest {
         assertEquals(expectedPerson.getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
                 actualCard.getTags());
     }
-
+```
+###### /java/seedu/address/ui/testutil/GuiTestAssert.java
+``` java
+    /**
+     * Asserts that {@code actualCard} displays the details of {@code expectedPerson}.
+     */
+    public static void assertCreditorCardDisplays(Creditor expectedCreditor, CreditorCardHandle actualCard) {
+        assertEquals(expectedCreditor.getCreditor().getName().fullName, actualCard.getName());
+        assertEquals(expectedCreditor.getCreditor().getPhone().value, actualCard.getPhone());
+        assertEquals(expectedCreditor.getCreditor().getEmail().value, actualCard.getEmail());
+        assertEquals(expectedCreditor.getCreditor().getTags().stream().map(tag -> tag.tagName)
+                        .collect(Collectors.toList()),
+                actualCard.getTags());
+        assertEquals(expectedCreditor.getDebt().value, actualCard.getDebt());
+    }
+```
+###### /java/seedu/address/ui/testutil/GuiTestAssert.java
+``` java
+    /**
+     * Asserts that {@code actualCard} displays the details of {@code expectedPerson}.
+     */
+    public static void assertDebtorCardDisplays(Debtor expectedDebtor, DebtorCardHandle actualCard) {
+        assertEquals(expectedDebtor.getDebtor().getName().fullName, actualCard.getName());
+        assertEquals(expectedDebtor.getDebtor().getPhone().value, actualCard.getPhone());
+        assertEquals(expectedDebtor.getDebtor().getEmail().value, actualCard.getEmail());
+        assertEquals(expectedDebtor.getDebtor().getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
+                actualCard.getTags());
+        assertEquals(expectedDebtor.getDebt().value, actualCard.getDebt());
+    }
     /**
      * Asserts that the list in {@code personListPanelHandle} displays the details of {@code persons} correctly and
      * in the correct order.
@@ -163,6 +191,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.parser.ParserUtil;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -178,9 +208,10 @@ import seedu.address.model.util.SampleDataUtil;
  */
 public class TransactionBuilder {
 
-    public static final String DEFAULT_AMOUNT = "123.45";
+    public static final String DEFAULT_AMOUNT = "6172.50";
     public static final String DEFAULT_DESCRIPTION = "paying for Cookies";
-
+    private static Integer lastTransactionId = 0;
+    private final Integer id;
     private Person payer;
     private Amount amount;
     private Description description;
@@ -200,12 +231,11 @@ public class TransactionBuilder {
         UniquePersonList samplePayees = new UniquePersonList();
         try {
             samplePayees.add(SampleDataUtil.getSamplePersons()[1]);
-            samplePayees.add(SampleDataUtil.getSamplePersons()[2]);
-            samplePayees.add(SampleDataUtil.getSamplePersons()[3]);
         } catch (DuplicatePersonException dpe) {
             throw new AssertionError("This payee has already been added");
         }
         dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
+        this.id = lastTransactionId++;
         payees = samplePayees;
         splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_EVENLY);
         unitsList = Collections.emptyList();
@@ -221,6 +251,7 @@ public class TransactionBuilder {
         amount = transactionToCopy.getAmount();
         description = transactionToCopy.getDescription();
         dateTime = transactionToCopy.getDateTime();
+        id = transactionToCopy.getId();
         payees = transactionToCopy.getPayees();
         transactionType = transactionToCopy.getTransactionType();
         splitMethod = transactionToCopy.getSplitMethod();
@@ -253,9 +284,10 @@ public class TransactionBuilder {
 
     /**
      * Sets the {@code payees} of the {@code Transaction} that we are building.
+     * @param payees
      */
-    public TransactionBuilder withPayees(UniquePersonList payees) {
-        this.payees = payees;
+    public TransactionBuilder withPayees(String... payees) throws DuplicatePersonException {
+        this.payees = SampleDataUtil.getPayeesSet(payees);
         return this;
     }
 
