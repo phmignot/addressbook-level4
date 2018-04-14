@@ -357,7 +357,7 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Pros: We do not need to maintain a separate stack, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
 // end::undoredo[]
-
+// start::addtransaction[]
 ===  Add Transaction feature
 ==== Add Transaction Command Implementation
 .Component interactions for `addTransaction` command (part 1)
@@ -423,6 +423,7 @@ Why it is implemented that way
 * **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
 ** Pros: Easier for users to understand. Allows for the use of a clearer and more obvious command word (i.e. "payDebt").
 ** Cons: Very similar to addTransaction and will likely re-use a lot of the same code. As a new command, `payDebtCommand` would also require new tests for coverage.
+// end::addtransaction[]
 
 // tag::selectfeature[]
 ===  Select feature
@@ -482,8 +483,6 @@ This implementation saves the application from wasting of computing resource.
 
 === Delete Transaction Feature
 
-
-// end::payDebt[]
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
