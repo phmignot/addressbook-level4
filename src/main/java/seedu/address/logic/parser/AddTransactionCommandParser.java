@@ -3,6 +3,8 @@ package seedu.address.logic.parser;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_INVALID_NUMBER_OF_VALUES;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_INVALID_PERCENTAGE_VALUES;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_MISSING_PERCENTAGES_VALUES;
+import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_MISSING_UNITS_VALUES;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_NONEXISTENT_PERSON;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_PAYEE_IS_PAYER;
 import static seedu.address.logic.commands.AddTransactionCommand.MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT;
@@ -144,11 +146,19 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
                                            List<Integer> units, List<Integer> percentages)
             throws IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
+            if(units.isEmpty()) {
+                throw new IllegalValueException(String.format(MESSAGE_MISSING_UNITS_VALUES,
+                        splitMethod.toString()));
+            }
             if (units.size() != payees.asObservableList().size() + 1) {
                 throw new IllegalValueException(
                         String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
+            if(percentages.isEmpty()) {
+                throw new IllegalValueException(String.format(MESSAGE_MISSING_PERCENTAGES_VALUES,
+                        splitMethod.toString()));
+            }
             if (percentages.size() != payees.asObservableList().size() + 1) {
                 throw new IllegalValueException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES,
                         splitMethod.toString()));

@@ -83,12 +83,12 @@ public class CalculationUtil {
             Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
             amountToAdd = transaction.getAmount().getDoubleValue()
-                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+                    * numberOfUnitsForPayer / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayer = transaction.getPercentages().get(0);
             amountToAdd = transaction.getAmount().getDoubleValue()
-                    * (100 - percentageForPayer) / 100;
+                    * percentageForPayer / 100;
             break;
         case EVENLY:
         default:
@@ -140,12 +140,12 @@ public class CalculationUtil {
             Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
             amountToAdd = -transaction.getAmount().getDoubleValue()
-                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+                    * numberOfUnitsForPayer / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayer = transaction.getPercentages().get(0);
             amountToAdd = -transaction.getAmount().getDoubleValue()
-                    * (100 - percentageForPayer) / 100;
+                    * percentageForPayer / 100;
             break;
         case EVENLY:
         default:
