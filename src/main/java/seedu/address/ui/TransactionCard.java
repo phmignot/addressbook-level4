@@ -43,7 +43,7 @@ public class TransactionCard extends UiPart<Region> {
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
         transactionType.setText(transaction.getTransactionType().toString().toLowerCase().substring(0, 1).toUpperCase()
-                + transaction.getTransactionType().toString().substring(1));
+                + transaction.getTransactionType().toString().toLowerCase().substring(1));
 
         int numPayees = transaction.getPayees().asObservableList().size();
         for (int i = 0; i < numPayees; i++) {

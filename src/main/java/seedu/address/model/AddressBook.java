@@ -275,7 +275,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Adds a {@code transaction} to the list of transactions.
      */
     public void addTransaction(Transaction transaction) throws CommandException {
-        if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+        if (transaction.getTransactionType().toString().toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             if (transaction.getPayees().asObservableList().size() > 1) {
                 throw new CommandException(MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT);
             }
@@ -346,7 +346,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     private boolean isBeingOverpaid(Transaction transaction, Person payeeToFind) {
         return transaction.getAmount().getDoubleValue()
-                < -debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
+                > debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
     }
 
 }
