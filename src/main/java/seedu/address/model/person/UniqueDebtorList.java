@@ -39,9 +39,9 @@ public class UniqueDebtorList implements Iterable<Debtor> {
 
         final UniqueDebtorList replacement = new UniqueDebtorList();
         for (DebtsList.Entry<Person, Balance> entry : debtsList.entrySet()) {
-            if (entry.getValue().getDoubleValue() > 0) {
+            if (entry.getValue().getDoubleValue() < 0) {
                 Person person = entry.getKey();
-                Balance debt = entry.getValue();
+                Balance debt = entry.getValue().getInverse();
                 Debtor debtor = new Debtor(person, debt);
                 replacement.add(debtor);
             }

@@ -205,7 +205,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void addTransaction(Transaction transaction) throws CommandException, PersonNotFoundException {
         addressBook.addTransaction(transaction);
         addressBook.updatePayerAndPayeesBalance(true, transaction, findPersonByName(
-                transaction.getPayer().getName()), getPayeesList(transaction.getPayees()));
+                    transaction.getPayer().getName()), getPayeesList(transaction.getPayees()));
         updateFilteredTransactionList(PREDICATE_SHOW_ALL_TRANSACTIONS);
         updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
         updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);

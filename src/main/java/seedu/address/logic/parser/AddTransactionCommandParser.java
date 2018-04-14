@@ -66,9 +66,9 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
         //@@author steven-jia
         parseTransactionType(argMultimap);
 
-        if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
+        if (transactionType.value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
             parseSplitMethod(argMultimap);
-        } else if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+        } else if (transactionType.value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             if (arePrefixesPresent(argMultimap, PREFIX_SPLIT_METHOD)
                     || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_UNITS)
                     || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_PERCENTAGE)) {

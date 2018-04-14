@@ -296,6 +296,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction, Person payer,
                                             UniquePersonList payees) {
+
         updatePayerBalance(isAddingTransaction, transaction, payer);
         for (int i = 0; i < payees.asObservableList().size(); i++) {
             Person payee = payees.asObservableList().get(i);
@@ -308,8 +309,10 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Update payer balance whenever a new transaction is added or deleted
      */
     private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction, Person payer) {
-        payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
-                transaction));
+        if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
+                    transaction));
+        }
     }
 
     /**
@@ -319,8 +322,10 @@ public class AddressBook implements ReadOnlyAddressBook {
                                     Boolean isAddingTransaction,
                                     Integer splitMethodValuesListIndex,
                                     Transaction transaction) {
-        payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
-                splitMethodValuesListIndex, transaction));
+        if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
+                    splitMethodValuesListIndex, transaction));
+        }
     }
     /**
      * Removes {@code target} from the list of transactions.
@@ -336,12 +341,12 @@ public class AddressBook implements ReadOnlyAddressBook {
     private boolean isNotOwedAnyDebt(Transaction transaction, Person payeeToFind) {
         return debtsTable.size() != 0
                 && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
-                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() >= 0);
+                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() <= 0);
     }
 
     private boolean isBeingOverpaid(Transaction transaction, Person payeeToFind) {
         return transaction.getAmount().getDoubleValue()
-                > -debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
+                < -debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
     }
 
 }

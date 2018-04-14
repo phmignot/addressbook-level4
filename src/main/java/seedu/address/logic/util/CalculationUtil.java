@@ -77,7 +77,7 @@ public class CalculationUtil {
      * Returned amount will be negative.
      */
     private static Balance calculateAmountToAddForPayeeForPaydebtTransaction(Transaction transaction) {
-        Double amountToAdd = -Double.valueOf(transaction.getAmount().value);
+        Double amountToAdd = Double.valueOf(transaction.getAmount().value);
         return getRoundedFormattedBalance(amountToAdd);
     }
 
@@ -120,16 +120,16 @@ public class CalculationUtil {
         case UNITS:
             Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
-            amountToAdd = -Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
+            amountToAdd = Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
                     / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
-            amountToAdd = -Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
+            amountToAdd = Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
             break;
         case EVENLY:
         default:
-            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
                     transaction.getPayees());
             break;
         }
@@ -172,7 +172,7 @@ public class CalculationUtil {
     public static Balance calculateAmountToAddForPayeeForDeleteTransaction(Integer splitMethodValuesListIndex,
                                                                            Transaction transaction) {
         if (transaction.getTransactionType().value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
-            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue());
+            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue()).getInverse();
         }
 
         Double amountToAdd;
@@ -180,16 +180,16 @@ public class CalculationUtil {
         case UNITS:
             Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
-            amountToAdd = transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
+            amountToAdd = -transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
                     / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
-            amountToAdd = transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
+            amountToAdd = -transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
             break;
         case EVENLY:
         default:
-            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
                     transaction.getPayees());
             break;
         }
@@ -202,7 +202,7 @@ public class CalculationUtil {
      */
     private static Double calculateAmountForPayerSplitEvenly(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        return Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1) / numberOfInvolvedPersons;
+        return Double.valueOf(amount.value) / numberOfInvolvedPersons;
     }
 
     /**

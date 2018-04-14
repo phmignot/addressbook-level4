@@ -38,7 +38,7 @@
   </GridPane>
    <VBox prefHeight="105.0" prefWidth="105.0">
       <children>
-         <Label text="Balance">
+         <Label prefHeight="42.0" prefWidth="97.0" text="Amount Spent">
             <VBox.margin>
                <Insets />
             </VBox.margin>
