@@ -24,18 +24,11 @@ public class CalculationUtil {
      */
     public static Balance calculateAmountToAddForPayer(Boolean isAddingTransaction,
                                                        Transaction transaction) {
-        // This is a deleteTransaction command
         if (!isAddingTransaction) {
             return calculateAmountToAddForPayerForDeleteTransaction(transaction);
-        }
-
-        switch (transaction.getTransactionType().value.toLowerCase()) {
-        case TransactionType.TRANSACTION_TYPE_PAYMENT:
+        } else {
             return calculateAmountToAddForPayerForPaymentTransaction(transaction);
-        default:
-            assert false : transaction.getTransactionType().value;
         }
-        return null;
     }
 
     /**
@@ -44,20 +37,20 @@ public class CalculationUtil {
     public static Balance calculateAmountToAddForPayee(Boolean isAddingTransaction,
                                                        Integer splitMethodValuesListIndex,
                                                        Transaction transaction) {
+        //@@author steven-jia
         // This is a deleteTransaction command
         if (!isAddingTransaction) {
             return calculateAmountToAddForPayeeForDeleteTransaction(splitMethodValuesListIndex, transaction);
         }
+        //@@author ongkc
 
         switch (transaction.getTransactionType().value.toLowerCase()) {
-        case TransactionType.TRANSACTION_TYPE_PAYMENT:
-            return calculateAmountToAddForPayeeForPaymentTransaction(splitMethodValuesListIndex, transaction);
         case TransactionType.TRANSACTION_TYPE_PAYDEBT:
             return calculateAmountToAddForPayeeForPaydebtTransaction(transaction);
+        case TransactionType.TRANSACTION_TYPE_PAYMENT:
         default:
-            assert false : transaction.getTransactionType().value;
+            return calculateAmountToAddForPayeeForPaymentTransaction(splitMethodValuesListIndex, transaction);
         }
-        return null;
     }
 
     /**

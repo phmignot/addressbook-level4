@@ -1,4 +1,4 @@
-= John Doe - Project Portfolio
+= Kok Cong Ong - Project Portfolio
 :imagesDir: ../images
 :stylesDir: ../stylesheets
 

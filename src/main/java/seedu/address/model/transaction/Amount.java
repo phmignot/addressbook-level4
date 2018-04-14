@@ -12,10 +12,9 @@ public class Amount {
     public static final String MESSAGE_AMOUNT_CONSTRAINTS =
             "Amount can only take in a positive numerical number up to 2 decimal places, "
                     + "and it should not be blank";
-    /*
-     * The first character of the address must not be a whitespace,
-     * otherwise " " (a blank string) becomes a valid input.
-     */
+
+    // The first character of the amount must not be a whitespace,
+    // otherwise " " (a blank string) becomes a valid input.
     public static final String AMOUNT_VALIDATION_REGEX = "^\\d+(\\.\\d{1,2})?$";
 
     public final String value;

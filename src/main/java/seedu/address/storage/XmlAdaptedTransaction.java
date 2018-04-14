@@ -43,15 +43,16 @@ public class XmlAdaptedTransaction {
     private String description;
     @XmlElement(required = true)
     private Date dateTime;
+    //@@author steven-jia
     @XmlElement(required = true)
     private List<XmlAdaptedPerson> payees = new ArrayList<>();
     @XmlElement(required = true)
     private String splitMethod;
-
     @XmlElement
     private String unitsList;
     @XmlElement
     private String percentagesList;
+    //@@author ongkc
 
     /**
      * Constructs an XmlAdaptedTransaction.
@@ -82,9 +83,8 @@ public class XmlAdaptedTransaction {
         if (!percentagesList.isEmpty()) {
             this.percentagesList = buildIntegerListString(percentagesList);
         }
-        //@@author
     }
-
+    //@@author ongkc
     /**
      * Constructs an {@code XmlAdaptedTransaction} with the given transaction details.
      */
@@ -108,8 +108,9 @@ public class XmlAdaptedTransaction {
         if (!percentagesList.isEmpty()) {
             this.percentagesList = buildIntegerListString(percentagesList);
         }
-        //@@author
     }
+
+    //@@author ongkc
     /**
      * Converts a given Transaction into this class for JAXB use.
      *
@@ -133,9 +134,9 @@ public class XmlAdaptedTransaction {
         if (!source.getPercentages().isEmpty()) {
             percentagesList = buildIntegerListString(source.getPercentages());
         }
-        //@@author
     }
 
+    //@@author ongkc
     /**
      * Converts this jaxb-friendly adapted transaction's object into the model's Transaction object.
      *
@@ -180,7 +181,6 @@ public class XmlAdaptedTransaction {
         }
         final TransactionType transactionType = new TransactionType(this.transactionType);
 
-        //@@author steven-jia
         if (this.dateTime == null) {
             throw new IllegalValueException(String.format
                     (MISSING_FIELD_MESSAGE_FORMAT_DATE, Date.class.getSimpleName()));
@@ -189,6 +189,7 @@ public class XmlAdaptedTransaction {
         final Date dateTime = this.dateTime;
 
         if (this.payees.isEmpty()) {
+
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
 
@@ -231,7 +232,6 @@ public class XmlAdaptedTransaction {
                 splitMethod, units, percentages);
     }
 
-    //@@author steven-jia
     /**
      * Checks each field of the {@code person} for validity
      */
