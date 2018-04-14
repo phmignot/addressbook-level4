@@ -72,7 +72,7 @@ public class AddTransactionCommandParser implements Parser<AddTransactionCommand
             if (arePrefixesPresent(argMultimap, PREFIX_SPLIT_METHOD)
                     || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_UNITS)
                     || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_PERCENTAGE)) {
-                throw new CommandException(MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT);
+                throw new ParseException(MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT);
             }
             splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
         }

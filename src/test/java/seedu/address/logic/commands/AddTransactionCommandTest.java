@@ -70,14 +70,13 @@ public class AddTransactionCommandTest {
     }
     @Test
     public void execute_paymentTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingTransactionAdded modelStub =
-                new ModelStubAcceptingTransactionAdded();
-        Transaction validTransaction = new TransactionBuilder().withAmount("12345").build();
-
-        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
-        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
-                commandResult.feedbackToUser);
-        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+        ModelManager expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Transaction validTransaction = new TransactionBuilder().withAmount("12345").withSplitMethod("percentage")
+                .withPercentages("50, 50").build();
+        AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
+        String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
+                validTransaction);
+        assertCommandSuccess(addTransactionCommand, model, expectedMessage, expectedModel);
     }
     @Test
     public void execute_payDebtTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {

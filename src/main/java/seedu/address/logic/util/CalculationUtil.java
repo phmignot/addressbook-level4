@@ -32,8 +32,6 @@ public class CalculationUtil {
         switch (transaction.getTransactionType().value.toLowerCase()) {
         case TransactionType.TRANSACTION_TYPE_PAYMENT:
             return calculateAmountToAddForPayerForPaymentTransaction(transaction);
-        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
-            return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
             assert false : transaction.getTransactionType().value;
         }
@@ -63,14 +61,6 @@ public class CalculationUtil {
     }
 
     //@@author ongkc
-    /**
-     * Calculates amount to add to the payer's balance after a new paydebt transaction is added.
-     * Returned amount will be positive.
-     */
-    private static Balance calculateAmountToAddForPayerForPaydebtTransaction(Transaction transaction) {
-        Double amountToAdd = Double.valueOf(transaction.getAmount().value);
-        return getRoundedFormattedBalance(amountToAdd);
-    }
 
     /**
      * Calculates amount to add to the payee's balance after a new paydebt transaction is added.
