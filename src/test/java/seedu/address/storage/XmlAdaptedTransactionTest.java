@@ -1,6 +1,7 @@
 package seedu.address.storage;
 
 import static seedu.address.storage.XmlAdaptedTransaction.MISSING_FIELD_MESSAGE_FORMAT;
+import static seedu.address.storage.XmlAdaptedTransaction.MISSING_FIELD_MESSAGE_FORMAT_DATE;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,7 +90,7 @@ public class XmlAdaptedTransactionTest extends XmlAdaptedPersonTest {
         XmlAdaptedTransaction transaction = new XmlAdaptedTransaction(VALID_TRANSACTION_TYPE,
                 VALID_PAYER, VALID_AMOUNT, VALID_DESCRIPTION, validPayees, null,
                 VALID_SPLIT_METHOD_EVENLY, VALID_EMPTY_LIST, VALID_EMPTY_LIST);
-        String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName());
+        String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT_DATE, Date.class.getSimpleName());
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
 
@@ -155,5 +156,6 @@ public class XmlAdaptedTransactionTest extends XmlAdaptedPersonTest {
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, SplitMethod.class.getSimpleName());
         Assert.assertThrows(IllegalValueException.class, expectedMessage, transaction::toModelType);
     }
+
 
 }

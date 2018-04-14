@@ -1111,8 +1111,72 @@ These instructions only provide a starting point for testers to work on; testers
 .. Re-launch the app by double-clicking the jar file. +
    Expected: The most recent window size and location is retained.
 
-_{ more test cases ... }_
+=== Adding a person
 
+. A person can be added only if the name is different and is case sensitive.
+.. Test case: `addPerson n/john Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, `addPerson n/joHn DoE p/98765432 e/johnd@example.com t/friends t/owesMoney`
+   Expected: This person already exists in the address book. The name must be unique.
+.. Test case: `addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`
+   Expected: New person added: Bernice Yu Phone: 98765432 Email: johnd@example.com Balance: 0.00 Tags: [owesMoney][friends]
+
+=== Adding a transaction
+
+. A transaction can be either payment or paydebt.
+.. A payment type transaction should be used if a person is making a payment for multiple people.
+.. A paydebt type transaction should be used when a person have already returned the amount owed to other person.
+.. All transactions can only be made if the payer or payee(s) indicated in the transaction exist in the application
+   ... Test case (if no person is added): `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
+       Expected: The specified payer or payee(s) do not exist.
+.. Before you proceed, please add the following persons to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney`
+
+==== Payment Type Transaction
+. A payment transaction allows one payer to one or more payees. There are three types of payment methods, split evenly , by percentages or by units. After each payment transaction is added, the amount spent based on the type of splitting methods indicated, will be updated and added onto the "Amount Spent" person panel card.
+.. Split Evenly(Default method)
+... Test case: `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
+   Expected: New transaction added
+... Test case: `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu`
+   Expected: New transaction added
+.. By Percentage(percentages indicated must be seperated by
+... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40, 20`
+   Expected: New transaction added
+... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40`
+   Expected: The number of percentage values does not match the number of persons involved. Remember to include the payer in the count.
+... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40, 50`
+   Expected: The sum of the percentages does not equal 100.
+... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40,`
+   Expected: List of percentages can only take comma-separated integers
+... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40 .20`
+   Expected: List of percentages can only take comma-separated integers
+.. By Units
+... Test case: `addtransaction type/payment payer/Bernice Yu a/35.00 d/Team apparel items payee/Alex Yeoh payee/John Doe m/units units/4, 2, 1`
+   Expected: New transaction added
+... Test case: `addtransaction type/payment payer/Bernice Yu a/35.00 d/Team apparel items payee/Alex Yeoh payee/John Doe m/units units/4, 2,`
+   Expected: List of units can only take comma-separated integers
+... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/4, 2`
+   Expected: The number of units values does not match the number of persons involved. Remember to include the payer in the count.
+
+==== Paydebt Type Transaction
+
+. A paydebt type transaction only allow one payer to one payee.
+.. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
+ 4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
+
+ ... Test case: `addtransaction type/paydebt payer/Bernice Yu a/50.00 d/Taxi ride to NUS payee/John Doe` (Amount pay more than amount owed)
+    Expected: Payee is being overpaid. Ensure that the transaction amount does not exceed the balance owed.
+ ... Test case: `addtransaction type/paydebt payer/Bernice Yu a/40.00 d/Taxi ride to NUS payee/John Doe`
+    Expected: New transaction added
+ ... Test case: `addtransaction type/paydebt payer/Bernice Yu a/40.00 d/Taxi ride to NUS payee/John Doe` (Bernice Yu does not owed John Doe any money)
+    Expected: Payee is not owed any debt
+
+==== Delete Transaction
+ . Purpose of delete transaction is solely for wrongly added transaction
+ .. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
+  4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly` 5) `addtransaction type/payment payer/John Doe a/240.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
+
+... Test case: `deleteTransaction 1`
+     Expected:  Deleted Transaction:  Transaction id: X + Details of the deleted contact shown in the status message
+  ... Test case: `addTransaction type/paydebt payer/Bernice Yu a/80.00 d/Amount owed for taxi ride payee/John Doe` + `deletePerson 2`(Bernice Yu) + `deleteTransaction 1`
+     Expected: The payer or payee(s) in the transaction do not exist
 === Deleting a person
 
 . Deleting a person while all persons are listed
@@ -1122,15 +1186,32 @@ _{ more test cases ... }_
    Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 .. Test case: `delete 0` +
    Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
-.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size) _{give more}_ +
-   Expected: Similar to previous.
+.. Test case: if delete person debt not cleared - outstanding debtor(s) or creditor(s) present in the debtor or creditor table respectively
+   Expected: Unable to delete, current person debt not cleared
+=== Selecting a person
 
-_{ more test cases ... }_
+.. Test: selectPerson 1
+  Expected: All debtor(s) or creditor(s) present and transactions that involved this person selected will be displayed.
+
+=== Un-selecting a person
+.. Test: selectPerson 1 + un-select Person 1
+  Expected: After the person is unselected, all transaction will be shown, and no debtor or creditor will be displayed.
 
 === Saving data
 
 . Dealing with missing/corrupted data files
 
-.. _{explain how to simulate a missing/corrupted file and the expected behavior}_
-
-_{ more test cases ... }_
+.. Missing & Invalid Transaction type
+   Expected: Transaction type can only be "paydebt" or "payment" and it should not be blank
+.. Missing & Invalid Missing payer
+   Expected: Transaction's Payer field is missing!
+.. Missing & Invalid Transaction amount
+   Expected: Amount can only take in a positive numerical number up to 2 decimal places, and it should not be blank
+.. Missing & Invalid Transaction description
+   Expected: Transaction description can take any value and should not be blank
+.. Missing & Invalid Transaction payee
+   Expected: Transaction's Payees field is missing!
+.. Missing & Invalid Transaction Date
+   Expected: Transaction's Date field is missing, or is in wrong format(date format example: 2018-04-14T17:22:56.218+08:00
+.. Missing & Invalid Split method
+   Expected: Transaction split method can only be "evenly", "units", or "percentage"
