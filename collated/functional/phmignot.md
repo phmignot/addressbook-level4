@@ -1,4 +1,101 @@
 # phmignot
+###### /resources/view/TransactionListPanel.fxml
+``` fxml
+
+<VBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+  <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+    <GridPane hgap="20" prefHeight="30.0" prefWidth="800.0" HBox.hgrow="ALWAYS" alignment="CENTER">
+      <columnConstraints>
+        <ColumnConstraints prefWidth="25.0" />
+        <ColumnConstraints maxWidth="214.4" minWidth="10.0" prefWidth="89.6" />
+        <ColumnConstraints maxWidth="179.6" minWidth="73.2" prefWidth="74.4" />
+        <ColumnConstraints maxWidth="274.8" minWidth="179.0" prefWidth="179.0" />
+        <ColumnConstraints maxWidth="255.6" minWidth="135.2" prefWidth="157.4" />
+        <ColumnConstraints maxWidth="85.0" minWidth="62.0" prefWidth="72.0" />
+        <ColumnConstraints maxWidth="250.0" minWidth="100.0" prefWidth="160.0" />
+      </columnConstraints>
+      <padding>
+        <Insets bottom="5" left="15" right="15" top="5" />
+      </padding>
+      <HBox GridPane.columnIndex="0" alignment="CENTER">
+        <Label text="No."/>
+      </HBox>
+      <HBox GridPane.columnIndex="1" alignment="CENTER">
+        <Label text="Payer" />
+      </HBox>
+      <HBox GridPane.columnIndex="2" alignment="CENTER">
+        <Label text="Amount" />
+      </HBox>
+      <HBox GridPane.columnIndex="3" alignment="CENTER">
+        <Label text="Description" />
+      </HBox>
+      <HBox GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" alignment="CENTER">
+        <Label text="Payee" />
+      </HBox>
+      <HBox GridPane.columnIndex="5" alignment="CENTER">
+        <Label text="Type" />
+      </HBox>
+      <HBox GridPane.columnIndex="6" alignment="CENTER">
+        <Label text="Date &amp; Time" />
+      </HBox>
+      <rowConstraints>
+        <RowConstraints maxHeight="36.600006103515625" minHeight="10.0" prefHeight="21.5999755859375" />
+        <RowConstraints maxHeight="33.399993896484375" minHeight="10.399993896484375" prefHeight="25.4000244140625" />
+      </rowConstraints>
+    </GridPane>
+  </HBox>
+  <ListView fx:id="transactionListView" VBox.vgrow="ALWAYS" />
+</VBox>
+```
+###### /resources/view/TransactionListCard.fxml
+``` fxml
+
+<HBox id="cardPane" fx:id="cardPane" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+  <GridPane hgap="20" prefWidth="400.0" HBox.hgrow="ALWAYS" alignment="CENTER">
+    <columnConstraints>
+         <ColumnConstraints prefWidth="25.0" />
+      <ColumnConstraints maxWidth="214.4" minWidth="10.0" prefWidth="89.6" />
+         <ColumnConstraints maxWidth="179.6" minWidth="73.2" prefWidth="74.4" />
+         <ColumnConstraints maxWidth="274.8" minWidth="179.0" prefWidth="179.0" />
+         <ColumnConstraints maxWidth="255.6" minWidth="135.2" prefWidth="157.4" />
+         <ColumnConstraints maxWidth="85.0" minWidth="62.0" prefWidth="72.0" />
+         <ColumnConstraints maxWidth="250.0" minWidth="100.0" prefWidth="160.0" />
+    </columnConstraints>
+    <padding>
+      <Insets bottom="5" left="15" right="15" top="5" />
+    </padding>
+      <HBox prefWidth="200.0" alignment="CENTER">
+         <children>
+         <Label fx:id="idDisplay" alignment="CENTER" styleClass="cell_big_label">
+           <minWidth>
+             <!-- Ensures that the label text is never truncated -->
+             <Region fx:constant="USE_PREF_SIZE" />
+           </minWidth>
+         </Label>
+         </children>
+      </HBox>
+    <HBox minWidth="200" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+      <Label fx:id="payerName" styleClass="cell_big_label" text="\$first" wrapText="true" />
+    </HBox>
+    <HBox minWidth="100" GridPane.columnIndex="2" alignment="CENTER">
+      <Label fx:id="amount" styleClass="cell_small_label" text="\$amount" wrapText="true" />
+      <padding>
+         <Insets left="5" right="5"/>
+      </padding>
+    </HBox>
+    <HBox minWidth="189.0" prefWidth="189.0" GridPane.columnIndex="3" alignment="CENTER">
+      <Label fx:id="description" styleClass="cell_small_label" text="\$description" wrapText="true" />
+    </HBox>
+    <HBox maxWidth="300" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
+      <FlowPane fx:id="payees"  prefWidth="302.0" alignment="CENTER" />
+    </HBox>
+    <HBox prefWidth="161.0" GridPane.columnIndex="6" alignment="CENTER" >
+      <Label fx:id="date" styleClass="cell_small_label" text="\$date" wrapText="true" />
+    </HBox>
+    <Label fx:id="transactionType" text="\$transactionType" GridPane.columnIndex="5" alignment="CENTER"/>
+  </GridPane>
+</HBox>
+```
 ###### /java/seedu/address/ui/TransactionListPanel.java
 ``` java
 package seedu.address.ui;
@@ -40,15 +137,6 @@ public class TransactionListPanel extends UiPart<Region> {
         transactionListView.setCellFactory(listView -> new TransactionListViewCell());
     }
 
-
-    private void setEventHandlerForSelectionChangeEvent() {
-    }
-
-    /**
-     * Scrolls to the {@code PersonCard} at the {@code index} and selects it.
-     */
-    private void scrollTo(int index) {
-    }
 
     /* Method could be used for selection in the transactionList
     @Subscribe
@@ -122,8 +210,8 @@ public class TransactionCard extends UiPart<Region> {
         payerName.setText(transaction.getPayer().getName().fullName);
         amount.setText(transaction.getAmount().toString());
         description.setText(transaction.getDescription().toString());
-        transactionType.setText(transaction.getTransactionType().toString().substring(0, 1).toUpperCase()
-                + transaction.getTransactionType().toString().substring(1));
+        transactionType.setText(transaction.getTransactionType().toString().toLowerCase().substring(0, 1).toUpperCase()
+                + transaction.getTransactionType().toString().toLowerCase().substring(1));
 
         int numPayees = transaction.getPayees().asObservableList().size();
         for (int i = 0; i < numPayees; i++) {
@@ -214,13 +302,12 @@ public class TransactionNotFoundException extends Exception {}
      *
      * @throws TransactionNotFoundException if no such transaction could be found in the list.
      */
-    public boolean remove(Transaction toRemove) throws TransactionNotFoundException {
+    public void remove(Transaction toRemove) throws TransactionNotFoundException {
         requireNonNull(toRemove);
         final boolean transactionFoundAndDeleted = internalList.remove(toRemove);
         if (!transactionFoundAndDeleted) {
             throw new TransactionNotFoundException();
         }
-        return transactionFoundAndDeleted;
     }
     /**
      * Replaces the list of transactions by a input list of transaction.
@@ -231,6 +318,29 @@ public class TransactionNotFoundException extends Exception {}
         internalList.setAll(transactions);
     }
 
+    public void setPerson(Person target, Person editedPerson) throws DuplicatePersonException, PersonNotFoundException {
+        for (Transaction transaction : this.asObservableList()) {
+            Person payer = transaction.getPayer();
+            UniquePersonList payees = transaction.getPayees();
+            Transaction editedTransaction = new Transaction(transaction);
+            UniquePersonList editedpayees = new UniquePersonList();
+            editedpayees.setPersons(payees);
+            if (!target.equals(editedPerson) && (payees.contains(editedPerson) || payer.equals(editedPerson))) {
+                throw new DuplicatePersonException();
+            }
+            if (payees.contains(target) && payer.equals(target)) {
+                throw new DuplicatePersonException();
+            }
+            if (payer.equals(target)) {
+                editedTransaction.setPayer(editedPerson);
+            }
+            if (payees.contains(target)) {
+                editedpayees.setPerson(target, editedPerson);
+                editedTransaction.setPayees(editedpayees);
+            }
+            internalList.set(internalList.indexOf(transaction), editedTransaction);
+        }
+    }
 }
 ```
 ###### /java/seedu/address/model/DebtsList.java
@@ -252,6 +362,13 @@ public class DebtsList extends HashMap<Person, Balance> {
         }
         Balance oldDebts = this.get(person);
         this.replace(person, oldDebts.add(debtToAdd));
+    }
+
+    public void setPerson(Person target, Person editedPerson) {
+        if (this.containsKey(target)) {
+            Balance targetBalance = this.remove(target);
+            this.put(editedPerson, targetBalance);
+        }
     }
 
     /**
@@ -294,24 +411,10 @@ public class DebtsList extends HashMap<Person, Balance> {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
     }
-    @Override
-    public void updateDebtorList(Predicate<Debtor> predicate) {
-        requireNonNull(predicate);
-        filteredDebtors.setPredicate(predicate);
-    }
-
-    @Override
-    public void updateCreditorList(Predicate<Creditor> predicate) {
-        requireNonNull(predicate);
-        filteredCreditors.setPredicate(predicate);
-    }
-
 ```
 ###### /java/seedu/address/model/DebtsTable.java
 ``` java
 public class DebtsTable extends HashMap<Person, DebtsList> {
-
-    private DebtsTable internalList;
 
     public DebtsTable() {
         super();
@@ -349,8 +452,27 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
         this.putIfAbsent(personToAdd, new DebtsList());
     }
 
-    public DebtsTable asObservableList() {
-        return internalList;
+
+    /**
+     * Replaces the person {@code target} in the list with {@code editedPerson}.
+     *
+     */
+    public void setPerson(Person target, Person editedPerson) throws PersonNotFoundException, DuplicatePersonException {
+        requireNonNull(editedPerson);
+        requireNonNull(target);
+        if (!this.containsKey(target)) {
+            throw new PersonNotFoundException();
+        }
+        if (!target.equals(editedPerson) && this.containsKey(editedPerson)) {
+            throw new DuplicatePersonException();
+        }
+        DebtsList targetDebtsList = this.remove(target);
+        this.put(editedPerson, targetDebtsList);
+        this.replaceAll(((person, debtsList) -> {
+            debtsList.setPerson(target, editedPerson);
+            return debtsList;
+        }));
+
     }
 
     /**
@@ -364,9 +486,16 @@ public class DebtsTable extends HashMap<Person, DebtsList> {
             System.out.println();
         }));
     }
-
-
 }
+
+```
+###### /java/seedu/address/model/Model.java
+``` java
+    /** Returns a List of transactions that have {@code person} as the payer */
+    List<Transaction> findTransactionsWithPayer(Person person);
+
+    /** Returns a List of transactions that have {@code person} as a payee */
+    List<Transaction> findTransactionsWithPayee(Person person);
 
 ```
 ###### /java/seedu/address/model/Model.java

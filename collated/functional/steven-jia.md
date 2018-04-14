@@ -1,50 +1,10 @@
 # steven-jia
 ###### /java/seedu/address/logic/util/CalculationUtil.java
 ``` java
-    /**
-     * Returns the amount to add to the balance of a payer.
-     */
-    public static Balance calculateAmountToAddForPayer(Boolean isAddingTransaction,
-                                                       Transaction transaction) {
-        // This is a deleteTransaction command
-        if (!isAddingTransaction) {
-            return calculateAmountToAddForPayerForDeleteTransaction(transaction);
-        }
-
-        switch (transaction.getTransactionType().value) {
-        case TransactionType.TRANSACTION_TYPE_PAYMENT:
-            return calculateAmountToAddForPayerForPaymentTransaction(transaction);
-        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
-            return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
-        default:
-            assert false : transaction.getTransactionType().value;
-            ;
-        }
-        return null;
-    }
-
-    /**
-     * Returns the amount to add to the balance or debt of a payee.
-     */
-    public static Balance calculateAmountToAddForPayee(Boolean isAddingTransaction,
-                                                       Integer splitMethodValuesListIndex,
-                                                       Transaction transaction) {
         // This is a deleteTransaction command
         if (!isAddingTransaction) {
             return calculateAmountToAddForPayeeForDeleteTransaction(splitMethodValuesListIndex, transaction);
         }
-
-        switch (transaction.getTransactionType().value) {
-        case TransactionType.TRANSACTION_TYPE_PAYMENT:
-            return calculateAmountToAddForPayeeForPaymentTransaction(splitMethodValuesListIndex, transaction);
-        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
-            return calculateAmountToAddForPayeeForPaydebtTransaction(transaction);
-        default:
-            assert false : transaction.getTransactionType().value;
-        }
-        return null;
-    }
-
 ```
 ###### /java/seedu/address/logic/util/CalculationUtil.java
 ``` java
@@ -59,12 +19,12 @@
             Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
             amountToAdd = transaction.getAmount().getDoubleValue()
-                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+                    * numberOfUnitsForPayer / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayer = transaction.getPercentages().get(0);
             amountToAdd = transaction.getAmount().getDoubleValue()
-                    * (100 - percentageForPayer) / 100;
+                    * percentageForPayer / 100;
             break;
         case EVENLY:
         default:
@@ -86,16 +46,16 @@
         case UNITS:
             Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
-            amountToAdd = -Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
+            amountToAdd = Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
                     / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
-            amountToAdd = -Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
+            amountToAdd = Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
             break;
         case EVENLY:
         default:
-            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
                     transaction.getPayees());
             break;
         }
@@ -116,12 +76,12 @@
             Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
             amountToAdd = -transaction.getAmount().getDoubleValue()
-                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+                    * numberOfUnitsForPayer / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayer = transaction.getPercentages().get(0);
             amountToAdd = -transaction.getAmount().getDoubleValue()
-                    * (100 - percentageForPayer) / 100;
+                    * percentageForPayer / 100;
             break;
         case EVENLY:
         default:
@@ -138,7 +98,7 @@
     public static Balance calculateAmountToAddForPayeeForDeleteTransaction(Integer splitMethodValuesListIndex,
                                                                            Transaction transaction) {
         if (transaction.getTransactionType().value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
-            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue());
+            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue()).getInverse();
         }
 
         Double amountToAdd;
@@ -146,16 +106,16 @@
         case UNITS:
             Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
-            amountToAdd = transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
+            amountToAdd = -transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
                     / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
-            amountToAdd = transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
+            amountToAdd = -transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
             break;
         case EVENLY:
         default:
-            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
                     transaction.getPayees());
             break;
         }
@@ -168,7 +128,7 @@
      */
     private static Double calculateAmountForPayerSplitEvenly(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        return Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1) / numberOfInvolvedPersons;
+        return Double.valueOf(amount.value) / numberOfInvolvedPersons;
     }
 
     /**
@@ -216,41 +176,21 @@
 ```
 ###### /java/seedu/address/logic/parser/AddTransactionCommandParser.java
 ``` java
-        try {
-            transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
-                    PREFIX_TRANSACTION_TYPE).get());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(ive.getMessage(), ive);
-        }
+        parseTransactionType(argMultimap);
 
-        if (transactionType.value.equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
-            try {
-                splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
-                switch (splitMethod.method) {
-                case EVENLY:
-                    break;
-                case UNITS:
-                    units = ParserUtil.parseUnitsList(argMultimap.getValue(PREFIX_SPLIT_BY_UNITS));
-                    break;
-                case PERCENTAGE:
-                    percentages = ParserUtil.parsePercentagesList(argMultimap.getValue(PREFIX_SPLIT_BY_PERCENTAGE));
-                    break;
-                default:
-                }
-            } catch (IllegalValueException ive) {
-                throw new ParseException(ive.getMessage(), ive);
+        if (transactionType.value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYMENT)) {
+            parseSplitMethod(argMultimap);
+        } else if (transactionType.value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            if (arePrefixesPresent(argMultimap, PREFIX_SPLIT_METHOD)
+                    || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_UNITS)
+                    || arePrefixesPresent(argMultimap, PREFIX_SPLIT_BY_PERCENTAGE)) {
+                throw new ParseException(MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT);
             }
-        } else {
             splitMethod = new SplitMethod(SplitMethod.SPLIT_METHOD_NOT_APPLICABLE);
         }
-
-        try {
-            Person payer = model.findPersonByName(ParserUtil.parseName(argMultimap.getValue(PREFIX_PAYER)).get());
-            Amount amount = ParserUtil.parseAmount(argMultimap.getValue(PREFIX_AMOUNT)).get();
-            Description description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESCRIPTION)).get();
-            UniquePersonList payees = model.getPayeesList(argMultimap, model);
-            Date dateTime = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Singapore"))));
-
+```
+###### /java/seedu/address/logic/parser/AddTransactionCommandParser.java
+``` java
             validatePayees(payer, payees);
             validateSplitMethodValues(payees, splitMethod, units, percentages);
 
@@ -258,30 +198,85 @@
                     payees, splitMethod, units, percentages);
             return new AddTransactionCommand(transaction);
         } catch (PersonNotFoundException pnfe) {
-            throw new CommandException(MESSAGE_NONEXISTENT_PERSON);
+            throw new ParseException(MESSAGE_NONEXISTENT_PERSON, pnfe);
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        } catch (CommandException a) {
+            throw new ParseException(a.getMessage(), a);
+        }
+    }
+```
+###### /java/seedu/address/logic/parser/AddTransactionCommandParser.java
+``` java
+    /**
+     * Attempts to parse the split method
+     * @param argMultimap
+     * @throws ParseException if the split method is not one of the listed options
+     */
+    private void parseSplitMethod(ArgumentMultimap argMultimap) throws ParseException {
+        try {
+            splitMethod = ParserUtil.parseSplitMethod(argMultimap.getValue(PREFIX_SPLIT_METHOD));
+            switch (splitMethod.method) {
+            case EVENLY:
+                break;
+            case UNITS:
+                units = ParserUtil.parseUnitsList(argMultimap.getValue(PREFIX_SPLIT_BY_UNITS));
+                break;
+            case PERCENTAGE:
+                percentages = ParserUtil.parsePercentagesList(argMultimap.getValue(PREFIX_SPLIT_BY_PERCENTAGE));
+                break;
+            default:
+            }
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
     }
+
+    /**
+     * Parses the transaction type
+     * @param argMultimap
+     * @throws ParseException if the transaction type is not one of the listed options
+     */
+    private void parseTransactionType(ArgumentMultimap argMultimap) throws ParseException {
+        try {
+            transactionType = ParserUtil.parseTransactionType(argMultimap.getValue(
+                    PREFIX_TRANSACTION_TYPE).get());
+        } catch (IllegalValueException ive) {
+            throw new ParseException(ive.getMessage(), ive);
+        }
+    }
+
     /**
      * Checks list of units and list of percentages for validity
      */
     private void validateSplitMethodValues(UniquePersonList payees, SplitMethod splitMethod,
-                                           List<Integer> units, List<Integer> percentages) throws CommandException {
+                                           List<Integer> units, List<Integer> percentages)
+            throws IllegalValueException {
         if (splitMethod.method.equals(SplitMethod.Method.UNITS)) {
+
+            if (units.isEmpty()) {
+                throw new IllegalValueException(String.format(MESSAGE_MISSING_UNITS_VALUES,
+                        splitMethod.toString()));
+            }
             if (units.size() != payees.asObservableList().size() + 1) {
-                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+                throw new IllegalValueException(
+                        String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
             }
         } else if (splitMethod.method.equals(SplitMethod.Method.PERCENTAGE)) {
+            if (percentages.isEmpty()) {
+                throw new ParseException(String.format(MESSAGE_MISSING_PERCENTAGES_VALUES,
+                        splitMethod.toString()));
+            }
             if (percentages.size() != payees.asObservableList().size() + 1) {
-                throw new CommandException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES, splitMethod.toString()));
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_NUMBER_OF_VALUES,
+                        splitMethod.toString()));
             }
             Integer total = 0;
             for (Integer percentage: percentages) {
                 total += percentage;
             }
             if (total != 100) {
-                throw new CommandException(MESSAGE_INVALID_PERCENTAGE_VALUES);
+                throw new IllegalValueException(MESSAGE_INVALID_PERCENTAGE_VALUES);
             }
         }
     }
@@ -292,6 +287,34 @@
         }
     }
 
+```
+###### /java/seedu/address/logic/parser/ParserUtil.java
+``` java
+    /**
+     * Parses a {@code String amount} into a {@code Amount}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws IllegalValueException if the given {@code tag} is invalid.
+     */
+    public static Amount parseAmount(String amount) throws IllegalValueException {
+        requireNonNull(amount);
+        String parsedAmount = amount.trim();
+        if (!parsedAmount.contains(".")) {
+            parsedAmount += ".00";
+        }
+        if (!Amount.isValidAmount(parsedAmount)) {
+            throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
+        }
+        return new Amount(parsedAmount);
+    }
+
+    /**
+     * Parses {@code Collection<String> Amount} into a {@code Set<Amount>}.
+     */
+    public static Optional<Amount> parseAmount(Optional<String> amount) throws IllegalValueException {
+        requireNonNull(amount);
+        return amount.isPresent() ? Optional.of(parseAmount(amount.get())) : Optional.empty();
+    }
 ```
 ###### /java/seedu/address/logic/parser/ParserUtil.java
 ``` java
@@ -421,8 +444,16 @@
     public static final String MESSAGE_INVALID_NUMBER_OF_VALUES = "The number of %1$s values does not match"
             + " the number of persons involved. Remember to include the payer in the count.";
     public static final String MESSAGE_INVALID_PERCENTAGE_VALUES = "The sum of the percentages does not equal 100.";
+    public static final String MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT = "Paydebt transactions can only have 1 payee";
+    public static final String MESSAGE_PAYEE_NOT_OWED_ANY_DEBT = "Payee is not owed any debt";
+    public static final String MESSAGE_PAYEE_IS_BEING_OVERPAID = "Payee is being overpaid. Ensure that the transaction "
+            + "amount does not exceed the balance owed.";
+    public static final String MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT = "Paydebt transactions do not require "
+            + "a split method, a list of units, nor a list of percentages. Ensure that those prefixes are not entered.";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
     public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
+    public static final String MESSAGE_MISSING_PERCENTAGES_VALUES = "The percentage value is missing.";
+    public static final String MESSAGE_MISSING_UNITS_VALUES = "The unit value is missing.";
 ```
 ###### /java/seedu/address/storage/XmlAdaptedPerson.java
 ``` java
@@ -437,6 +468,17 @@
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
+    @XmlElement(required = true)
+    private List<XmlAdaptedPerson> payees = new ArrayList<>();
+    @XmlElement(required = true)
+    private String splitMethod;
+    @XmlElement
+    private String unitsList;
+    @XmlElement
+    private String percentagesList;
+```
+###### /java/seedu/address/storage/XmlAdaptedTransaction.java
+``` java
         List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
         payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
         this.payees = payeesToStore;
@@ -447,6 +489,22 @@
         if (!percentagesList.isEmpty()) {
             this.percentagesList = buildIntegerListString(percentagesList);
         }
+    }
+```
+###### /java/seedu/address/storage/XmlAdaptedTransaction.java
+``` java
+        List<XmlAdaptedPerson> payeesToStore = new ArrayList<>();
+        payees.asObservableList().forEach(payee -> payeesToStore.add(new XmlAdaptedPerson(payee)));
+        this.payees = payeesToStore;
+        this.splitMethod = splitMethod;
+        if (!unitsList.isEmpty()) {
+            this.unitsList = buildIntegerListString(unitsList);
+        }
+        if (!percentagesList.isEmpty()) {
+            this.percentagesList = buildIntegerListString(percentagesList);
+        }
+    }
+
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
@@ -460,6 +518,8 @@
         if (!source.getPercentages().isEmpty()) {
             percentagesList = buildIntegerListString(source.getPercentages());
         }
+    }
+
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
@@ -472,12 +532,6 @@
 ```
 ###### /java/seedu/address/storage/XmlAdaptedTransaction.java
 ``` java
-        if (this.dateTime == null) {
-            throw new IllegalValueException(String.format
-                    (MISSING_FIELD_MESSAGE_FORMAT, Date.class.getSimpleName()));
-        }
-        final Date dateTime = this.dateTime;
-
         if (this.payees == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
@@ -520,9 +574,6 @@
                 splitMethod, units, percentages);
     }
 
-```
-###### /java/seedu/address/storage/XmlAdaptedTransaction.java
-``` java
     /**
      * Checks each field of the {@code person} for validity
      */
@@ -577,7 +628,6 @@
 ```
 ###### /java/seedu/address/model/transaction/SplitMethod.java
 ``` java
-
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
@@ -636,10 +686,10 @@ public class SplitMethod {
      * Returns true if a given string is a valid split method.
      */
     public static boolean isValidSplitMethod(String test) {
-        return test.matches(SPLIT_METHOD_EVENLY)
-            || test.matches(SPLIT_METHOD_UNITS)
-            || test.matches(SPLIT_METHOD_PERCENTAGE)
-            || test.matches(SPLIT_METHOD_NOT_APPLICABLE);
+        return test.toLowerCase().matches(SPLIT_METHOD_EVENLY)
+            || test.toLowerCase().matches(SPLIT_METHOD_UNITS)
+            || test.toLowerCase().matches(SPLIT_METHOD_PERCENTAGE)
+            || test.toLowerCase().matches(SPLIT_METHOD_NOT_APPLICABLE);
     }
 
     @Override
@@ -662,11 +712,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
  * Represents a Transaction in SmartSplit.
@@ -674,13 +722,13 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  */
 public class Transaction {
     private static Integer lastTransactionId = 0;
-    private final Integer id;
-    private final Date dateTime;
-    private final Person payer;
+    private Integer id;
+    private Date dateTime;
+    private Person payer;
     private final Amount amount;
     private final Description description;
-    private final UniquePersonList payees;
-    private final TransactionType transactionType;
+    private UniquePersonList payees;
+    private TransactionType transactionType;
     private final SplitMethod splitMethod;
     private ArrayList<Integer> units;
     private ArrayList<Integer> percentages;
@@ -699,29 +747,18 @@ public class Transaction {
         initializeSplitMethodListValues(units, percentages);
     }
 
-    public Transaction(TransactionType transactionType, Person payer, Amount amount, Description description,
-                       Date dateTime, Set<Person> payeesToAdd, SplitMethod splitMethod,
-                       List<Integer> units, List<Integer> percentages) {
-        UniquePersonList payees = new UniquePersonList();
-        for (Person p: payeesToAdd) {
-            try {
-                payees.add(p);
-            } catch (DuplicatePersonException e) {
-                System.out.println("Duplicate person" + p.getName() + " not added to list of payees");
-            }
-        }
-
-        this.transactionType = transactionType;
-        this.dateTime = dateTime;
-        this.id = lastTransactionId++;
-        this.payer = payer;
-        this.amount = amount;
-        this.description = description;
-        this.payees = payees;
-        this.splitMethod = splitMethod;
-        initializeSplitMethodListValues(units, percentages);
+    public Transaction(Transaction transaction) {
+        this.transactionType = transaction.getTransactionType();
+        this.dateTime = transaction.getDateTime();
+        this.id = transaction.getId();
+        this.payer = transaction.getPayer();
+        this.amount = transaction.getAmount();
+        this.description = transaction.getDescription();
+        this.payees = transaction.getPayees();
+        this.splitMethod = transaction.getSplitMethod();
+        this.units = transaction.getUnits();
+        this.percentages = transaction.getPercentages();
     }
-
     /**
      * @param units
      * @param percentages
@@ -740,7 +777,9 @@ public class Transaction {
             this.percentages = new ArrayList<>();
         }
     }
-
+    public void setTransactionType(String transactionType) {
+        this.transactionType = new TransactionType(transactionType);
+    }
     public Integer getId() {
         return id;
     }
@@ -751,6 +790,10 @@ public class Transaction {
 
     public Person getPayer() {
         return payer;
+    }
+
+    public void setPayer(Person payer) {
+        this.payer = payer;
     }
 
     public Amount getAmount() {
@@ -765,6 +808,10 @@ public class Transaction {
         return payees;
     }
 
+    public void setPayees(UniquePersonList payees) {
+        this.payees = payees;
+    }
+
     public TransactionType getTransactionType() {
         return transactionType;
     }
@@ -773,11 +820,11 @@ public class Transaction {
         return splitMethod;
     }
 
-    public List<Integer> getUnits() {
+    public ArrayList<Integer> getUnits() {
         return units;
     }
 
-    public List<Integer> getPercentages() {
+    public ArrayList<Integer> getPercentages() {
         return percentages;
     }
 
@@ -933,6 +980,44 @@ public class Balance {
 
 }
 ```
+###### /java/seedu/address/model/AddressBook.java
+``` java
+        if (transaction.getTransactionType().toString().toLowerCase()
+                .equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            if (transaction.getPayees().asObservableList().size() > 1) {
+                throw new CommandException(MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT);
+            }
+            Person payeeToFind = transaction.getPayees().asObservableList().get(0);
+            if (isNotOwedAnyDebt(transaction, payeeToFind)) {
+                throw new CommandException(MESSAGE_PAYEE_NOT_OWED_ANY_DEBT);
+            } else if (isBeingOverpaid(transaction, payeeToFind)) {
+                throw new CommandException(MESSAGE_PAYEE_IS_BEING_OVERPAID);
+            }
+        }
+```
+###### /java/seedu/address/model/AddressBook.java
+``` java
+            for (int i = 0; i < payees.asObservableList().size(); i++) {
+                Person payee = payees.asObservableList().get(i);
+                Integer splitMethodValuesListIndex = i + 1;
+                updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
+            }
+```
+###### /java/seedu/address/model/AddressBook.java
+``` java
+    private boolean isNotOwedAnyDebt(Transaction transaction, Person payeeToFind) {
+        return debtsTable.size() != 0
+                && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
+                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() <= 0);
+    }
+
+    private boolean isBeingOverpaid(Transaction transaction, Person payeeToFind) {
+        return transaction.getAmount().getDoubleValue()
+                > debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
+    }
+
+}
+```
 ###### /java/seedu/address/model/ModelManager.java
 ``` java
     @Override
@@ -989,10 +1074,10 @@ public class Balance {
 ```
 ###### /java/seedu/address/model/Model.java
 ``` java
-    /** Returns a set of transactions that have {@code person} as the payer */
-    boolean findTransactionsWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
+    /** Returns a boolean if a transaction ,that have {@code person} as the payer, has been found. */
+    boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
 
-    /** Returns a set of transactions that have {@code person} as a payee */
-    boolean findTransactionsWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
+    /** Returns a boolean if a transaction ,that have {@code person} as a payee, has been found. */
+    boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
 
 ```
