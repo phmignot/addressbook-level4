@@ -18,7 +18,7 @@ public class CalculationUtil {
 
     private static final int NUMBER_OF_DECIMAL_PLACES = 2;
 
-    //@@author steven-jia
+    //@@author ongkc
     /**
      * Returns the amount to add to the balance of a payer.
      */
@@ -32,8 +32,6 @@ public class CalculationUtil {
         switch (transaction.getTransactionType().value.toLowerCase()) {
         case TransactionType.TRANSACTION_TYPE_PAYMENT:
             return calculateAmountToAddForPayerForPaymentTransaction(transaction);
-        case TransactionType.TRANSACTION_TYPE_PAYDEBT:
-            return calculateAmountToAddForPayerForPaydebtTransaction(transaction);
         default:
             assert false : transaction.getTransactionType().value;
         }
@@ -62,22 +60,12 @@ public class CalculationUtil {
         return null;
     }
 
-    //@@author ongkc
-    /**
-     * Calculates amount to add to the payer's balance after a new paydebt transaction is added.
-     * Returned amount will be positive.
-     */
-    private static Balance calculateAmountToAddForPayerForPaydebtTransaction(Transaction transaction) {
-        Double amountToAdd = Double.valueOf(transaction.getAmount().value);
-        return getRoundedFormattedBalance(amountToAdd);
-    }
-
     /**
      * Calculates amount to add to the payee's balance after a new paydebt transaction is added.
      * Returned amount will be negative.
      */
     private static Balance calculateAmountToAddForPayeeForPaydebtTransaction(Transaction transaction) {
-        Double amountToAdd = -Double.valueOf(transaction.getAmount().value);
+        Double amountToAdd = Double.valueOf(transaction.getAmount().value);
         return getRoundedFormattedBalance(amountToAdd);
     }
 
@@ -93,12 +81,12 @@ public class CalculationUtil {
             Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
             amountToAdd = transaction.getAmount().getDoubleValue()
-                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+                    * numberOfUnitsForPayer / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayer = transaction.getPercentages().get(0);
             amountToAdd = transaction.getAmount().getDoubleValue()
-                    * (100 - percentageForPayer) / 100;
+                    * percentageForPayer / 100;
             break;
         case EVENLY:
         default:
@@ -120,16 +108,16 @@ public class CalculationUtil {
         case UNITS:
             Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
-            amountToAdd = -Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
+            amountToAdd = Double.valueOf(transaction.getAmount().value) * numberOfUnitsForPayee
                     / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
-            amountToAdd = -Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
+            amountToAdd = Double.valueOf(transaction.getAmount().value) * percentageForPayee / 100;
             break;
         case EVENLY:
         default:
-            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
                     transaction.getPayees());
             break;
         }
@@ -150,12 +138,12 @@ public class CalculationUtil {
             Integer numberOfUnitsForPayer = transaction.getUnits().get(0);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
             amountToAdd = -transaction.getAmount().getDoubleValue()
-                    * (totalNumberOfUnits - numberOfUnitsForPayer) / totalNumberOfUnits;
+                    * numberOfUnitsForPayer / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayer = transaction.getPercentages().get(0);
             amountToAdd = -transaction.getAmount().getDoubleValue()
-                    * (100 - percentageForPayer) / 100;
+                    * percentageForPayer / 100;
             break;
         case EVENLY:
         default:
@@ -172,7 +160,7 @@ public class CalculationUtil {
     public static Balance calculateAmountToAddForPayeeForDeleteTransaction(Integer splitMethodValuesListIndex,
                                                                            Transaction transaction) {
         if (transaction.getTransactionType().value.equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
-            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue());
+            return getRoundedFormattedBalance(transaction.getAmount().getDoubleValue()).getInverse();
         }
 
         Double amountToAdd;
@@ -180,16 +168,16 @@ public class CalculationUtil {
         case UNITS:
             Integer numberOfUnitsForPayee = transaction.getUnits().get(splitMethodValuesListIndex);
             int totalNumberOfUnits = calculateTotalNumberOfUnits(transaction.getUnits());
-            amountToAdd = transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
+            amountToAdd = -transaction.getAmount().getDoubleValue() * numberOfUnitsForPayee
                     / totalNumberOfUnits;
             break;
         case PERCENTAGE:
             Integer percentageForPayee = transaction.getPercentages().get(splitMethodValuesListIndex);
-            amountToAdd = transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
+            amountToAdd = -transaction.getAmount().getDoubleValue() * percentageForPayee / 100;
             break;
         case EVENLY:
         default:
-            amountToAdd = calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
+            amountToAdd = -calculateAmountForPayeeSplitEvenly(transaction.getAmount(),
                     transaction.getPayees());
             break;
         }
@@ -202,7 +190,7 @@ public class CalculationUtil {
      */
     private static Double calculateAmountForPayerSplitEvenly(Amount amount, UniquePersonList payees) {
         int numberOfInvolvedPersons = calculateNumberOfInvolvedPersons(payees);
-        return Double.valueOf(amount.value) * (numberOfInvolvedPersons - 1) / numberOfInvolvedPersons;
+        return Double.valueOf(amount.value) / numberOfInvolvedPersons;
     }
 
     /**

@@ -5,6 +5,7 @@ import seedu.address.model.person.Creditor;
 import seedu.address.model.person.Debtor;
 import seedu.address.model.person.Person;
 import seedu.address.model.util.SampleDataUtil;
+//@@author ongkc
 /**
  * A utility class to help with building Debtor objects.
  */

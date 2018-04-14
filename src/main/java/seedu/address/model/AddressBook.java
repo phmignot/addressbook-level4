@@ -74,11 +74,14 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     //// list overwrite operations
-
     public void setPersons(List<Person> persons) throws DuplicatePersonException {
         this.persons.setPersons(persons);
     }
 
+    public void setTags(Set<Tag> tags) {
+        this.tags.setTags(tags);
+    }
+    //@@author ongkc
     public void setDebtors(DebtsList debtsList)  {
         this.debtors.setDebtors(debtsList);
     }
@@ -88,11 +91,6 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void setTransactions(List<Transaction> transactions) {
         this.transactions.setTransactions(transactions);
     }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags.setTags(tags);
-    }
-
     public void setDebtsTable(DebtsTable debtsTable) {
         final DebtsTable replacement = new DebtsTable();
         for (DebtsTable.Entry<Person, DebtsList> entry : debtsTable.entrySet()) {
@@ -199,6 +197,7 @@ public class AddressBook implements ReadOnlyAddressBook {
             throw new PersonNotFoundException();
         }
     }
+    //@@author ongkc
     /**
      * check if the person to be deleted still owed any unpaid debt
      */
@@ -270,12 +269,13 @@ public class AddressBook implements ReadOnlyAddressBook {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
     }
-
+    //@@author ongkc
     /**
      * Adds a {@code transaction} to the list of transactions.
      */
     public void addTransaction(Transaction transaction) throws CommandException {
-        if (transaction.getTransactionType().toString().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+        if (transaction.getTransactionType().toString().toLowerCase()
+                .equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
             if (transaction.getPayees().asObservableList().size() > 1) {
                 throw new CommandException(MESSAGE_ONLY_ONE_PAYEE_FOR_PAYDEBT);
             }
@@ -296,11 +296,13 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void updatePayerAndPayeesBalance(Boolean isAddingTransaction, Transaction transaction, Person payer,
                                             UniquePersonList payees) {
-        updatePayerBalance(isAddingTransaction, transaction, payer);
-        for (int i = 0; i < payees.asObservableList().size(); i++) {
-            Person payee = payees.asObservableList().get(i);
-            Integer splitMethodValuesListIndex = i + 1;
-            updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
+        if (!transaction.getTransactionType().value.toLowerCase().equals(TransactionType.TRANSACTION_TYPE_PAYDEBT)) {
+            updatePayerBalance(isAddingTransaction, transaction, payer);
+            for (int i = 0; i < payees.asObservableList().size(); i++) {
+                Person payee = payees.asObservableList().get(i);
+                Integer splitMethodValuesListIndex = i + 1;
+                updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
+            }
         }
     }
 
@@ -308,10 +310,8 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Update payer balance whenever a new transaction is added or deleted
      */
     private void updatePayerBalance(Boolean isAddingTransaction, Transaction transaction, Person payer) {
-        payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction,
-                transaction));
+        payer.addToBalance(calculateAmountToAddForPayer(isAddingTransaction, transaction));
     }
-
     /**
      * Update payee balance whenever a new transaction is added or deleted
      */
@@ -320,8 +320,9 @@ public class AddressBook implements ReadOnlyAddressBook {
                                     Integer splitMethodValuesListIndex,
                                     Transaction transaction) {
         payee.addToBalance(calculateAmountToAddForPayee(isAddingTransaction,
-                splitMethodValuesListIndex, transaction));
+                    splitMethodValuesListIndex, transaction));
     }
+    //@author phmignot
     /**
      * Removes {@code target} from the list of transactions.
      * @throws TransactionNotFoundException if the {@code target} is not in the list of transactions.
@@ -332,16 +333,16 @@ public class AddressBook implements ReadOnlyAddressBook {
         debtsTable.display();
     }
 
-
+    //@@author steven-jia
     private boolean isNotOwedAnyDebt(Transaction transaction, Person payeeToFind) {
         return debtsTable.size() != 0
                 && (debtsTable.get(transaction.getPayer()).get(payeeToFind) == null
-                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() == 0);
+                || debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue() <= 0);
     }
 
     private boolean isBeingOverpaid(Transaction transaction, Person payeeToFind) {
         return transaction.getAmount().getDoubleValue()
-                > -debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
+                > debtsTable.get(transaction.getPayer()).get(payeeToFind).getDoubleValue();
     }
 
 }

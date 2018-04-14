@@ -16,7 +16,7 @@ import seedu.address.model.transaction.Transaction;
 
 //@@author ongkc
 /**
- * Adds a transaction to the address book.
+ * Adds a new transaction to the SplitSplit application.
  */
 public class AddTransactionCommand extends UndoableCommand {
 
@@ -83,6 +83,8 @@ public class AddTransactionCommand extends UndoableCommand {
             + "a split method, a list of units, nor a list of percentages. Ensure that those prefixes are not entered.";
     public static final String MESSAGE_NONEXISTENT_PERSON = "The specified payer or payee(s) do not exist";
     public static final String MESSAGE_PAYEE_IS_PAYER = "A payee cannot be the payer";
+    public static final String MESSAGE_MISSING_PERCENTAGES_VALUES = "The percentage value is missing.";
+    public static final String MESSAGE_MISSING_UNITS_VALUES = "The unit value is missing.";
     //@@author ongkc
     public static final String MESSAGE_SUCCESS = "New transaction added";
 

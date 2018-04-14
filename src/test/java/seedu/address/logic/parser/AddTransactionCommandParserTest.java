@@ -22,6 +22,7 @@ import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DES
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC_THREE;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_PAYER_DESC_TWO;
 import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_TYPE_DESC_ONE;
+import static seedu.address.logic.commands.CommandTestUtil.TRANSACTION_TYPE_DESC_THREE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_AMOUNT_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_DESCRIPTION_ONE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TRANSACTION_PAYEE_ONE;
@@ -38,37 +39,9 @@ import seedu.address.model.transaction.Amount;
 import seedu.address.model.transaction.Description;
 import seedu.address.model.transaction.SplitMethod;
 import seedu.address.model.transaction.TransactionType;
-
+//@@author ongkc
 public class AddTransactionCommandParserTest {
     private AddTransactionCommandParser parser = new AddTransactionCommandParser();
-
-    //    @Test
-    //    public void parse_allFieldsPresent_success() throws CommandException, DuplicatePersonException {
-    //        Transaction expectedTransaction = new TransactionBuilder().withTransactionType(VALID_TRANSACTION_TYPE_ONE)
-    //                .withAmount(VALID_TRANSACTION_AMOUNT_ONE).withDescription(VALID_TRANSACTION_DESCRIPTION_ONE)
-    //                .withSplitMethod(VALID_TRANSACTION_SPLIT_METHOD_ONE).build();
-    //        // whitespace only preamble
-    //        expectedTransaction.setId(1);
-    //        assertParseTransactionSuccess(parser, PREAMBLE_WHITESPACE + TRANSACTION_TYPE_DESC_ONE
-    //                        + TRANSACTION_PAYER_DESC
-    //                        + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
-    // + TRANSACTION_PAYEE_DESC_ONE
-    //                        + TRANSACTION_DESC_SPLIT_METHOD_ONE,
-    //                new AddTransactionCommand(expectedTransaction));
-    //        // multiple payees - all accepted
-    //        Transaction expectedTransactionMultiplePayees =  new TransactionBuilder()
-    //                .withTransactionType(VALID_TRANSACTION_TYPE_ONE)
-    //                .withAmount(VALID_TRANSACTION_AMOUNT_ONE).withDescription(VALID_TRANSACTION_DESCRIPTION_ONE)
-    //                .withPayees(VALID_TRANSACTION_PAYEE_ONE, VALID_TRANSACTION_PAYEE_TWO)
-    //                .withSplitMethod(VALID_TRANSACTION_SPLIT_METHOD_ONE).build();
-    //        expectedTransactionMultiplePayees.setId(3);
-    //        assertParseTransactionSuccess(parser, PREAMBLE_WHITESPACE + TRANSACTION_TYPE_DESC_ONE
-    //                        + TRANSACTION_PAYER_DESC
-    //                        + TRANSACTION_DESC_AMOUNT_ONE + TRANSACTION_DESC_DESCRIPTION_ONE
-    //                        + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_PAYEE_DESC_TWO
-    // + TRANSACTION_DESC_SPLIT_METHOD_ONE,
-    //                new AddTransactionCommand(expectedTransactionMultiplePayees));
-    //    }
 
     @Test
     public void parse_compulsoryFieldMissing_failure() throws CommandException, DuplicatePersonException {
@@ -198,6 +171,12 @@ public class AddTransactionCommandParserTest {
                         + INVALID_AMOUNT_DESC + TRANSACTION_DESC_DESCRIPTION_ONE
                         + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
                 TransactionType.MESSAGE_TRANSACTION_TYPE_CONSTRAINTS);
+        // too many prefit for paydebt command
+        assertParseTransactionFailure(parser, TRANSACTION_TYPE_DESC_THREE
+                        + TRANSACTION_PAYER_DESC
+                        + INVALID_AMOUNT_DESC + TRANSACTION_DESC_DESCRIPTION_ONE
+                        + TRANSACTION_PAYEE_DESC_ONE + TRANSACTION_DESC_SPLIT_METHOD_ONE,
+                AddTransactionCommand.MESSAGE_TOO_MANY_PREFIXES_FOR_PAYDEBT);
         // non-empty preamble
         assertParseTransactionFailure(parser, PREAMBLE_NON_EMPTY + TRANSACTION_TYPE_DESC_ONE
                         + TRANSACTION_PAYER_DESC

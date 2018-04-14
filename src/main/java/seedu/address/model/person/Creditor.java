@@ -1,4 +1,5 @@
 package seedu.address.model.person;
+//@@author ongkc
 /**
  * Represents a Creditor in SmartSplit.
  * Guarantees: details are present and not null, field values are validated, immutable.

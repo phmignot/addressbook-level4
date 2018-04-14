@@ -1,5 +1,5 @@
 package seedu.address.model.person;
-
+//@@author ongkc
 import static java.util.Objects.requireNonNull;
 
 import java.util.Iterator;
@@ -41,9 +41,9 @@ public class UniqueCreditorList implements Iterable<Creditor> {
 
         final UniqueCreditorList replacement = new UniqueCreditorList();
         for (DebtsList.Entry<Person, Balance> entry : debtsList.entrySet()) {
-            if (entry.getValue().getDoubleValue() < 0) {
+            if (entry.getValue().getDoubleValue() > 0) {
                 Person person = entry.getKey();
-                Balance debt = entry.getValue().getInverse();
+                Balance debt = entry.getValue();
                 Creditor creditor = new Creditor(person, debt);
                 replacement.add(creditor);
             }

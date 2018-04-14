@@ -2,7 +2,7 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-
+//@@author ongkc
 /**
  * Represents a Person's email in SmartSplit.
  * Guarantees: immutable; is valid as declared in {@link #isValidEmail(String)}

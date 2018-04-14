@@ -25,7 +25,7 @@ import seedu.address.model.util.SampleDataUtil;
  */
 public class TransactionBuilder {
 
-    public static final String DEFAULT_AMOUNT = "123.45";
+    public static final String DEFAULT_AMOUNT = "6172.50";
     public static final String DEFAULT_DESCRIPTION = "paying for Cookies";
     private static Integer lastTransactionId = 0;
     private final Integer id;

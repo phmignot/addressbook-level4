@@ -13,7 +13,10 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.transaction.Transaction;
 import seedu.address.testutil.TransactionBuilder;
-
+//@@author ongkc
+/**
+ * Contains integration tests (interaction with the Model) for {@code AddTransactionCommand}.
+ */
 public class AddTransactionCommandIntegrationTest {
 
     private Model model;
@@ -35,7 +38,7 @@ public class AddTransactionCommandIntegrationTest {
     }
 
     /**
-     * Generates a new {@code AddCommand} which upon execution, adds {@code person} into the {@code model}.
+     * Generates a new {@code AddTransactionCommand} which upon execution, adds {@code person} into the {@code model}.
      */
     private AddTransactionCommand prepareCommand(Transaction transaction, Model model) {
         AddTransactionCommand command = new AddTransactionCommand(transaction);

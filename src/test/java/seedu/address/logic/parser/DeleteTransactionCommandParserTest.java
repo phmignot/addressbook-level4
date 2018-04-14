@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
-
+//@@author ongkc
 public class DeleteTransactionCommandParserTest {
 
     private DeleteTransactionCommandParser parser = new DeleteTransactionCommandParser();

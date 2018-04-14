@@ -7,7 +7,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.DeleteTransactionCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
-
+//@author phmignot
 /**
  * Parses input arguments and creates a new DeleteTransactionCommand object
  */

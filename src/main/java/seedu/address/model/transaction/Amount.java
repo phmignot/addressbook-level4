@@ -10,7 +10,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Amount {
 
     public static final String MESSAGE_AMOUNT_CONSTRAINTS =
-            "Amount can only take in a numerical number up to 2 decimal places, "
+            "Amount can only take in a positive numerical number up to 2 decimal places, "
                     + "and it should not be blank";
     /*
      * The first character of the address must not be a whitespace,

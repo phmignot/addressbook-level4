@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
+//@@author ongkc
 /**
  * Provides a handle to a creditor card in the creditor list panel.
  */

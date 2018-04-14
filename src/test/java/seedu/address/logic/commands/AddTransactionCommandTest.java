@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javafx.collections.ObservableList;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -40,9 +39,8 @@ import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
-import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
+import seedu.address.model.util.SampleDataUtil;
 import seedu.address.testutil.TransactionBuilder;
-
 //@@author ongkc
 public class AddTransactionCommandTest {
 
@@ -69,19 +67,19 @@ public class AddTransactionCommandTest {
     }
     @Test
     public void execute_paymentTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingTransactionAdded modelStub =
-                new ModelStubAcceptingTransactionAdded();
-        Transaction validTransaction = new TransactionBuilder().withAmount("12345").build();
-
-        CommandResult commandResult = getAddTransactionCommand(validTransaction, modelStub).execute();
-        assertEquals(String.format(AddTransactionCommand.MESSAGE_SUCCESS, validTransaction),
-                commandResult.feedbackToUser);
-        assertEquals(Arrays.asList(validTransaction), modelStub.transactionsAdded);
+        ModelManager expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Transaction validTransaction = new TransactionBuilder().withAmount("12345").withSplitMethod("percentage")
+                .withPercentages("50, 50").build();
+        AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
+        String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
+                validTransaction);
+        assertCommandSuccess(addTransactionCommand, model, expectedMessage, expectedModel);
     }
     @Test
     public void execute_payDebtTransactionRoundedAmountAcceptedByModel_addSuccessful() throws Exception {
-        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        Transaction validTransaction = new TransactionBuilder().withTransactionType("paydebt").build();
+        ModelManager expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Transaction validTransaction = new TransactionBuilder().withPayer(SampleDataUtil.getSamplePersons()[1])
+                .withTransactionType("paydebt").withPayees("Alice Pauline").build();
         AddTransactionCommand addTransactionCommand = prepareCommand(validTransaction);
         String expectedMessage = String.format(addTransactionCommand.MESSAGE_SUCCESS,
                 validTransaction);
@@ -187,25 +185,23 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void deletePerson(Person target) throws PersonNotFoundException {
+        public void deletePerson(Person target) {
             fail("This method should not be called.");
         }
 
         @Override
-        public void updatePerson(Person target, Person editedPerson)
-                throws DuplicatePersonException {
+        public void updatePerson(Person target, Person editedPerson) {
             fail("This method should not be called.");
         }
 
         @Override
-        public Person findPersonByName(Name name) throws PersonNotFoundException {
+        public Person findPersonByName(Name name) {
             fail("This method should not be called.");
             return null;
         }
 
         @Override
-        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) throws PersonNotFoundException,
-                IllegalValueException {
+        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) {
             return null;
         }
 
@@ -216,13 +212,13 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayer(Person person) {
             fail("This method should not be called.");
             return true;
         }
 
         @Override
-        public boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException {
+        public boolean hasNoTransactionWithPayee(Person person) {
             fail("This method should not be called.");
             return true;
         }
@@ -253,10 +249,10 @@ public class AddTransactionCommandTest {
         }
 
         @Override
-        public void addTransaction(Transaction transaction) throws CommandException, PersonNotFoundException {}
+        public void addTransaction(Transaction transaction) throws PersonNotFoundException {}
 
         @Override
-        public void deleteTransaction(Transaction transaction) throws TransactionNotFoundException {
+        public void deleteTransaction(Transaction transaction) {
         }
 
         @Override
@@ -279,11 +275,6 @@ public class AddTransactionCommandTest {
 
         }
     }
-
-    public class ModelStubImpl extends AddTransactionCommandTest.ModelStub {
-    }
-
-
     /**
      * A Model stub that always accept the transaction being added.
      */

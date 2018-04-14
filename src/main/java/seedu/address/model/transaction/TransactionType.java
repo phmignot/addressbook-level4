@@ -2,6 +2,7 @@ package seedu.address.model.transaction;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
+//@@author ongkc
 /**
  * Types of transaction
  */

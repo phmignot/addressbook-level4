@@ -81,17 +81,26 @@ public class LogicManager extends ComponentManager implements Logic {
     public ListElementPointer getHistorySnapshot() {
         return new ListElementPointer(history.getHistory());
     }
-
+    //@author phmignot
+    /**
+     * Update the transaction list to show all transaction
+     */
     @Override
     public void updateFilteredTransactionList() {
         model.updateFilteredTransactionList(Model.PREDICATE_SHOW_ALL_TRANSACTIONS);
     }
-
+    /**
+     * Update the transaction list to show transactions of the selected person
+     */
     @Override
     public void updateFilteredTransactionList(Person person) {
         TransactionContainsPersonPredicate predicate = new TransactionContainsPersonPredicate(person);
         model.updateFilteredTransactionList(predicate);
     }
+    //@@author ongkc
+    /**
+     * Update the debt list to an empty list
+     */
     @Override
     public void updateDebtorsList() {
         model.updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
@@ -99,7 +108,6 @@ public class LogicManager extends ComponentManager implements Logic {
     /**
      * Update the people in the debt list
      */
-    //@@author ongkc
     public void updateDebtorsList(Person person) {
         model.updateDebtorList(PREDICATE_SHOW_ALL_DEBTORS);
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
@@ -107,6 +115,10 @@ public class LogicManager extends ComponentManager implements Logic {
         model.getAddressBook().setDebtors(debtsList);
 
     }
+
+    /**
+     * Update creditor list to an empty list
+     */
     @Override
     public void updateCreditorsList() {
         model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);

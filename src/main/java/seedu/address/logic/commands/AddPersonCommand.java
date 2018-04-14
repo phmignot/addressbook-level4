@@ -11,7 +11,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
- * Adds a person to the address book.
+ * Adds a person to the SmartSplit.
  */
 public class AddPersonCommand extends UndoableCommand {
 
