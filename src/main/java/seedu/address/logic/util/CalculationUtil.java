@@ -18,7 +18,7 @@ public class CalculationUtil {
 
     private static final int NUMBER_OF_DECIMAL_PLACES = 2;
 
-    //@@author steven-jia
+    //@@author ongkc
     /**
      * Returns the amount to add to the balance of a payer.
      */
@@ -59,8 +59,6 @@ public class CalculationUtil {
         }
         return null;
     }
-
-    //@@author ongkc
 
     /**
      * Calculates amount to add to the payee's balance after a new paydebt transaction is added.

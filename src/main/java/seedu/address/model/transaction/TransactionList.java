@@ -15,7 +15,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 //@@author ongkc
 /**
- * Recard all transactions to the list.
+ * Record all transactions to the list.
  *
  */
 public class TransactionList implements Iterable<Transaction> {
