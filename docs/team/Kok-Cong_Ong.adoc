@@ -52,7 +52,8 @@ image::CantDeletePerson2.png[width="800"]
 Furthermore, a transaction can only be added only if the person in the transaction existed.
 
 
-* *Code contributed*: [https://github.com[Functional code]] [https://github.com[Test code]] _{give links to collated code files}_
+=== *Code contributed*: [https://github.com/ongkc/addressbook-level4/blob/master/collated/functional/ongkc.md[Functional code]] +
+ [https://github.com/ongkc/addressbook-level4/blob/master/collated/test/ongkc.md[Test code]]
 
 * *Other contributions*:
 
@@ -64,18 +65,6 @@ Furthermore, a transaction can only be added only if the person in the transacti
 *** Create the balance amount on the person panel card (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/106[#106])
 *** Create the balance amount on the debtor and creditor panel card (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/106[#106])
 *** Wrote tests for existing features to increase coverage from 79% to 90% (Pull requests https://github.com/CS2103JAN2018-W10-B1/main/pull/129/commits[#129])
-** Documentation:
-*** Did cosmetic tweaks to existing contents of the User Guide: https://github.com[#14]
-** Community:
-*** PRs reviewed (with non-trivial review comments): https://github.com[#12], https://github.com[#32], https://github.com[#19], https://github.com[#42]
-*** Contributed to forum discussions (examples:  https://github.com[1], https://github.com[2], https://github.com[3], https://github.com[4])
-*** Reported bugs and suggestions for other teams in the class (examples:  https://github.com[1], https://github.com[2], https://github.com[3])
-*** Some parts of the history feature I added was adopted by several other class mates (https://github.com[1], https://github.com[2])
-** Tools:
-*** Integrated a third party library (Natty) to the project (https://github.com[#42])
-*** Integrated a new Github plugin (CircleCI) to the team repo
-
-_{you can add/remove categories in the list above}_
 
 == Contributions to the User Guide
 
@@ -94,7 +83,7 @@ include::../UserGuide.adoc[tag=dataencryption]
 |_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
 
-include::../DeveloperGuide.adoc[tag=undoredo]
+include::../DeveloperGuide.adoc[tag=addtransaction]
 
 include::../DeveloperGuide.adoc[tag=dataencryption]
 

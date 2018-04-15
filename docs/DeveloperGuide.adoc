@@ -357,7 +357,7 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Pros: We do not need to maintain a separate stack, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
 // end::undoredo[]
-
+// start::addtransaction[]
 ===  Add Transaction feature
 ==== Add Transaction Command Implementation
 .Component interactions for `addTransaction` command (part 1)
@@ -423,6 +423,7 @@ Why it is implemented that way
 * **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
 ** Pros: Easier for users to understand. Allows for the use of a clearer and more obvious command word (i.e. "payDebt").
 ** Cons: Very similar to addTransaction and will likely re-use a lot of the same code. As a new command, `payDebtCommand` would also require new tests for coverage.
+// end::addtransaction[]
 
 // tag::selectfeature[]
 ===  Select feature
@@ -482,8 +483,6 @@ This implementation saves the application from wasting of computing resource.
 
 === Delete Transaction Feature
 
-
-// end::payDebt[]
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
@@ -913,12 +912,15 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Kok Cong Ong*
 
-* Major feature: Allow user to categorise their spending into different categories, so as to allow the ease of tracking what they spent most on
-* Minor feature: Allow user to edit their added transaction
+* Major feature: Added Payment & Paydebt add Transaction command. Payment transaction command is used when a person make a payment to one or multiple people. Paydebt Transaction is used when the user return an amount owed to another person.
+* Major feature: Added Debtors & Creditors panel for the user to see who owed them money or people who they owed money to
+* Minor feature: Prevent person from deleted if his debt not clear.
+* Minor feature: Prevent transaction from deleted if payer or payee in the transaction do not exist anymore.
 
 *Paul Henri Mignot*
 
 * Major feature: Update the User Interface to display the list of transactions.
+* Major feature: Update the User Interface to display the list of transactions related to the person selected
 * Minor feature: Allow user to delete their transactions.
 
 *Wen Qin Jia*
@@ -942,7 +944,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |see how much I owe to or am owed by each individual|
 
-|`* * *` |user |see how much I owe or am owed in total|
+|`* * *` |user |see how much I have spent during the trip|
 
 |`* * *` |user |record an offline payment to or from another user |update the balance between the 2 users
 
@@ -1013,20 +1015,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 (For all use cases below, the *System* is `SmartSplit` and the *Actor* is the `user`, unless specified otherwise)
 
-[discrete]
-=== Use case: Create group
-
-*MSS*
-
-1.  User requests to create group
-2.  SmartSplit prompts user for the name of the new group
-3.  User enters the desired name
-4.  SmartSplit creates the new group with the name and designates the user as the admin user for that group
-+
-Use case ends.
-
-[discrete]
-=== Use case: Add members to group
+=== Use case: Add all persons involved in the trip to application
 
 *Preconditions*
 
@@ -1042,11 +1031,11 @@ Use case ends.
 Use case ends.
 
 [discrete]
-=== Use case: Add transaction
+=== Use case: Add payment type transaction
 
 *MSS*
 
-1.  User requests to add transaction
+1.  User requests to add payment type transaction
 2.  SmartSplit requests transaction details from the user
 3.  User enters the transaction details
 4.  SmartSplit records the transaction
@@ -1056,14 +1045,120 @@ Use case ends.
 *Extensions*
 
 * 3a. User enters details in an incorrect format.
-+
-[none]
-** 3a1. SmartSplit shows an error message and prompts the user to try again.
-+
-Use case resumes at step 3.
 
-_{More to be added}_
+ SmartSplit shows an error message. Use case resume at 3.
 
+* 3b. User enters a payer or payee(s) name who does not exist in the application.
+
+ SmartSplit shows an error message. Use case resume at 3 or use case for add person.
+
+[discrete]
+=== Use case: Add paydebt type transaction (After an amount owed was returned)
+
+*MSS*
+
+1.  User requests to add paydebt type transaction
+2.  SmartSplit requests transaction details from the user
+3.  User enters the transaction details
+4.  SmartSplit records the transaction
++
+Use case ends.
+
+*Extensions*
+
+* 3a. User enters details in an incorrect format.
+
+ SmartSplit shows an error message. Use case resume at 3.
+
+* 3b. User enters a payer or payee name who does not exist in the application.
+
+ SmartSplit shows an error message. Use case resume at 3.
+
+ * 3c. User enters a payee name who does not owed any amount to the payer.
+
+  SmartSplit shows an error message. Use case resume at 3.
+
+* 3d. User enters a wrong amount.
+
+ SmartSplit shows an error message. Use case resume at 3.
+
+[discrete]
+
+=== Use case: delete a person
+
+*MSS*
+
+1.  User requests to delete a person
+2.  SmartSplit requests delete person index
+3.  User enters the delete person index
+4.  SmartSplit delete the person from the application
++
+Use case ends.
+
+*Extensions*
+
+* 3a. User enters the wrong index
+
+ SmartSplit shows an error message. Use case resume at 3.
+
+* 3b. User enter the person index whom the person has outstanding debt
+
+ SmartSplit shows an error message. Use case resume at 3 or ends.
+
+[discrete]
+
+=== Use case: delete a transaction
+
+*MSS*
+
+1.  User requests to delete a transaction
+2.  SmartSplit requests delete transaction index
+3.  User enters the delete transaction index
+4.  SmartSplit delete the transaction from the application
++
+Use case ends.
+
+*Extensions*
+
+* 3a. User enters the wrong index
+
+ SmartSplit shows an error message. Use case resume at 3.
+
+* 3b. User enter the transaction index whom the payer or payee(s) do not exist
+
+ SmartSplit shows an error message. Use case resume at 3 or ends.
+
+[discrete]
+
+=== Use case: Check debtors & creditors list
+
+*MSS*
+
+1.  User requests to check the debtors & creditors list
+2.  User select the person to check
+3.  SmartSplit displayed all the debtors and creditors with respect to the person selected
++
+Use case ends.
+
+[discrete]
+=== Use case: Check relevant transactions to the related to him/her
+
+*MSS*
+
+1.  User requests to relevant transaction related to him/her
+2.  User select the person to check
+3.  SmartSplit displayed all the transactions with respect to the person selected
++
+Use case ends.
+
+*Extensions*
+
+* 3a. User un-select the person selected
+
+    SmartSplit re-displayed all the transactions
+
+
+[discrete]
 [appendix]
 == Non Functional Requirements
 
