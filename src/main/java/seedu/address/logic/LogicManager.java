@@ -113,7 +113,6 @@ public class LogicManager extends ComponentManager implements Logic {
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
         DebtsList debtsList = debtsTable.get(person);
         model.getAddressBook().setDebtors(debtsList);
-
     }
 
     /**
@@ -122,7 +121,6 @@ public class LogicManager extends ComponentManager implements Logic {
     @Override
     public void updateCreditorsList() {
         model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-
     }
 
     /**
@@ -133,7 +131,6 @@ public class LogicManager extends ComponentManager implements Logic {
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
         DebtsList debtsList = debtsTable.get(person);
         model.getAddressBook().setCreditors(debtsList);
-
     }
 
 }

@@ -145,8 +145,11 @@ public class ModelManager extends ComponentManager implements Model {
         return payees;
     }
     //@@author ongkc
+    /**
+     * Check if the payer or payee in the transaction indicated exists
+     */
     @Override
-    public boolean hasNoTransactionWithPayer(Person person) throws PersonFoundException {
+    public boolean personNotFoundInTransaction(Person person) throws PersonFoundException {
         Set<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .stream()
                 .filter(transaction -> transaction.getPayer().equals(person))
@@ -160,30 +163,9 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public boolean hasNoTransactionWithPayee(Person person) throws PersonFoundException {
-        Set<Transaction> matchingTransactions = addressBook.getTransactionList()
-                .stream()
-                .filter(transaction -> transaction.getPayees().contains(person))
-                .collect(Collectors.toSet());
-
-        if (matchingTransactions.isEmpty()) {
-            return true;
-        } else {
-            throw new PersonFoundException();
-        }
-    }
-
-    @Override
-    public List<Transaction> findTransactionsWithPayer(Person person) {
+    public List<Transaction> findTransactionsWithPerson(Person person) {
         List<Transaction> matchingTransactions = addressBook.getTransactionList()
                 .filtered(transaction -> transaction.getPayer().equals(person));
-        return matchingTransactions;
-    }
-
-    @Override
-    public List<Transaction> findTransactionsWithPayee(Person person) {
-        List<Transaction> matchingTransactions = addressBook.getTransactionList()
-                .filtered(transaction -> transaction.getPayees().contains(person));
         return matchingTransactions;
     }
     /**
@@ -280,5 +262,4 @@ public class ModelManager extends ComponentManager implements Model {
         return addressBook.equals(other.addressBook)
                 && filteredPersons.equals(other.filteredPersons);
     }
-
 }

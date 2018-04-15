@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javafx.collections.ObservableList;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -30,9 +29,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.transaction.Transaction;
-import seedu.address.model.transaction.exceptions.TransactionNotFoundException;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddPersonCommandTest {
@@ -138,8 +135,7 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) throws PersonNotFoundException,
-                IllegalValueException {
+        public UniquePersonList getPayeesList(ArgumentMultimap argMultimap, Model model) {
             return null;
         }
 
@@ -150,25 +146,13 @@ public class AddPersonCommandTest {
         }
 
         @Override
-        public boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException {
+        public boolean personNotFoundInTransaction(Person person) {
             fail("This method should not be called.");
             return true;
         }
 
         @Override
-        public boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException {
-            fail("This method should not be called.");
-            return true;
-        }
-
-        @Override
-        public List<Transaction> findTransactionsWithPayer(Person person) {
-            fail("This method should not be called.");
-            return null;
-        }
-
-        @Override
-        public List<Transaction> findTransactionsWithPayee(Person person) {
+        public List<Transaction> findTransactionsWithPerson(Person person) {
             fail("This method should not be called.");
             return null;
         }

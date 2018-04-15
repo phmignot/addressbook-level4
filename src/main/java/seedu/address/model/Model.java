@@ -76,18 +76,10 @@ public interface Model {
 
     //@@author steven-jia
     /** Returns a boolean if a transaction ,that have {@code person} as the payer, has been found. */
-    boolean hasNoTransactionWithPayer(Person person) throws TransactionNotFoundException, PersonFoundException;
-
-    /** Returns a boolean if a transaction ,that have {@code person} as a payee, has been found. */
-    boolean hasNoTransactionWithPayee(Person person) throws TransactionNotFoundException, PersonFoundException;
-
+    boolean personNotFoundInTransaction(Person person) throws TransactionNotFoundException, PersonFoundException;
     //@@author phmignot
     /** Returns a List of transactions that have {@code person} as the payer */
-    List<Transaction> findTransactionsWithPayer(Person person);
-
-    /** Returns a List of transactions that have {@code person} as a payee */
-    List<Transaction> findTransactionsWithPayee(Person person);
-
+    List<Transaction> findTransactionsWithPerson(Person person);
     //@@author
     /** Returns an unmodifiable view of the filtered transaction list */
     ObservableList<Transaction> getFilteredTransactionList();

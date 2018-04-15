@@ -38,7 +38,7 @@ public class DebtorListPanel extends UiPart<Region> {
 
 
     /**
-     * Scrolls to the {@code PersonCard} at the {@code index} and selects it.
+     * Scrolls to the {@code DebtorCard} at the {@code index} and selects it.
      */
     private void scrollTo(int index) {
         Platform.runLater(() -> {
@@ -49,7 +49,7 @@ public class DebtorListPanel extends UiPart<Region> {
 
 
     /**
-     * Custom {@code ListCell} that displays the graphics of a {@code PersonCard}.
+     * Custom {@code ListCell} that displays the graphics of a {@code DebtorCard}.
      */
     class DebtorListViewCell extends ListCell<DebtorCard> {
         @Override
