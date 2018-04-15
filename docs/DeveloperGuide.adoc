@@ -369,7 +369,7 @@ image::AddTransaction.png[width="800"]
 
 image::addTransactionParser.png[width="800"]
 
-From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return to AddTransactionCommand as shown by the acitivty diagram above. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. In addition, validatePayees() is called to check if payee(s) enter is the same as the payer and valiadateSplitMethodValue() is used to check the validity of the split value entered. If all the three methods fail, An exception will be thrown if its not found. Refer to the code and diagram below for addTransactionCommandParser.
+From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return to AddTransactionCommand as shown by the acitivty diagram above. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. In addition, validatePayees() is called to check if payee(s) enter is the same as the payer and valiadateSplitMethodValue() is used to check the validity of the split value entered. If all the three methods fail, an exception will be thrown. Refer to the code and diagram below for addTransactionCommandParser.
 
 image::AddTransactionCommandParser.png[width="800"]
 
@@ -409,27 +409,27 @@ Why it is implemented that way
 
 ===== Aspect: Calculation for each transaction
 
-** Alternative 1: A new calculationUtil object is created (Current)
+*** Alternative 1: A new calculationUtil object is created (Current)
 ** Pro: Allow reusability of calculation method since most transaction uses similar calculation formula. In addition, it ensures minimum coupling which could arise if there are many different kinds of transactions to be added in future enhancement.
 ** Con: Create method not specific for each type of transaction calculation can be confusing and messy
 
-** Alternative 2: Each transaction has it own specific calculation method
+*** Alternative 2: Each transaction has it own specific calculation method
 ** Pro: Easier to amend errors or bugs if arises
 ** Con: Multiple method for each transaction calculation has to be created
 
 ===== Aspect: Storing and updating of debt for each person after each new transaction is added
 
-** Alternative 1: Create a HashMap Object
+*** Alternative 1: Create a HashMap Object
 ** Pros: Allow debt to be updated easily when a person added or deleted, or when a person information is changed
 ** Cons: Find method is required to retrieve the debt information for each person
 
-** Alternative 2: Create a list of debtors or creditors unique to each person
+*** Alternative 2: Create a list of debtors or creditors unique to each person
 ** Pros: Debt amount can be easily retrieved
 ** Con: If any person is deleted or added, or when any person information is changed, we need to go through every single person debtors or creditors list to amend.
 
 ===== Aspect: Implementation of `payDebt addTransactionCommand`
 
-* **Alternative 1 (current choice):** Add a `transactionType` parameter that allows for a transaction to be added as a transaction of type "payDebt"
+*** Alternative 1 (current choice):** Add a `transactionType` parameter that allows for a transaction to be added as a transaction of type "payDebt"
 ** Pros: `addTransactionCommand` already works well and would simply need to include another parameter.
 ** Cons: Increases the length of CLI input required from the user and adds complexity to the command by increasing the number of parameter combinations.
 * **Alternative 2:** Create a separate `payDebtCommand` that extends `addTransactionCommand`
@@ -532,11 +532,11 @@ Why it is implemented that way
 
 ===== Aspect: Checking the existence of payer or payee in the transaction to be deleted
 
-** Alternative 1: Checking is done concurrently when trying to update the amount spent by the payer and payee(s) (Current)
+*** Alternative 1: Checking is done concurrently when trying to update the amount spent by the payer and payee(s) (Current)
 ** Pro: This allows less method to be created
 ** Con: If the check fail while updating the payer and payee(s) new amount spent, the payer or payee(s) new amount spent and as well as debt table will be affected and will be updated by the wrong amount.
 
-** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
+*** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
 ** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
 ** Con: More line of codes and method has to be added
 //end::deletetransaction[]
