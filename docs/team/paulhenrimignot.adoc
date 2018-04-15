@@ -82,3 +82,11 @@ include::../UserGuide.adoc[tag=select]
 |===
 
 include::../DeveloperGuide.adoc[tag=selectfeature]
+
+---
+
+include::../DeveloperGuide.adoc[tag=DesignUI]
+
+---
+
+include::../DeveloperGuide.adoc[tag=DebtsTable]

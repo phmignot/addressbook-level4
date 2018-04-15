@@ -153,6 +153,7 @@ Note how the event is propagated through the `EventsCenter` to the `Storage` and
 
 The sections below give more details of each component.
 
+// tag::DesignUI[]
 [[Design-Ui]]
 === UI component
 
@@ -161,7 +162,7 @@ image::UiClassDiagram.png[width="800"]
 
 *API* : link:{repoURL}/src/main/java/seedu/address/ui/Ui.java[`Ui.java`]
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
+The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter`, `CreditorPanel`, `DebtorPanel`, `TransactionPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
 
 The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`]
 
@@ -170,6 +171,7 @@ The `UI` component,
 * Executes user commands using the `Logic` component.
 * Binds itself to some data in the `Model` so that the UI can auto-update when data in the `Model` change.
 * Responds to events raised from various parts of the App and updates the UI accordingly.
+// end::DesignUI[]
 
 [[Design-Logic]]
 === Logic component
@@ -208,6 +210,28 @@ The `Model`,
 * stores the Address Book data.
 * exposes an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * does not depend on any of the other three components.
+
+// tag::DebtsTable[]
+==== DebtsTable
+
+DebtsTable is a table that collects the debts between every person.
+
+This feature simplified the calculation, the storing and the retrieving of every debts between the persons added.
+The `DebtTable` is updated when a person or a transaction is added, edited or removed. +
+
+* Implementation of the DebtsTable:
+
+** **Alternative 1 (current choice):** Using a dictionary of every person's `DebtsList`, 
+which are dictionaries with all persons that have debts with its owner.
+*** Pros: More flexible. Easy to add and remove a person or a debt. Easy to retrieve the debt between two persons. 
+Will use less memory. 
+*** Cons: Harder to edit
+** **Alternative 2:** Using an two dimensional array.
+*** Pros: Easy to add or edit a person or a debt.
+*** Cons: Hard to remove a person.
+
+// end::DebtsTable[]
+
 
 [[Design-Storage]]
 === Storage component
