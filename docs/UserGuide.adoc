@@ -259,8 +259,10 @@ Format: `deleteTransaction INDEX`
 ****
 
 [TIP]
+
 Payer or payee(s) in the transaction to be deleted must exist.
 Do not delete a payment transaction after a paydebt transaction with respect to that payment transaction had been made, as we assumed that payment transaction is not a wrongly added transaction after a paydebt transaction has made.
+
 Example:
 
 * `deleteTransaction 2` +
