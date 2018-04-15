@@ -358,7 +358,9 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
 // end::undoredo[]
 // start::addtransaction[]
+
 ===  Add Transaction feature
+
 ==== Add Transaction Command Implementation
 .Component interactions for `addTransaction` command (part 1)
 image::AddTransaction.png[width="800"]
