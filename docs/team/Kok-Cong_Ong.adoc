@@ -83,7 +83,7 @@ include::../UserGuide.adoc[tag=addTransaction]
 
 include::../DeveloperGuide.adoc[tag=addtransaction]
 
-include::../DeveloperGuide.adoc[tag=deletetransaction]
+include::../DeveloperGuide.adoc[tag=personchanges]
 
 include::../DeveloperGuide.adoc[tag=usecases]
 

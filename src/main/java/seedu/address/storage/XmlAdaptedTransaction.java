@@ -30,8 +30,8 @@ public class XmlAdaptedTransaction {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Transaction's %s field is missing!";
     public static final String MISSING_FIELD_MESSAGE_FORMAT_DATE =
-            "Transaction's %s field is missing, or is in wrong format"
-                    + "(date format example: 2018-04-14T17:22:56.218+08:00";
+            "Transaction's %s field is missing, or is in wrong format "
+                    + "(date format example: 2018-04-14T17:22:56.218+08:00)";
 
     @XmlElement(required = true)
     private String transactionType;

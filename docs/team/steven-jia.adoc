@@ -29,7 +29,8 @@ the command line input required from the user. That implementation option too wa
 ** Credits: Most features that were brainstormed for this project, including the ones mentioned here, were inspired by https://www.splitwise.com[SplitWise].
 
 === *Minor enhancements*:
-* Added a balance field for the Person model and calculation logic that *updates a person's balance every time a new transaction is added or deleted*.
+* Added calculation logic to display the total amount spent for every user based on all their transactions
+* Added a balance field to the Person class and calculation logic that *updates a person's total amount spent every time a new transaction is added or deleted*.
 * Enabled *multiple payees for transactions* by adding a list of Persons to the Transaction model and ensured proper storage.
 
 === *Code contributed*:

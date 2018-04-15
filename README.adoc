@@ -19,7 +19,7 @@ endif::[]
 * Why should you use it?
 ** Conveniently record people and transactions
 ** Don't do any math! SmartSplit will tell you exactly how much you have to pay each person or how much you should expect to receive from each person!
-** More exciting features, such as different ways of splitting your transactions, will be available in `v1.5`!
+** More exciting features, such as finding transactions by keywords and forming groups, will be available in `v2.0`!
 
 == Site Map
 
