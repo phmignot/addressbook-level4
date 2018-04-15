@@ -73,9 +73,7 @@ Furthermore, a transaction can only be added only if the person in the transacti
 |_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=undoredo]
-
-include::../UserGuide.adoc[tag=dataencryption]
+include::../UserGuide.adoc[tag=addTransaction]
 
 == Contributions to the Developer Guide
 
@@ -87,9 +85,6 @@ include::../DeveloperGuide.adoc[tag=addtransaction]
 
 include::../DeveloperGuide.adoc[tag=deletetransaction]
 
+include::../DeveloperGuide.adoc[tag=usecases]
 
-== PROJECT: PowerPointLabs
-
----
-
-_{Optionally, you may include other projects in your portfolio.}_
+include::../DeveloperGuide.adoc[tag=manualtesting]

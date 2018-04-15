@@ -1098,6 +1098,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |=======================================================================
 
+//tag::usecases[]
 [appendix]
 == Use Cases
 
@@ -1245,8 +1246,9 @@ Use case ends.
 
     SmartSplit re-displayed all the transactions
 
-
 [discrete]
+//end::usecases[]
+
 [appendix]
 == Non Functional Requirements
 
@@ -1282,23 +1284,7 @@ A feature that allows a user to record a payment that was made to another user t
 [[recurring-expense]] Recurring expense::
 An expense that does not change in amount over a repeated time period (e.g. every month) and is always incurred by a user
 
-[appendix]
-== Product Survey
-
-*Product Name*
-
-Author: ...
-
-Pros:
-
-* ...
-* ...
-
-Cons:
-
-* ...
-* ...
-
+//tag::manualtesting[]
 [appendix]
 == Instructions for Manual Testing
 
@@ -1485,3 +1471,5 @@ These instructions only provide a starting point for testers to work on; testers
 .. Missing & Invalid Split method
 
    Expected: Transaction split method can only be "evenly", "units", or "percentage"
+//end::deletetransaction[]
+
