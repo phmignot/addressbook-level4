@@ -1318,17 +1318,18 @@ These instructions only provide a starting point for testers to work on; testers
 
 . Dealing with missing/corrupted data files
 
-.. Missing & Invalid Transaction type
-   Expected: Transaction type can only be "paydebt" or "payment" and it should not be blank
-.. Missing & Invalid Missing payer
-   Expected: Transaction's Payer field is missing!
-.. Missing & Invalid Transaction amount
-   Expected: Amount can only take in a positive numerical number up to 2 decimal places, and it should not be blank
-.. Missing & Invalid Transaction description
-   Expected: Transaction description can take any value and should not be blank
-.. Missing & Invalid Transaction payee
-   Expected: Transaction's Payees field is missing!
-.. Missing & Invalid Transaction Date
-   Expected: Transaction's Date field is missing, or is in wrong format(date format example: 2018-04-14T17:22:56.218+08:00
-.. Missing & Invalid Split method
-   Expected: Transaction split method can only be "evenly", "units", or "percentage"
+.. Missing & Invalid Transaction type +
+   Expected: `Transaction type can only be "paydebt" or "payment" and it should not be blank`
+.. Missing & Invalid Missing payer +
+   Expected: `Transaction's Payer field is missing!` +
+   This message exists for every mandatory field of the Transaction class (i.e. Type, Payer, Amount, Description, Payees, SplitMethod)
+.. Missing & Invalid Transaction amount +
+   Expected: `Amount can only take in a positive numerical number up to 2 decimal places, and it should not be blank`
+.. Missing & Invalid Transaction description +
+   Expected: `Transaction description can take any value and should not be blank`
+.. Missing & Invalid Transaction payee +
+   Expected: `Transaction's Payees field is missing!`
+.. Missing & Invalid Transaction Date +
+   Expected: `Transaction's Date field is missing, or is in wrong format (date format example: 2018-04-14T17:22:56.218+08:00)`
+.. Missing & Invalid Split method +
+   Expected: `Transaction split method can only be "evenly", "units", or "percentage"`
