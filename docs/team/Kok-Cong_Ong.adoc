@@ -85,7 +85,7 @@ include::../UserGuide.adoc[tag=dataencryption]
 
 include::../DeveloperGuide.adoc[tag=addtransaction]
 
-include::../DeveloperGuide.adoc[tag=dataencryption]
+include::../DeveloperGuide.adoc[tag=deletetransaction]
 
 
 == PROJECT: PowerPointLabs

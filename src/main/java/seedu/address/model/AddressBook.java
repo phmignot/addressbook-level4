@@ -189,7 +189,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public boolean removePerson(Person key) throws PersonNotFoundException, CommandException {
         //@@author ongkc
-        if (checkDebt(key)) {
+        if (debtExists(key)) {
             throw new CommandException(String.format(MESSAGE_DEBT_NOT_PAID, key));
         }
         if (persons.remove(key)) {
@@ -202,7 +202,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * check if the person to be deleted still owed any unpaid debt
      */
-    private boolean checkDebt(Person key) {
+    private boolean debtExists(Person key) {
         DebtsList debtsList = debtsTable.get(key);
         if (debtsList != null) {
             for (Balance value : debtsList.values()) {
@@ -307,7 +307,6 @@ public class AddressBook implements ReadOnlyAddressBook {
                 Integer splitMethodValuesListIndex = i + 1;
                 updatePayeeBalance(payee, isAddingTransaction, splitMethodValuesListIndex, transaction);
             }
-            //@@author ongkc
         }
     }
 

@@ -98,6 +98,7 @@ When you are ready to start coding,
 
 .Architecture Diagram
 image::Architecture.png[width="600"]
+_Figure 5.1f. Undo Redo New Command Stack Diagram 2_
 
 The *_Architecture Diagram_* given above explains the high-level design of the App. Given below is a quick overview of each component.
 
@@ -357,14 +358,16 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Pros: We do not need to maintain a separate stack, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
 // end::undoredo[]
-// start::addtransaction[]
 
+// tag::addtransaction[]
 ===  Add Transaction feature
 
 ==== Add Transaction Command Implementation
+
 .Component interactions for `addTransaction` command (part 1)
 image::AddTransaction.png[width="800"]
-From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return toAddTransactionCommand. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. An exception will be thrown if its not found. Refer to the code and diagram below for addTransactionCommandParser.
+
+From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return toAddTransactionCommand. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. In addition, validatePayees() is called to check if payee(s) enter is the same as the payer and valiadateSplitMethodValue() is used to check the validity of the split value entered. If all the three methods fail, An exception will be thrown if its not found. Refer to the code and diagram below for addTransactionCommandParser.
 
 image::AddTransactionCommandParser.png[width="800"]
 
@@ -372,7 +375,7 @@ image::AddTransactionCommandParser.png[width="800"]
 
 image::AddTransactionCommandParserCode.png[width="800"]
 
-Next, AddTransactionCommand will call its method execute(). After addTransaction command is executed, an addTransaction() method will be called.
+Next, AddTransactionCommand will call its method execute(). When addTransaction command is executed, an addTransaction() method will be called.
 
 image::AddTransactionSequenceDiagram1.png[width="800"]
 
@@ -384,6 +387,11 @@ With reference to the diagram above, when addTransaction method is executed, new
 
 image::AddTransactionCode.png[width="800"]
 
+** Add Transaction Calculation
+
+image::CalculationUtil.png[width="800"]
+
+
 ** Debt Table Object
 
 image::DebtTable.png[width="800"]
@@ -392,7 +400,7 @@ image::DebtTable.png[width="800"]
 .Component interactions for `addTransaction` command (part 2)
 image::SDforDeletePersonEventHandling.png[width="800"]
 An AddressBookChangeEvent will be posted to allow the storage to handle this event and save the new transaction and balances of the involved Persons into the hard disk.
-The UI will also handle this event by adding the new transaction to the TransactionList Panel, updating the amount spent for each person, as well as CreditorList Panel and DebtorList Panel.
+The UI will also handle this event by adding the new transaction to the TransactionList Panel, updating the amount spent by each person.
 
 ==== Design Considerations
 Why it is implemented that way
@@ -411,7 +419,7 @@ Why it is implemented that way
 
 ** Alternative 1: Create a HashMap Object
 ** Pros: Allow debt to be updated easily when a person added or deleted, or when a person information is changed
-** Cons: Find method is required to retrieve the information required
+** Cons: Find method is required to retrieve the debt information for each person
 
 ** Alternative 2: Create a list of debtors or creditors unique to each person
 ** Pros: Debt amount can be easily retrieved
@@ -461,7 +469,25 @@ image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
 
 With reference to the diagram above, the `PersonPanelSelectionChanged` event is handled by the `Model`, that will call
 the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep only transactions related with the person selected. +
-The `FilteredTransactionList`, `FilteredDebtorList` and `FilteredCreditorList` will be updated, the UI will display the new list.
+The `FilteredTransactionList`, `FilteredDebtorList` and `FilteredCreditorList` will be updated, the UI will display the new list. Refer to the codes below.
+
+* Code Listing
+
+** HandleSelectionChangeEvent
+
+image::PersonSelection.png[width="800"]
+
+** Update Transaction List
+
+image::FilterTransaction.png[width="800"]
+
+** Update Debtor & Creditor List
+
+image::Debtor_Creditor_list.png[width="800"]
+
+** Transaction Predicate
+
+image::TransactionPredicate.png[width="800"]
 
 ==== PersonPanelNoSelection Event process
 In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
@@ -472,8 +498,8 @@ another command that will clear the selection, such as the `find` command, or by
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
 
 With reference to the diagram above, the `PersonPanelNoSelection` event is handled by the `Model`, that will call
-the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep every transactions.
-The `FilteredTransactionList` will be updated, the UI will display the new list.
+the `UpdateFilteredTransactionList` method in the `addressbook`, with the predicate to keep every transactions, debtors list and creditors list.
+The `FilteredTransactionList`, `FilteredDebtorList` and `FilteredCreditorList` will be updated, the UI will display the new list.
 
 ==== Why it is implemented that way
 
@@ -482,8 +508,64 @@ This implementation uses events that are raised if needed, so there is no need t
 This implementation saves the application from wasting of computing resource.
 
 // end::selectfeature[]
-
+//tag::deletetransaction[]
 === Delete Transaction Feature
+
+==== Delete Transaction Implementation
+
+Delete transaction feature was implemented the same as add transaction feature, please refer to addTransaction sequence diagram above. Similarly, for a transaction to be deleted the specify payer or payee(s) in that transaction need to exist in the application, otherwise an exception will be thrown. However the checking is done in when deleteTransaction method is called, and uses findPersonByName method when trying to update payer or payee(s) amount if a transaction were to delete. The updating the payer or payee(s) amount spent is successfully then the indicated transaction will be deleted successfully. In addition, calculation methods from calculationUtil object used are different from add transaction command. Refer to the code below for example,
+
+* Code Listing
+
+** Delete Transaction
+
+image::DeleteTransaction.png[width="800"]
+
+** Delete Transaction Calculation
+
+image::DeleteTransactionCode.png[width="800"]
+
+==== Design Considerations
+Why it is implemented that way
+
+===== Aspect: Checking the existence of payer or payee in the transaction to be deleted
+
+** Alternative 1: Checking is done concurrently when trying to update the amount spent by the payer and payee(s) (Current)
+** Pro: This allows less method to be created
+** Con: If the check fail while updating the payer and payee(s) new amount spent, the payer or payee(s) new amount spent and as well as debt table will be affected and will be updated by the wrong amount.
+
+** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
+** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
+** Con: More line of codes and method has to be added
+//end::deletetransaction[]
+=== Edit Person changes persons information in Transaction list Mechanism
+
+==== Edit Person changes persons in Transaction list Implementation
+
+Delete transaction feature was implemented the same as add transaction feature, please refer to addTransaction sequence diagram above. Similarly, for a transaction to be deleted the specify payer or payee(s) in that transaction need to exist in the application, otherwise an exception will be thrown. However the checking is done in when deleteTransaction method is called, and uses findPersonByName method when trying to update payer or payee(s) amount if a transaction were to delete. The updating the payer or payee(s) amount spent is successfully then the indicated transaction will be deleted successfully. In addition, calculation methods from calculationUtil object used are different from add transaction command. Refer to the code below for example,
+
+* Code Listing
+
+** Delete Transaction
+
+image::DeleteTransaction.png[width="800"]
+
+** Delete Transaction Calculation
+
+image::DeleteTransactionCode.png[width="800"]
+
+==== Design Considerations
+Why it is implemented that way
+
+===== Aspect: Checking the existence of payer or payee in the transaction to be deleted
+
+** Alternative 1: Checking is done concurrently when trying to update the amount spent by the payer and payee(s) (Current)
+** Pro: This allows less method to be created
+** Con: If the check fail while updating the payer and payee(s) new amount spent, the payer or payee(s) new amount spent and as well as debt table will be affected and will be updated by the wrong amount.
+
+** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
+** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
+** Con: More line of codes and method has to be added
 
 === Logging
 
@@ -924,11 +1006,15 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 * Major feature: Update the User Interface to display the list of transactions.
 * Major feature: Update the User Interface to display the list of transactions related to the person selected
 * Minor feature: Allow user to delete their transactions.
+* Minor feature: Person information in the transaction list to be updated when the person is edited( E.g name).
 
 *Wen Qin Jia*
 
 * Major feature: Allow users to split their expenses using evenly, by units, and by percentage
 * Minor feature: Calculate and display a net balance for every user based on all their transactions
+* Minor feature: Ensure correct amount is entered for pay debt transaction. (E.g debt must exists, amount entered cannot be more than the debt owed)
+* Minor feature: Calculate and display a net balance for every user based on all their transactions
+* Minor feature: Ensure payer or payee(s) indicated in the transaction exist for every a add transaction command
 
 [appendix]
 == User Stories
@@ -1250,75 +1336,122 @@ These instructions only provide a starting point for testers to work on; testers
 .. A paydebt type transaction should be used when a person have already returned the amount owed to other person.
 .. All transactions can only be made if the payer or payee(s) indicated in the transaction exist in the application
    ... Test case (if no person is added): `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
+
        Expected: The specified payer or payee(s) do not exist.
+
 .. Before you proceed, please add the following persons to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney`
 
 ==== Payment Type Transaction
 . A payment transaction allows one payer to one or more payees. There are three types of payment methods, split evenly , by percentages or by units. After each payment transaction is added, the amount spent based on the type of splitting methods indicated, will be updated and added onto the "Amount Spent" person panel card.
 .. Split Evenly(Default method)
 ... Test case: `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
+
    Expected: New transaction added
+
 ... Test case: `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu`
+
    Expected: New transaction added
+
 .. By Percentage(percentages indicated must be seperated by
+
 ... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40, 20`
+
    Expected: New transaction added
+
 ... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40`
+
    Expected: The number of percentage values does not match the number of persons involved. Remember to include the payer in the count.
+
 ... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40, 50`
+
    Expected: The sum of the percentages does not equal 100.
+
 ... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40,`
+
    Expected: List of percentages can only take comma-separated integers
+
 ... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/40, 40 .20`
+
    Expected: List of percentages can only take comma-separated integers
+
 .. By Units
+
 ... Test case: `addtransaction type/payment payer/Bernice Yu a/35.00 d/Team apparel items payee/Alex Yeoh payee/John Doe m/units units/4, 2, 1`
+
    Expected: New transaction added
+
 ... Test case: `addtransaction type/payment payer/Bernice Yu a/35.00 d/Team apparel items payee/Alex Yeoh payee/John Doe m/units units/4, 2,`
+
    Expected: List of units can only take comma-separated integers
+
 ... Test case: `addtransaction type/payment payer/Alex Yeoh a/50.00 d/Team dinner payee/John Doe payee/Bernice Yu m/percentage percentage/4, 2`
+
    Expected: The number of units values does not match the number of persons involved. Remember to include the payer in the count.
 
 ==== Paydebt Type Transaction
 
 . A paydebt type transaction only allow one payer to one payee.
+
 .. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
+
  4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
 
  ... Test case: `addtransaction type/paydebt payer/Bernice Yu a/50.00 d/Taxi ride to NUS payee/John Doe` (Amount pay more than amount owed)
+
     Expected: Payee is being overpaid. Ensure that the transaction amount does not exceed the balance owed.
+
  ... Test case: `addtransaction type/paydebt payer/Bernice Yu a/40.00 d/Taxi ride to NUS payee/John Doe`
+
     Expected: New transaction added
+
  ... Test case: `addtransaction type/paydebt payer/Bernice Yu a/40.00 d/Taxi ride to NUS payee/John Doe` (Bernice Yu does not owed John Doe any money)
+
     Expected: Payee is not owed any debt
 
 ==== Delete Transaction
+
  . Purpose of delete transaction is solely for wrongly added transaction
+
  .. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
+
   4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly` 5) `addtransaction type/payment payer/John Doe a/240.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
 
 ... Test case: `deleteTransaction 1`
+
      Expected:  Deleted Transaction:  Transaction id: X + Details of the deleted contact shown in the status message
+
   ... Test case: `addTransaction type/paydebt payer/Bernice Yu a/80.00 d/Amount owed for taxi ride payee/John Doe` + `deletePerson 2`(Bernice Yu) + `deleteTransaction 1`
+
      Expected: The payer or payee(s) in the transaction do not exist
+
 === Deleting a person
 
 . Deleting a person while all persons are listed
 
 .. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
 .. Test case: `delete 1` +
+
    Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+
 .. Test case: `delete 0` +
+
    Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+
 .. Test case: if delete person debt not cleared - outstanding debtor(s) or creditor(s) present in the debtor or creditor table respectively
+
    Expected: Unable to delete, current person debt not cleared
+
 === Selecting a person
 
 .. Test: selectPerson 1
+
   Expected: All debtor(s) or creditor(s) present and transactions that involved this person selected will be displayed.
 
 === Un-selecting a person
+
 .. Test: selectPerson 1 + un-select Person 1
+
   Expected: After the person is unselected, all transaction will be shown, and no debtor or creditor will be displayed.
 
 === Saving data
@@ -1326,16 +1459,29 @@ These instructions only provide a starting point for testers to work on; testers
 . Dealing with missing/corrupted data files
 
 .. Missing & Invalid Transaction type
+
    Expected: Transaction type can only be "paydebt" or "payment" and it should not be blank
+
 .. Missing & Invalid Missing payer
+
    Expected: Transaction's Payer field is missing!
+
 .. Missing & Invalid Transaction amount
+
    Expected: Amount can only take in a positive numerical number up to 2 decimal places, and it should not be blank
+
 .. Missing & Invalid Transaction description
+
    Expected: Transaction description can take any value and should not be blank
+
 .. Missing & Invalid Transaction payee
+
    Expected: Transaction's Payees field is missing!
+
 .. Missing & Invalid Transaction Date
+
    Expected: Transaction's Date field is missing, or is in wrong format(date format example: 2018-04-14T17:22:56.218+08:00
+
 .. Missing & Invalid Split method
+
    Expected: Transaction split method can only be "evenly", "units", or "percentage"
