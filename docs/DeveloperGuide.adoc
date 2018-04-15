@@ -367,7 +367,9 @@ image::UndoRedoActivityDiagram.png[width="650"]
 .Component interactions for `addTransaction` command (part 1)
 image::AddTransaction.png[width="800"]
 
-From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return toAddTransactionCommand. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. In addition, validatePayees() is called to check if payee(s) enter is the same as the payer and valiadateSplitMethodValue() is used to check the validity of the split value entered. If all the three methods fail, An exception will be thrown if its not found. Refer to the code and diagram below for addTransactionCommandParser.
+image::addTransactionParser.png[width="800"]
+
+From the diagram above, when users enter the command addTransaction type/ Transaction_Type payer/ Payer a/ Amount d/ Description payee/ Payee to add a new a Transaction in their address book, AddTransactionCommandParser will be called and parse the arguments and return AddTransactionCommand. Depending on the type of transactions and split method input by the user, a different transaction object will be created and return to AddTransactionCommand as shown by the acitivty diagram above. Furthermore, during the parsing of the argument, a method(findPersonByName) to check if the payer or payee(s) exist will be called. In addition, validatePayees() is called to check if payee(s) enter is the same as the payer and valiadateSplitMethodValue() is used to check the validity of the split value entered. If all the three methods fail, An exception will be thrown if its not found. Refer to the code and diagram below for addTransactionCommandParser.
 
 image::AddTransactionCommandParser.png[width="800"]
 
