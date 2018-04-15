@@ -12,7 +12,7 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/se-edu/addressbook-level4/tree/master
 
-By: `Kok Cong, Wen Qin, Paul Henri`      Since: `March 2018`      Licence: `MIT`
+By: `Kok Cong, Wen Qin, and Paul Henri`      Since: `April 2018`      Licence: `MIT`
 
 == Setting up
 
@@ -900,7 +900,7 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Target user profile*:
 
-* traveller who share many expenses with friends
+* person who shares many expenses with other people (friends, family, classmates, etc.)
 * prefer desktop apps over other types
 * prefers typing over mouse input
 * is reasonably comfortable using CLI apps
@@ -912,10 +912,10 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Kok Cong Ong*
 
-* Major feature: Added Payment & Paydebt add Transaction command. Payment transaction command is used when a person make a payment to one or multiple people. Paydebt Transaction is used when the user return an amount owed to another person.
-* Major feature: Added Debtors & Creditors panel for the user to see who owed them money or people who they owed money to
-* Minor feature: Prevent person from deleted if his debt not clear.
-* Minor feature: Prevent transaction from deleted if payer or payee in the transaction do not exist anymore.
+* Major feature: Add a new addtransaction command with two types: <<payment,payment>> and <<paydebt,paydebt>>.
+* Major feature: Add a Debtors & Creditors panel for the user to see who owed them money or people who they owed money to
+* Minor feature: Prevent a person from being deleted if his debt is not cleared.
+* Minor feature: Prevent a transaction from being deleted if the payer or payee in the transaction does not exist anymore.
 
 *Paul Henri Mignot*
 
@@ -925,8 +925,10 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Wen Qin Jia*
 
-* Major feature: Allow users to split their expenses using evenly, by units, and by percentage
-* Minor feature: Calculate and display a net balance for every user based on all their transactions
+* Major feature: Allow users to split their expenses <<split-evenly,evenly>>, <<split-by-percentage,by percentage>> or <<split-by-units,by units>>
+* Minor feature: Calculate and display the total amount spent for every user based on all of their transactions
+* Minor feature: Update the Person class with a Balance field in order to track, display, and store a person's total amount spent
+* Minor feature: Enable multiple payees for transactions
 
 [appendix]
 == User Stories
@@ -962,17 +964,15 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |edit an expense on the application |correct any mistakes I may have made
 
-|`* * *` |admin user |create a new group |separate different trips by the people who were involved
+|`* *` |admin user |create a new group |separate different trips by the people who were involved
 
-|`* * *` |admin user |add people to a group |know who was involved with the expenses that were shared
+|`* *` |admin user |add people to a group |know who was involved with the expenses that were shared
 
-|`* * *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
+|`* *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
 
-|`* * *` |user |sort my expense into different categories |keep better track of my expenses
+|`* *` |user |sort my expense into different categories |keep better track of my expenses
 
-|`* * *` |user |use a user-friendly interactive interface |enter input
-
-|`* * *` |user |comment on an expense |clarify an expense or ask questions about it
+|`* *` |user |comment on an expense |clarify an expense or ask questions about it
 
 |`* *` |admin user |set whether other group members can add new people to the group |control who is added
 
@@ -1159,6 +1159,7 @@ Use case ends.
 
 
 [discrete]
+
 [appendix]
 == Non Functional Requirements
 
@@ -1182,34 +1183,23 @@ Windows, Linux, Unix, OS-X
 [[private-contact-detail]] Private contact detail::
 A contact detail that is not meant to be shared with others
 
+[[payment]] Payment::
+A type of transaction that allows a user to record a payment that was made on behalf of himself/herself and at least one other person
+
+[[paydebt]] Paydebt::
+A type of transaction that allows a user to record a payment that was made to another person to reduce the debt owed
+
 [[split-evenly]] Split evenly::
 A method of dividing the total cost of an expense by splitting it in even parts over the total number of users involved with that expense
 
 [[split-by-units]] Split by units::
-A method of dividing the total cost of an expense by units and then assigning the specific amount of units (which can vary among users) owed by a user to that user
+A method of dividing the total cost of an expense by units. The amount that each person owes is the number of units that they are responsible for divided by the total number of units
 
-[[settle-balance]] Settle balance::
-A feature that allows a user to record a payment that was made to another user to settle the debt owed
+[[split-by-percentage]] Split by percentage::
+A method of dividing the total cost of an expense by percentages that add up to 100. The amount that each person owes is the percentage that they are responsible for multiplied by the amount
 
 [[recurring-expense]] Recurring expense::
 An expense that does not change in amount over a repeated time period (e.g. every month) and is always incurred by a user
-
-[appendix]
-== Product Survey
-
-*Product Name*
-
-Author: ...
-
-Pros:
-
-* ...
-* ...
-
-Cons:
-
-* ...
-* ...
 
 [appendix]
 == Instructions for Manual Testing
@@ -1235,7 +1225,7 @@ These instructions only provide a starting point for testers to work on; testers
 
 === Adding a person
 
-. A person can be added only if the name is different and is case sensitive.
+. A person can be added only if the name is different, regardless of case (e.g. John Doe, john doe, and JOHN DOE are considered to all be the same).
 .. Test case: `addPerson n/john Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, `addPerson n/joHn DoE p/98765432 e/johnd@example.com t/friends t/owesMoney`
    Expected: This person already exists in the address book. The name must be unique.
 .. Test case: `addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`
@@ -1243,7 +1233,7 @@ These instructions only provide a starting point for testers to work on; testers
 
 === Adding a transaction
 
-. A transaction can be either payment or paydebt.
+. A transaction can be either of type <<payment,payment>> or <<paydebt,paydebt>>.
 .. A payment type transaction should be used if a person is making a payment for multiple people.
 .. A paydebt type transaction should be used when a person have already returned the amount owed to other person.
 .. All transactions can only be made if the payer or payee(s) indicated in the transaction exist in the application
@@ -1252,7 +1242,8 @@ These instructions only provide a starting point for testers to work on; testers
 .. Before you proceed, please add the following persons to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney`
 
 ==== Payment Type Transaction
-. A payment transaction allows one payer to one or more payees. There are three types of payment methods, split evenly , by percentages or by units. After each payment transaction is added, the amount spent based on the type of splitting methods indicated, will be updated and added onto the "Amount Spent" person panel card.
+
+. A payment transaction allows one payer to one or more payees. There are three types of payment methods, <<split-evenly,split evenly>>, <<split-by-percentage,by percentage>> or <<split-by-units,by units>>. After each payment transaction is added, the amount spent based on the type of splitting methods indicated, will be updated and added onto the "Amount Spent" person panel card.
 .. Split Evenly(Default method)
 ... Test case: `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
    Expected: New transaction added
@@ -1279,7 +1270,7 @@ These instructions only provide a starting point for testers to work on; testers
 
 ==== Paydebt Type Transaction
 
-. A paydebt type transaction only allow one payer to one payee.
+. A paydebt type transaction only allows one payer to one payee.
 .. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
  4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
 
@@ -1291,6 +1282,7 @@ These instructions only provide a starting point for testers to work on; testers
     Expected: Payee is not owed any debt
 
 ==== Delete Transaction
+
  . Purpose of delete transaction is solely for wrongly added transaction
  .. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
   4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly` 5) `addtransaction type/payment payer/John Doe a/240.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
@@ -1299,6 +1291,7 @@ These instructions only provide a starting point for testers to work on; testers
      Expected:  Deleted Transaction:  Transaction id: X + Details of the deleted contact shown in the status message
   ... Test case: `addTransaction type/paydebt payer/Bernice Yu a/80.00 d/Amount owed for taxi ride payee/John Doe` + `deletePerson 2`(Bernice Yu) + `deleteTransaction 1`
      Expected: The payer or payee(s) in the transaction do not exist
+
 === Deleting a person
 
 . Deleting a person while all persons are listed
@@ -1310,12 +1303,14 @@ These instructions only provide a starting point for testers to work on; testers
    Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
 .. Test case: if delete person debt not cleared - outstanding debtor(s) or creditor(s) present in the debtor or creditor table respectively
    Expected: Unable to delete, current person debt not cleared
+
 === Selecting a person
 
 .. Test: selectPerson 1
   Expected: All debtor(s) or creditor(s) present and transactions that involved this person selected will be displayed.
 
 === Un-selecting a person
+
 .. Test: selectPerson 1 + un-select Person 1
   Expected: After the person is unselected, all transaction will be shown, and no debtor or creditor will be displayed.
 
