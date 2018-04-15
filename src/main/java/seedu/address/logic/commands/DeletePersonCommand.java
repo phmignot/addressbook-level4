@@ -24,7 +24,8 @@ public class DeletePersonCommand extends UndoableCommand {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
-    public static final String MESSAGE_DEBT_NOT_PAID = "Unable to delete, current person debt not cleared";
+    public static final String MESSAGE_DEBT_NOT_PAID = "Unable to delete, current person debt not cleared"
+            + "and/or loan by other people not paid";
 
     private final Index targetIndex;
 
