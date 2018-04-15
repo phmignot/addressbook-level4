@@ -166,6 +166,20 @@ Selects the 2nd person in SmartSplit.
 `selectPerson 1` +
 Selects the 1st person in the results of the `findPerson` command.
 
+=== Listing all transactions related to the person: `[Since v1.3]`
+
+By clicking on a person on the person panel list, the person can be selected.
+All transactions that are relevant to that person will be displayed on the
+transaction panel list.
+In the debtors panel, any person who owes the selected person will appear with
+the amount that they owe.
+In the creditors panel, any person who is owed by the selected person will
+appear with the amount that they are owed.
+
+To de-select the person, press 'control' + click (for Mac/Linux: 'command' + click) on the person.
+All transactions will be re-displayed and the debtors panel and creditors panel will be cleared.
+// end::select[]
+
 // tag::addTransaction[]
 === Adding a transaction: `addTransaction` `[Since v1.2]` `[Updated for v1.5rc]`
 
@@ -232,19 +246,6 @@ The *addTransaction* command fails because the payer does not owe the payee any 
 * Assuming that Bernice only owes Betsy $15.00 for the dinner last night, the *addTransaction* command fails
 because the payer is overpaying the payee.
 
-=== Listing all transactions related to the person: `[Since v1.3]`
-
-By clicking on a person on the person panel list, the person can be selected.
-All transactions that are relevant to that person will be displayed on the
-transaction panel list.
-In the debtors panel, any person who owes the selected person will appear with
-the amount that they owe.
-In the creditors panel, any person who is owed by the selected person will
-appear with the amount that they are owed.
-
-To de-select the person, press 'control' + click (for Mac/Linux: 'command' + click) on the person.
-All transactions will be re-displayed and the debtors panel and creditors panel will be cleared.
-// end::select[]
 // end::addTransaction[]
 === Deleting a transaction : `deleteTransaction` `[Since v1.2]`
 
