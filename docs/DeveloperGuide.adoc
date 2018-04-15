@@ -221,10 +221,10 @@ The `DebtTable` is updated when a person or a transaction is added, edited or re
 
 * Implementation of the DebtsTable:
 
-** **Alternative 1 (current choice):** Using a dictionary of every person's `DebtsList`, 
+** **Alternative 1 (current choice):** Using a dictionary of every person's `DebtsList`,
 which are dictionaries with all persons that have debts with its owner.
-*** Pros: More flexible. Easy to add and remove a person or a debt. Easy to retrieve the debt between two persons. 
-Will use less memory. 
+*** Pros: More flexible. Easy to add and remove a person or a debt. Easy to retrieve the debt between two persons.
+Will use less memory.
 *** Cons: Harder to edit
 ** **Alternative 2:** Using an two dimensional array.
 *** Pros: Easy to add or edit a person or a debt.
